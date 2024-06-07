@@ -1,9 +1,12 @@
 import random as rnd
 
 class Room:
-    def __init__(self,description):
+    def __init__(self,description,player,monsters,items):
         self.description=description
-    
+        self.player=player
+        self.monsters=monsters
+        self.items=items
+
     def examine(self):
         print(self.description)
 
@@ -65,8 +68,15 @@ def enter_room(room):
     room.examine()
 
 def main ():
+    no_armor=Armor("none", "none", 0, 0)
+    fists=Weapon("fists", "none", [1,2], 0)
+    dagger=Weapon("a dagger", "weapon", [3,6], 1)
+    player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
+    drunk_goblin=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
+    monsters=[drunk_goblin]
+    items=[]
     room=[]
-    room.append (Room("This is the first room"))
+    room.append (Room("This is the first room",player,monsters,items))
     room_number=0
     enter_room(room[room_number])
 
