@@ -1,3 +1,5 @@
+import random as rnd
+
 class Room:
     def __init__(self,description):
         self.description=description
@@ -30,6 +32,31 @@ class Potion(Item):
         Item.__init__(self,description,item_type)
         self.stat=stat
         self.bonus=bonus
+
+class Monster:
+    def __init__(self,description,details,hp,strength,agility,armor,weapon):
+        self.description=description
+        self.details=details
+        self.hp=int( (hp*rnd.random() + 2)/3 )
+        self.start_hp=self.hp
+        self.strength=strength
+        self.agility=agility
+        self.armor=armor
+        self.weapon=weapon
+    
+    def attack(self,target):
+        print(f'{self.description} attacks {target.description}...')
+        hit=self.agility+self.weapon.hit + (rnd.random()*10)
+        dodge=target.agility + target.armor.dodge + (rnd.random()*10)
+        if hit > dodge:
+            damage=self.strength + rnd.randrange[self.weapon.damage[0],self.weapon.damage[1]] - target.armor.armor_value
+            damage = 1 if damage < 1 else None
+            print(f'{self.description} hits for {damage} points of damage')
+            target.hp-=damage
+            target.hp = 0 if target.hp < 0 else None
+        else:
+            print(f'{self.description} misses')
+
 
 def enter_room(room):
     '''
