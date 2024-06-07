@@ -6,6 +6,8 @@ class Room:
         self.player=player
         self.monsters=monsters
         self.items=items
+        self.battle_started=False
+        self.monster_action=False
 
     def examine(self):
         print(self.description)
@@ -66,17 +68,16 @@ class Monster:
             print(f'{self.description} misses')
 
 
-def enter_room(room,room_number):
+def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
     '''
-    room.examine()
-    battle_started = False
-    monster_action = False
-    start_turn(room, room_number, monster_action, battle_started)
+    rooms[room_number].examine()
+    start_turn(rooms, room_number)
 
-def start_turn(room,room_number,monster_action,battle_started):
-    if battle_started == True and monster_action == True:
+def start_turn(rooms,room_number):
+    room=rooms[room_number]
+    if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
             monster.attack(room.player)
     action=input('choose an action:')
@@ -90,31 +91,31 @@ def start_turn(room,room_number,monster_action,battle_started):
     if action == "help":
         for option in options:
             print(option)
-        monster_action=False
+        room.monster_action=False
     elif action == "attack":
-        choose_target(room,battle_started)
+        choose_target(room)
     elif action == "forwards":
         if len(room.monsters) == 0:
             room_number+=1
-            enter_room(room(room_number),room_number)
+            enter_room(rooms,room_number)
         else:
             print("You must clear the path first")
-            monster_action=False
+            room.monster_action=False
     elif action == "backwards":
         if len(room.monsters) == 0:
             room_number-=1
             enter_room(room(room_number))
         else:
             print("You don't run away from a fight!")
-            monster_action=False
+            room.monster_action=False
     else:
-        monster_action=False
         print("Please choose a valid option")
         for option in options:
             print(option)
-    start_turn(room, room_number, monster_action, battle_started)
+        room.monster_action=False
+    start_turn(rooms, room_number)
     
-def choose_target(room,battle_started):
+def choose_target(room):
     index=1
     
     for monster in room.monsters:
@@ -126,11 +127,12 @@ def choose_target(room,battle_started):
         target_number=int(target_number)
     except:
         print('Please enter a number')
-        choose_target(room,battle_started)
+        choose_target(room)
 
     if target_number > 0 and target_number <= len (room.monsters) + 1:
         room.player.attack(room.monsters[target_number-1])
-
+        room.battle_started=True
+        room.monster_action=True
 
 def main ():
     no_armor=Armor("none", "none", 0, 0)
@@ -140,9 +142,9 @@ def main ():
     drunk_goblin=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     monsters=[drunk_goblin]
     items=[]
-    room=[]
-    room.append (Room("This is the first room",player,monsters,items))
+    rooms=[]
+    rooms.append (Room("This is the first room",player,monsters,items))
     room_number=0
-    enter_room(room[room_number],room_number)
+    enter_room(rooms,room_number)
 
 main()
