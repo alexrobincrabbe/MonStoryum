@@ -129,10 +129,13 @@ def choose_target(room):
         print('Please enter a number')
         choose_target(room)
 
-    if target_number > 0 and target_number <= len (room.monsters) + 1:
+    if target_number > 0 and target_number <= len (room.monsters):
         room.player.attack(room.monsters[target_number-1])
         room.battle_started=True
         room.monster_action=True
+    else:
+        print("Please pick a valid number")
+        room.monster_action=False
 
 def main ():
     no_armor=Armor("none", "none", 0, 0)
