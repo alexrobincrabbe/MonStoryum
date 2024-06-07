@@ -4,11 +4,12 @@ import os
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 class Room:
-    def __init__(self,description,player,monsters,items):
+    def __init__(self,description,player,monsters,items,features):
         self.description=description
         self.player=player
         self.monsters=monsters
         self.items=items
+        self.features=features
         self.battle_started=False
         self.monster_action=False
 
@@ -19,6 +20,8 @@ class Room:
             print(monster.description)
         for item in self.items:
             print(item.description)
+        for feature in self.features:
+            print(feature.description)
 
 class Item:
     def __init__(self,description,item_type):
@@ -70,6 +73,27 @@ class Monster:
         else:
             print(f'{self.description} misses')
 
+    def loot(self):
+        lootables=[]
+        if self.armor.type != "none":
+            lootables.append(self.armor)
+        if self.weapon.type != "none":
+            lootables.append(self.armor)
+        return lootables
+
+class Feature:
+    def __init__(self, description, loot):
+        self.description=description
+        self.loot=loot
+    
+    def examine(self):
+        if len(self.loot) > 0:
+            print("You find:")
+            for items in self.loot:
+                print(items)
+        else:
+            print("You find nothing")
+
 
 def enter_room(rooms,room_number):
     '''
@@ -97,6 +121,8 @@ def start_turn(rooms,room_number):
         for option in options:
             print(option)
         room.monster_action=False
+    elif action == "examine room":
+        print(room.examine())
     elif action == "attack":
         if len(room.monsters) > 0:
             choose_target(room)
@@ -133,23 +159,25 @@ def choose_target(room):
     target_number = input('Enter a number to choose a target: ')
     try:
         target_number=int(target_number)
-        print(target_number)
-        if target_number > 0 and target_number <= len (room.monsters):
-            room.player.attack(room.monsters[target_number-1])
-            room.battle_started=True
-            room.monster_action=True
-            if room.monsters[target_number-1].hp == 0:
-                print(f'{room.monsters[target_number-1].description} dies')
-                dead_monster=room.monsters.pop(target_number-1)
-            return
-        else:
-            clear_console()
-            print('Please pick a valid number')
     except:
         clear_console()
         print('Please enter a number')
-    
-    choose_target(room)
+        return
+
+    if target_number > 0 and target_number <= len (room.monsters):
+        room.player.attack(room.monsters[target_number-1])
+        room.battle_started=True
+        room.monster_action=True
+        if room.monsters[target_number-1].hp == 0:
+            print(f'{room.monsters[target_number-1].description} dies')
+            dead_monster=room.monsters.pop(target_number-1)
+            description=f'a dead {dead_monster.description}'
+            loot=dead_monster.loot()
+            corpse=Feature(description,loot)
+            room.features.append(corpse)
+    else:
+        clear_console()
+        print('Please pick a valid number')
 
 
 def main ():
@@ -159,10 +187,12 @@ def main ():
     player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
     drunk_goblin=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     drunk_goblin2=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
+    feature=Feature("chest",dagger)
+    features=[feature]
     monsters=[drunk_goblin,drunk_goblin2]
     items=[]
     rooms=[]
-    rooms.append (Room("This is the first room",player,monsters,items))
+    rooms.append (Room("This is the first room",player,monsters,items,features))
     room_number=0
     enter_room(rooms,room_number)
 
