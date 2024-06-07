@@ -6,7 +6,16 @@ class Room:
         print(self.description)
 
 
+def enter_room(room):
+    '''
+    initiate game state when the player enters a room
+    '''
+    room.examine()
+
 def main ():
-    pass
+    room=[]
+    room.append (Room("This is the first room"))
+    room_number=0
+    enter_room(room[room_number])
 
 main()
