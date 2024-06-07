@@ -88,7 +88,7 @@ def start_turn(rooms,room_number):
     clear_console()
     options=["examine","inventory"]
     if len(room.monsters) == 0:
-        options.append("forwards","backwards")
+        options.append(["forwards","backwards"])
         if len(room.items) > 0:
             options.append("take")
     else:
@@ -98,7 +98,10 @@ def start_turn(rooms,room_number):
             print(option)
         room.monster_action=False
     elif action == "attack":
-        choose_target(room)
+        if len(room.monsters) > 0:
+            choose_target(room)
+        else:
+            print("There is nothing to attack")
     elif action == "forwards":
         if len(room.monsters) == 0:
             room_number+=1
@@ -126,21 +129,28 @@ def choose_target(room):
     for monster in room.monsters:
         print(f'{index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
         index+=1
-    
+
     target_number = input('Enter a number to choose a target: ')
     try:
         target_number=int(target_number)
+        print(target_number)
+        if target_number > 0 and target_number <= len (room.monsters):
+            room.player.attack(room.monsters[target_number-1])
+            room.battle_started=True
+            room.monster_action=True
+            if room.monsters[target_number-1].hp == 0:
+                print(f'{room.monsters[target_number-1].description} dies')
+                dead_monster=room.monsters.pop(target_number-1)
+            return
+        else:
+            clear_console()
+            print('Please pick a valid number')
     except:
+        clear_console()
         print('Please enter a number')
-        choose_target(room)
+    
+    choose_target(room)
 
-    if target_number > 0 and target_number <= len (room.monsters):
-        room.player.attack(room.monsters[target_number-1])
-        room.battle_started=True
-        room.monster_action=True
-    else:
-        print("Please pick a valid number")
-        room.monster_action=False
 
 def main ():
     no_armor=Armor("none", "none", 0, 0)
@@ -148,7 +158,8 @@ def main ():
     dagger=Weapon("a dagger", "weapon", [3,6], 1)
     player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
     drunk_goblin=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    monsters=[drunk_goblin]
+    drunk_goblin2=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
+    monsters=[drunk_goblin,drunk_goblin2]
     items=[]
     rooms=[]
     rooms.append (Room("This is the first room",player,monsters,items))
