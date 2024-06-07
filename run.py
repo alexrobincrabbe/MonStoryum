@@ -61,11 +61,60 @@ class Monster:
             print(f'{self.description} misses')
 
 
-def enter_room(room):
+def enter_room(room,room_number):
     '''
     initiate game state when the player enters a room
     '''
     room.examine()
+    battle_started = False
+    monster_action = False
+    start_turn(room, room_number, monster_action, battle_started)
+
+def start_turn(room,room_number,monster_action,battle_started):
+    player = room.player
+    monsters = room.monsters
+    items = room.items
+    if battle_started == True and monster_action == True:
+        for monster in monsters:
+            monster.attack(player)
+    action=input('choose an action:')
+    options=["examine","inventory"]
+    if len(monsters) == 0:
+        options.append("forwards","backwards")
+        if len(items) > 0:
+            options.append("take")
+    else:
+        options.append("attack")
+    if action == "help":
+        for option in options:
+            print(option)
+        monster_action=False
+    elif action == "attack":
+        choose_target(player,monsters)
+    elif action == "forwards":
+        if len(monsters) == 0:
+            room_number+=1
+            enter_room(room(room_number))
+        else:
+            print("You must clear the path first")
+            monster_action=False
+    elif action == "backwards":
+        if len(monsters) == 0:
+            room_number-=1
+            enter_room(room(room_number))
+        else:
+            print("You don't run away from a fight!")
+            monster_action=False
+    else:
+        monster_action=False
+        print("Please choose a valid option")
+        for option in options:
+            print(option)
+    start_turn(room, room_number, monster_action, battle_started)
+    
+def choose_target(player,monsters):
+    print("choose target")
+
 
 def main ():
     no_armor=Armor("none", "none", 0, 0)
@@ -78,6 +127,6 @@ def main ():
     room=[]
     room.append (Room("This is the first room",player,monsters,items))
     room_number=0
-    enter_room(room[room_number])
+    enter_room(room[room_number],room_number)
 
 main()
