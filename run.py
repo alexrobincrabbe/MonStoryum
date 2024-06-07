@@ -76,17 +76,14 @@ def enter_room(room,room_number):
     start_turn(room, room_number, monster_action, battle_started)
 
 def start_turn(room,room_number,monster_action,battle_started):
-    player = room.player
-    monsters = room.monsters
-    items = room.items
     if battle_started == True and monster_action == True:
-        for monster in monsters:
-            monster.attack(player)
+        for monster in room.monsters:
+            monster.attack(room.player)
     action=input('choose an action:')
     options=["examine","inventory"]
-    if len(monsters) == 0:
+    if len(room.monsters) == 0:
         options.append("forwards","backwards")
-        if len(items) > 0:
+        if len(room.items) > 0:
             options.append("take")
     else:
         options.append("attack")
@@ -95,16 +92,16 @@ def start_turn(room,room_number,monster_action,battle_started):
             print(option)
         monster_action=False
     elif action == "attack":
-        choose_target(player,monsters)
+        choose_target(room,battle_started)
     elif action == "forwards":
-        if len(monsters) == 0:
+        if len(room.monsters) == 0:
             room_number+=1
-            enter_room(room(room_number))
+            enter_room(room(room_number),room_number)
         else:
             print("You must clear the path first")
             monster_action=False
     elif action == "backwards":
-        if len(monsters) == 0:
+        if len(room.monsters) == 0:
             room_number-=1
             enter_room(room(room_number))
         else:
@@ -117,8 +114,23 @@ def start_turn(room,room_number,monster_action,battle_started):
             print(option)
     start_turn(room, room_number, monster_action, battle_started)
     
-def choose_target(player,monsters):
-    print("choose target")
+def choose_target(room,battle_started):
+    index=1
+    
+    for monster in room.monsters:
+        print(f'{index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+        index+=1
+    
+    target_number = input('Enter a number to choose a target: ')
+    try:
+        target_number=int(target_number)
+    except:
+        print('Please enter a number')
+        choose_target(room,battle_started)
+
+    if target_number > 0 and target_number <= len (room.monsters) + 1:
+        room.player.attack(room.monsters[target_number-1])
+        battle_started=True
 
 
 def main ():
