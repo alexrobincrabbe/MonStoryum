@@ -57,11 +57,16 @@ class Monster:
         hit=self.agility+self.weapon.hit + (rnd.random()*10)
         dodge=target.agility + target.armor.dodge + (rnd.random()*10)
         if hit > dodge:
-            damage=self.strength + rnd.randrange[self.weapon.damage[0],self.weapon.damage[1]] - target.armor.armor_value
-            damage = 1 if damage < 1 else None
+            print(self.strength)
+            print(self.weapon.damage)
+            print(target.armor.armor_value)
+            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]) - target.armor.armor_value
+            print(damage)
+            damage = 1 if damage < 1 else damage
+            print(damage)
             print(f'{self.description} hits for {damage} points of damage')
             target.hp-=damage
-            target.hp = 0 if target.hp < 0 else None
+            target.hp = 0 if target.hp < 0 else target.hp
         else:
             print(f'{self.description} misses')
 
@@ -130,7 +135,6 @@ def choose_target(room,battle_started):
 
     if target_number > 0 and target_number <= len (room.monsters) + 1:
         room.player.attack(room.monsters[target_number-1])
-        battle_started=True
 
 
 def main ():
