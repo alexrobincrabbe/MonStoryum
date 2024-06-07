@@ -9,6 +9,11 @@ class Room:
 
     def examine(self):
         print(self.description)
+        print("You see:")
+        for monster in self.monsters:
+            print(monster.description)
+        for item in self.items:
+            print(item.description)
 
 class Item:
     def __init__(self,description,item_type):
