@@ -1,5 +1,8 @@
 import random as rnd
+import os
 
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
 class Room:
     def __init__(self,description,player,monsters,items):
         self.description=description
@@ -72,6 +75,7 @@ def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
     '''
+    clear_console()
     rooms[room_number].examine()
     start_turn(rooms, room_number)
 
@@ -81,6 +85,7 @@ def start_turn(rooms,room_number):
         for monster in room.monsters:
             monster.attack(room.player)
     action=input('choose an action:')
+    clear_console()
     options=["examine","inventory"]
     if len(room.monsters) == 0:
         options.append("forwards","backwards")
