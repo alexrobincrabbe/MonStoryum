@@ -210,7 +210,7 @@ def choose_action(room,rooms,room_number,action,options):
     elif action == "backwards":
         if len(room.monsters) == 0:
             room_number-=1
-            enter_room(room(room_number))
+            enter_room(rooms,room_number)
         else:
             print("You don't run away from a fight!")
             room.monster_action=False
@@ -282,16 +282,29 @@ def main ():
     no_armor=Armor("none","none", "none", 0, 0)
     fists=Weapon("fists", "none", "none", [1,2], 0)
     dagger=Weapon("dagger", "a small stabby weapon", "weapon", [3,6], 1)
+    club=Weapon("club", "a large blunt weapon", "weapon", [10,12], -1)
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists)
     player.inventory=[dagger,dagger]
     drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    feature=Feature("chest","a wooden chest", [dagger],False)
-    features=[feature]
-    monsters=[drunk_goblin,drunk_goblin2]
+    troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club)
+    chest=Feature("chest","a wooden chest", [dagger],False)
+    features=[
+        [chest],
+        [],
+        [chest]
+    ]
+    print(features)
+    monsters=[]
+    monsters=[
+        [drunk_goblin,drunk_goblin2],
+        [troll],
+        []
+    ]
     items=[]
     rooms=[]
-    rooms.append (Room("This is the first room",player,monsters,items,features))
+    rooms.append (Room("This is the first room",player,monsters[0],items,features[0]))
+    rooms.append (Room("This is the second room",player,monsters[1],items,features[1]))
     room_number=0
     enter_room(rooms,room_number)
 
