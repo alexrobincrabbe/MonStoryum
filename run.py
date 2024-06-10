@@ -188,12 +188,10 @@ def examine(room,action):
         print("examine what?(hint: try 'examine room')")
 
 def choose_target(room):
-    index=1
-    
+    target_index=1
     for monster in room.monsters:
-        print(f'{index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
-        index+=1
-
+        print(f'{target_index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+        target_index+=1
     target_number = input('Enter a number to choose a target: ')
     try:
         target_number=int(target_number)
@@ -201,23 +199,24 @@ def choose_target(room):
         clear_console()
         print('Please enter a number')
         return
-
     if target_number > 0 and target_number <= len (room.monsters):
         room.player.attack(room.monsters[target_number-1])
         room.battle_started=True
         room.monster_action=True
-        if room.monsters[target_number-1].hp == 0:
-            print(f'{room.monsters[target_number-1].description} dies')
-            dead_monster=room.monsters.pop(target_number-1)
-            description=f'dead {dead_monster.description}'
-            details="you examine the corpse"
-            loot=dead_monster.loot()
-            corpse=Feature(description,details,loot)
-            room.features.append(corpse)
+        kill_monster(room, target_number)   
     else:
         clear_console()
         print('Please pick a valid number')
 
+def kill_monster(room, target_number):
+    if room.monsters[target_number-1].hp == 0:
+        print(f'{room.monsters[target_number-1].description} dies')
+        dead_monster=room.monsters.pop(target_number-1)
+        description=f'dead {dead_monster.description}'
+        details="you examine the corpse"
+        loot=dead_monster.loot()
+        corpse=Feature(description,details,loot)
+        room.features.append(corpse)
 
 def main ():
     no_armor=Armor("none","none", "none", 0, 0)
