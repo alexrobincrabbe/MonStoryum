@@ -79,22 +79,28 @@ class Monster:
         if self.armor.type != "none":
             lootables.append(self.armor)
         if self.weapon.type != "none":
-            lootables.append(self.armor)
+            lootables.append(self.weapon)
         return lootables
 
 class Feature:
-    def __init__(self, description,details, loot):
+    def __init__(self, description,details, loot, locked):
         self.description=description
         self.details=details
         self.loot=loot
+        self.locked=locked
     
     def examine(self):
-        if len(self.loot) > 0:
-            print("You find:")
-            for items in self.loot:
-                print(items)
-        else:
-            print("You find nothing")
+        if self.locked == False:
+            if len(self.loot) > 0:
+                print("You find:")
+                for items in self.loot:
+                    print(items.description)
+                take_items = input("take items?(yes/no)")
+                if take_items == "yes":
+                    self.loot=[]
+                    print("you take the items")
+            else:
+                print("You find nothing")
 
 
 def enter_room(rooms,room_number):
@@ -179,7 +185,7 @@ def examine(room,action):
             examine_options.append(feature.description)
             if examine_object==feature.description:
                 print(feature.details)
-                #feature_options()
+                feature.examine()
         if examine_object=="room":
                 room.examine()
         if examine_object not in examine_options:  
@@ -215,7 +221,7 @@ def kill_monster(room, target_number):
         description=f'dead {dead_monster.description}'
         details="you examine the corpse"
         loot=dead_monster.loot()
-        corpse=Feature(description,details,loot)
+        corpse=Feature(description,details,loot,False)
         room.features.append(corpse)
 
 def main ():
@@ -225,7 +231,7 @@ def main ():
     player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
     drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    feature=Feature("chest","a wooden chest", dagger)
+    feature=Feature("chest","a wooden chest", [dagger],False)
     features=[feature]
     monsters=[drunk_goblin,drunk_goblin2]
     items=[]
