@@ -53,7 +53,7 @@ class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon):
         self.description=description
         self.details=details
-        self.hp=int( (hp*rnd.random() + 2)/3 )
+        self.hp=int( (rnd.random()*2 + 2*hp)/3 )
         self.start_hp=self.hp
         self.strength=strength
         self.agility=agility
