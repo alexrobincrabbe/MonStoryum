@@ -4,8 +4,8 @@ import os
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 class Room:
-    def __init__(self,description,player,monsters,items,features):
-        self.description=description
+    def __init__(self,details,player,monsters,items,features):
+        self.details=details
         self.player=player
         self.monsters=monsters
         self.items=items
@@ -14,37 +14,38 @@ class Room:
         self.monster_action=False
 
     def examine(self):
-        print(self.description)
+        print(self.details)
         print("You see:")
         for monster in self.monsters:
-            print(monster.description)
+            print(f'a {monster.description}')
         for item in self.items:
-            print(item.description)
+            print(f'a {item.description}')
         for feature in self.features:
-            print(feature.description)
+            print(f'a {feature.description}')
 
 class Item:
-    def __init__(self,description,item_type):
+    def __init__(self,description,details,item_type):
         self.description=description
+        self.details=details
         self.type=item_type
     
     def examine(self):
         print(self.description)
 
 class Weapon(Item):
-    def __init__(self,description,item_type,damage,hit):
-        Item.__init__(self,description,item_type)
+    def __init__(self,description,details,item_type,damage,hit):
+        Item.__init__(self,description,details,item_type)
         self.damage=damage
         self.hit=hit
 
 class Armor(Item):
-    def __init__(self,description,item_type,armor_value,dodge):
-        Item.__init__(self,description,item_type)
+    def __init__(self,description,details,item_type,armor_value,dodge):
+        Item.__init__(self,description,details,item_type)
         self.armor_value=armor_value
         self.dodge=dodge
 
 class Potion(Item):
-    def __init__(self,description,item_type,stat,bonus):
+    def __init__(self,description,details,item_type,stat,bonus):
         Item.__init__(self,description,item_type)
         self.stat=stat
         self.bonus=bonus
@@ -82,8 +83,9 @@ class Monster:
         return lootables
 
 class Feature:
-    def __init__(self, description, loot):
+    def __init__(self, description,details, loot):
         self.description=description
+        self.details=details
         self.loot=loot
     
     def examine(self):
@@ -132,8 +134,9 @@ def choose_action(room,rooms,room_number,action,options):
         for option in options:
             print(option)
         room.monster_action=False
-    elif action == "examine room":
-        print(room.examine())
+    elif action.startswith("examine"):
+        examine(room,action)
+        room.monster_action=False
     elif action == "attack":
         if len(room.monsters) > 0:
             choose_target(room)
@@ -159,6 +162,31 @@ def choose_action(room,rooms,room_number,action,options):
             print(option)
         room.monster_action=False
 
+def examine(room,action):
+    examine_options=["room"]
+    examine_string=action.split(" ", 1)
+    if len(examine_string) > 1:
+        examine_object=examine_string[1]
+        for monster in room.monsters:
+            examine_options.append(monster.description)
+            if examine_object==monster.description:
+                print(monster.details)
+        for item in room.items:
+            examine_options.append(item.description)
+            if examine_object==item.description:
+                print(item.details)
+        for feature in room.features:
+            examine_options.append(feature.description)
+            if examine_object==feature.description:
+                print(feature.details)
+                #feature_options()
+        if examine_object=="room":
+                room.examine()
+        if examine_object not in examine_options:  
+            print("You don't see that here(hint: try 'examine room')")   
+    else:
+        print("examine what?(hint: try 'examine room')")
+
 def choose_target(room):
     index=1
     
@@ -181,9 +209,10 @@ def choose_target(room):
         if room.monsters[target_number-1].hp == 0:
             print(f'{room.monsters[target_number-1].description} dies')
             dead_monster=room.monsters.pop(target_number-1)
-            description=f'a dead {dead_monster.description}'
+            description=f'dead {dead_monster.description}'
+            details="you examine the corpse"
             loot=dead_monster.loot()
-            corpse=Feature(description,loot)
+            corpse=Feature(description,details,loot)
             room.features.append(corpse)
     else:
         clear_console()
@@ -191,13 +220,13 @@ def choose_target(room):
 
 
 def main ():
-    no_armor=Armor("none", "none", 0, 0)
-    fists=Weapon("fists", "none", [1,2], 0)
-    dagger=Weapon("a dagger", "weapon", [3,6], 1)
+    no_armor=Armor("none","none", "none", 0, 0)
+    fists=Weapon("fists", "none", "none", [1,2], 0)
+    dagger=Weapon("a dagger", "a small stabby weapon", "weapon", [3,6], 1)
     player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
-    drunk_goblin=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    drunk_goblin2=Monster("a goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    feature=Feature("chest",dagger)
+    drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
+    drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
+    feature=Feature("chest","a wooden chest", dagger)
     features=[feature]
     monsters=[drunk_goblin,drunk_goblin2]
     items=[]
