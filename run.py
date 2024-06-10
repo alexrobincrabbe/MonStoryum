@@ -105,11 +105,19 @@ def enter_room(rooms,room_number):
 
 def start_turn(rooms,room_number):
     room=rooms[room_number]
+    monsters_attack(room)
+    action=input('choose an action:')
+    clear_console()
+    options = check_options(room)
+    choose_action(room,rooms, room_number,action,options)
+    start_turn(rooms, room_number)
+    
+def monsters_attack(room):
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
             monster.attack(room.player)
-    action=input('choose an action:')
-    clear_console()
+
+def check_options(room):
     options=["examine","inventory"]
     if len(room.monsters) == 0:
         options.append(["forwards","backwards"])
@@ -117,6 +125,9 @@ def start_turn(rooms,room_number):
             options.append("take")
     else:
         options.append("attack")
+    return options
+
+def choose_action(room,rooms,room_number,action,options):
     if action == "help":
         for option in options:
             print(option)
@@ -147,8 +158,7 @@ def start_turn(rooms,room_number):
         for option in options:
             print(option)
         room.monster_action=False
-    start_turn(rooms, room_number)
-    
+
 def choose_target(room):
     index=1
     
