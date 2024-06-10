@@ -1,5 +1,12 @@
 import random as rnd
 import os
+import pandas as pd
+from rich import print
+from rich import pretty
+pretty.install()
+from tabulate import tabulate
+import numpy as np
+from prettytable import PrettyTable
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -45,10 +52,10 @@ class Armor(Item):
         self.dodge=dodge
 
 class Potion(Item):
-    def __init__(self,description,details,item_type,stat,bonus):
-        Item.__init__(self,description,item_type)
+    def __init__(self,description,details,item_type,stat,effect):
+        Item.__init__(self,description,details,item_type)
         self.stat=stat
-        self.bonus=bonus
+        self.effect=effect
 
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon):
@@ -81,6 +88,54 @@ class Monster:
         if self.weapon.type != "none":
             lootables.append(self.weapon)
         return lootables
+
+class Player(Monster):
+    def __init__(self,description,details,hp,strength,agility,armor,weapon):
+        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon)
+        self.inventory=[]
+        
+    def display_inventory(self):
+        self.weapons=[]
+        self.armors=[]
+        self.potions=[]
+        for item in self.inventory:
+            if item.type=="weapon":
+                self.weapons.append(item)
+            if item.type=="armor":
+                self.armors.append(item)
+            if item.type=="potion":
+                self.potions.append(item)
+        
+        inv_type=input("weapon, armor, or potion?")
+        table = PrettyTable()
+        if inv_type == "weapon":
+            weapon_data=([weapon.description for weapon in self.weapons])
+            damage_data=([f'{weapon.damage[0]}-{weapon.damage[1]}' for weapon in self.weapons])
+            hit_data=(['{0:+}'.format(weapon.hit) for weapon in self.weapons])
+            table.add_column("Weapons",weapon_data)
+            table.add_column("Damage",damage_data)
+            table.add_column("Hit bonus",hit_data)
+            print(table)
+            equip=input("equip?")
+        if inv_type == "armor":
+            armor_data=([armor.description for armor in self.armors])
+            armor_value_data=([f'{armor.armor_value}' for armor in self.armors])
+            dodge_data=(['{0:+}'.format(armor.dodge) for armor in self.armors])
+            table.add_column("Armor",armor_data)
+            table.add_column("Damage reduction",armor_value_data)
+            table.add_column("Dodge Bonus/Penalty",dodge_data)
+            print(table)
+            equip=input("equip?")
+        if inv_type == "potion":
+            potion_data=([potion.description for potion in self.potions])
+            stat_data=([f'{potion.stat}' for potion in self.potions])
+            effect_data=(['{0:+}'.format(potion.effect) for potion in self.potions])
+            table.add_column("Potion",potion_data)
+            table.add_column("Stat",stat_data)
+            table.add_column("Effect",effect_data)
+            print(table)
+            use=input("use?")
+
 
 class Feature:
     def __init__(self, description,details, loot, locked):
@@ -162,6 +217,8 @@ def choose_action(room,rooms,room_number,action,options):
         else:
             print("You don't run away from a fight!")
             room.monster_action=False
+    elif action == "inventory":
+        room.player.display_inventory()
     else:
         print("Please choose a valid option")
         for option in options:
@@ -227,8 +284,9 @@ def kill_monster(room, target_number):
 def main ():
     no_armor=Armor("none","none", "none", 0, 0)
     fists=Weapon("fists", "none", "none", [1,2], 0)
-    dagger=Weapon("a dagger", "a small stabby weapon", "weapon", [3,6], 1)
-    player=Monster("Alex", "A warrior", 25, 5, 5, no_armor, fists)
+    dagger=Weapon("dagger", "a small stabby weapon", "weapon", [3,6], 1)
+    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists)
+    player.inventory=[dagger,dagger]
     drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     feature=Feature("chest","a wooden chest", [dagger],False)
