@@ -1,11 +1,8 @@
 import random as rnd
 import os
-import pandas as pd
 from rich import print
 from rich import pretty
 pretty.install()
-from tabulate import tabulate
-import numpy as np
 from prettytable import PrettyTable
 
 def clear_console():
