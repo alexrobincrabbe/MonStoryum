@@ -4,6 +4,7 @@ from rich import print
 from rich import pretty
 pretty.install()
 from prettytable import PrettyTable
+import time
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -16,6 +17,8 @@ class Room:
         self.features=features
         self.battle_started=False
         self.monster_action=False
+        self.door="open"
+        self.key_name=""
 
     def examine(self):
         print(self.details)
@@ -26,7 +29,7 @@ class Room:
             print(f'a {item.description}')
         for feature in self.features:
             print(f'a {feature.description}')
-
+    
 class Item:
     def __init__(self,description,details):
         self.description=description
@@ -57,9 +60,9 @@ class Potion(Item):
         self.type="potion"
 
 class Key(Item):
-    def __init__(self,description,details,keyname):
+    def __init__(self,description,details,key_name):
         Item.__init__(self,description,details)
-        self.keyname=keyname
+        self.key_name=key_name
         self.type="key"
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
@@ -272,7 +275,7 @@ class Feature:
         self.loot=loot
         self.locked=locked
     
-    def examine(self):
+    def examine(self,player):
         if self.locked == False:
             if len(self.loot) > 0:
                 print("You find:")
@@ -280,8 +283,11 @@ class Feature:
                     print(items.description)
                 take_items = input("take items?(yes/no)")
                 if take_items == "yes":
+                    for item in self.loot:
+                        player.inventory.append(item)
                     self.loot=[]
                     print("you take the items")
+
             else:
                 print("You find nothing")
 
@@ -323,18 +329,24 @@ def choose_action(room,rooms,room_number,action):
             print("There is nothing to attack")
     elif action == "forwards":
         if len(room.monsters) == 0:
-            room_number+=1
-            enter_room(rooms,room_number)
+            if room.door == "open":
+                room_number+=1
+                enter_room(rooms,room_number)
+            else:
+                check_door(rooms,room_number)
         else:
             print("You must clear the path first")
             room.monster_action=False
     elif action == "backwards":
-        if len(room.monsters) == 0:
-            room_number-=1
-            enter_room(rooms,room_number)
+        if room_number > 0:
+            if len(room.monsters) == 0:
+                room_number-=1
+                enter_room(rooms,room_number)
+            else:
+                print("You don't run away from a fight!")
+                room.monster_action=False
         else:
-            print("You don't run away from a fight!")
-            room.monster_action=False
+            print("You can only go forwards from here")
     elif action == "inventory":
         room.player.display_inventory()
         room.player.inventory_options()
@@ -343,6 +355,20 @@ def choose_action(room,rooms,room_number,action):
     else:
         print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
+
+def check_door(rooms,room_number):
+    room=rooms[room_number]
+    key_name=room.key_name
+    items=[item for item in room.player.inventory]
+    for item in items:
+        if item.type == "key":
+            if item.key_name == key_name:
+                print(f"you unlock the door with the {item.description}")
+                room.door="open"
+                time.sleep(3)
+                room_number += 1
+                enter_room(rooms, room_number)
+    print("The door is locked")
 
 def examine(room,action):
     examine_options=["room"]
@@ -361,7 +387,7 @@ def examine(room,action):
             examine_options.append(feature.description)
             if examine_object==feature.description:
                 print(feature.details)
-                feature.examine()
+                feature.examine(room.player)
         if examine_object=="room":
                 room.examine()
         if examine_object not in examine_options:  
@@ -406,9 +432,10 @@ def main ():
     dagger=Weapon("dagger", "a small stabby weapon", [3,6], 1)
     club=Weapon("club", "a large blunt weapon", [10,12], -1)
     healing_potion=Potion("healing potion","potion that restores hp", "hp",50)
+    rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
     player.inventory=[dagger,dagger,healing_potion]
-    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
+    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
     drunk_goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
     troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club,[])
     chest=Feature("chest","a wooden chest", [dagger],False)
@@ -427,6 +454,8 @@ def main ():
     items=[]
     rooms=[]
     rooms.append (Room("This is the first room",player,monsters[0],items,features[0]))
+    rooms[0].door="locked"
+    rooms[0].key_name="prison_door"
     rooms.append (Room("This is the second room",player,monsters[1],items,features[1]))
     room_number=0
     enter_room(rooms,room_number)
