@@ -28,36 +28,39 @@ class Room:
             print(f'a {feature.description}')
 
 class Item:
-    def __init__(self,description,details,item_type):
+    def __init__(self,description,details):
         self.description=description
         self.details=details
-        self.type=item_type
     
     def examine(self):
         print(self.description)
 
 class Weapon(Item):
-    def __init__(self,description,details,item_type,damage,hit):
-        Item.__init__(self,description,details,item_type)
+    def __init__(self,description,details,damage,hit):
+        Item.__init__(self,description,details)
         self.damage=damage
         self.hit=hit
+        self.type="weapon"
 
 class Armor(Item):
-    def __init__(self,description,details,item_type,armor_value,dodge):
-        Item.__init__(self,description,details,item_type)
+    def __init__(self,description,details,armor_value,dodge):
+        Item.__init__(self,description,details)
         self.armor_value=armor_value
         self.dodge=dodge
+        self.type="armor"
 
 class Potion(Item):
-    def __init__(self,description,details,item_type,stat,effect):
-        Item.__init__(self,description,details,item_type)
+    def __init__(self,description,details,stat,effect):
+        Item.__init__(self,description,details)
         self.stat=stat
         self.effect=effect
+        self.type="potion"
 
 class Key(Item):
-    def __init__(self,description,details,item_type,keyname):
-        Item.__init__(self,description,details,item_type)
+    def __init__(self,description,details,keyname):
+        Item.__init__(self,description,details)
         self.keyname=keyname
+        self.type="key"
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
         self.description=description
@@ -69,9 +72,9 @@ class Monster:
         self.armor=armor
         self.weapon=weapon
         self.loot=loot
-        if self.armor.type != "none":
+        if self.armor.description != "none":
             self.loot.append(self.armor)
-        if self.weapon.type != "none":
+        if self.weapon.description != "none":
             self.loot.append(self.weapon)
     
     def attack(self,target):
@@ -194,10 +197,10 @@ class Player(Monster):
                     if item.type == "weapon":
                         self.weapon=item
                         print(f'equipped {item.description}')
-                    if item.type == "armor":
+                    elif item.type == "armor":
                         self.armor=item
                         print(f'equipped {item.description}')
-                    if item.type == "potion":
+                    else:
                         print("you cant equip that")
                 item_list.append(item.description)
             if equip_object not in item_list:
@@ -220,7 +223,7 @@ class Player(Monster):
                         self.inventory.pop(inventory_index)
                         self.potion_use(item)
                     else:
-                        print("you cant use that")
+                        print("you cant use that right now")
                 item_list.append(item.description)
                 inventory_index+=1
             if use_object not in item_list:
@@ -304,9 +307,9 @@ def monsters_attack(room):
             monster.attack(room.player)
 
 def choose_action(room,rooms,room_number,action):
+    options=["examine","inventory","forwards","backwards","status","attack"]
     if action == "help":
         print("list of available commands:")
-        options=["examine","inventory","forwards","backwards","status","attack"]
         for option in options:
             print(option)
         room.monster_action=False
@@ -338,9 +341,7 @@ def choose_action(room,rooms,room_number,action):
     elif action == "status":
         room.player.status()
     else:
-        print("Please choose a valid option")
-        for option in options:
-            print(option)
+        print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
 
 def examine(room,action):
@@ -400,11 +401,11 @@ def kill_monster(room, target_number):
         room.features.append(corpse)
 
 def main ():
-    no_armor=Armor("none","none", "none", 0, 0)
-    fists=Weapon("fists", "none", "none", [1,2], 0)
-    dagger=Weapon("dagger", "a small stabby weapon", "weapon", [3,6], 1)
-    club=Weapon("club", "a large blunt weapon", "weapon", [10,12], -1)
-    healing_potion=Potion("healing potion","potion that restores hp", "potion", "hp",50)
+    no_armor=Armor("none","none", 0, 0)
+    fists=Weapon("fists", "none", [1,2], 0)
+    dagger=Weapon("dagger", "a small stabby weapon", [3,6], 1)
+    club=Weapon("club", "a large blunt weapon", [10,12], -1)
+    healing_potion=Potion("healing potion","potion that restores hp", "hp",50)
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
     player.inventory=[dagger,dagger,healing_potion]
     drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
