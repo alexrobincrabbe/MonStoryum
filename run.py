@@ -139,8 +139,13 @@ class Player(Monster):
     def inventory_options(self):
         exit_inventory = False
         while exit_inventory == False:
-            inv_action=input("examine/equip/use/exit: ")
-            if inv_action.startswith("examine"):
+            inv_action=input("what would you like to do?(help for options): ")
+            if inv_action == "help":
+                print("list of available commands:")
+                options=["examine","equip","use","inventory","exit"]
+                for option in options:
+                    print(option)
+            elif inv_action.startswith("examine"):
                 self.inv_examine(inv_action)
             elif inv_action.startswith("equip"):
                 self.inv_equip(inv_action)
@@ -275,7 +280,6 @@ class Feature:
             else:
                 print("You find nothing")
 
-
 def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
@@ -289,8 +293,7 @@ def start_turn(rooms,room_number):
     monsters_attack(room)
     action=input('choose an action:')
     clear_console()
-    options = check_options(room)
-    choose_action(room,rooms, room_number,action,options)
+    choose_action(room,rooms, room_number,action)
     start_turn(rooms, room_number)
     
 def monsters_attack(room):
@@ -298,18 +301,10 @@ def monsters_attack(room):
         for monster in room.monsters:
             monster.attack(room.player)
 
-def check_options(room):
-    options=["examine","inventory"]
-    if len(room.monsters) == 0:
-        options.append(["forwards","backwards"])
-        if len(room.items) > 0:
-            options.append("take")
-    else:
-        options.append("attack")
-    return options
-
-def choose_action(room,rooms,room_number,action,options):
+def choose_action(room,rooms,room_number,action):
     if action == "help":
+        print("list of available commands:")
+        options=["examine","inventory","forwards","backwards","status","attack"]
         for option in options:
             print(option)
         room.monster_action=False
