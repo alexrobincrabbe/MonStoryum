@@ -305,9 +305,9 @@ def choose_action(room,rooms,room_number,action):
         room.monster_action=False
     elif action.startswith("examine"):
         room.monster_action=examine(room,action)
-    elif action == "attack":
+    elif action.startswith("attack"):
         if len(room.monsters) > 0:
-            choose_target(room)
+            choose_target(room,action)
         else:
             print("There is nothing to attack")
     elif action == "forwards":
@@ -398,26 +398,45 @@ def examine(room,action):
         print("examine what?(hint: try 'examine room')")
         return False
 
-def choose_target(room):
-    target_index=1
-    for monster in room.monsters:
-        print(f'{target_index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
-        target_index+=1
-    target_number = input('Enter a number to choose a target: ')
-    try:
-        target_number=int(target_number)
-    except:
-        clear_console()
-        print('Please enter a number')
-        return
-    if target_number > 0 and target_number <= len (room.monsters):
-        room.player.attack(room.monsters[target_number-1])
-        room.battle_started=True
-        room.monster_action=True
-        kill_monster(room, target_number)   
+def choose_target(room,action):
+    target_string=action.split(" ", 1)
+    if len(target_string) > 1:
+        target=target_string[1]
+    monsters = [monster.description for monster in room.monsters]
+    target_count=monsters.count(target)
+    if target_count == 1:
+        target_number=1
+        for monster in room.monsters:
+            if monster.description == target:
+                room.player.attack(monster)
+                room.battle_started=True
+                room.monster_action=True
+                kill_monster(room, target_number)
+            target_number+=1
     else:
-        clear_console()
-        print('Please pick a valid number')
+        targets=[]
+        for monster in room.monsters:
+            if monster.description == (target):
+                targets.append(monster)
+        target_index=1
+        for monster in targets:
+            print(f'{target_index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+            target_index+=1
+        target_number = input('Enter a number to choose a target: ')
+        try:
+            target_number=int(target_number)
+        except:
+            clear_console()
+            print('Please enter a number')
+            return
+        if target_number > 0 and target_number <= len (room.monsters):
+            room.player.attack(room.monsters[target_number-1])
+            room.battle_started=True
+            room.monster_action=True
+            kill_monster(room, target_number)   
+        else:
+            clear_console()
+            print('Please pick a valid number')
 
 def kill_monster(room, target_number):
     if room.monsters[target_number-1].hp == 0:
@@ -449,7 +468,9 @@ def main ():
     #creat monsters
     drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
     troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -2, no_armor,club,[])
-    monsters=[[drunk_goblin],[troll]]
+    goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
+    goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
+    monsters=[[drunk_goblin],[troll,goblin1,goblin2]]
     #create features
     chest=Feature("chest","the chest is made out of wood", [healing_potion],False)
     features=[[],[chest],[]]
