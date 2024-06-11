@@ -149,33 +149,6 @@ class Player(Monster):
         table.add_column("Effect",effect_data)
         print(table)
     
-    def inventory_options(self):
-        exit_inventory = False
-        while exit_inventory == False:
-            inv_action=input("what would you like to do?(help for options): ")
-            if inv_action == "help":
-                print("list of available commands:")
-                options=["examine","equip","use","inventory","exit"]
-                for option in options:
-                    print(option)
-            elif inv_action.startswith("examine"):
-                self.inv_examine(inv_action)
-            elif inv_action.startswith("equip"):
-                self.inv_equip(inv_action)
-            elif inv_action.startswith("use"):
-                self.inv_use(inv_action)
-            elif inv_action == "exit":
-                clear_console()
-                exit_inventory=True
-                print("exiting inventory")
-            elif inv_action == "inventory":
-                clear_console()
-                exit_inventory=True
-                self.display_inventory()
-            else:
-                print("please enter a valid option")
-
-
     def inv_examine(self,inv_action):
         examine_string=inv_action.split(" ", 1)
         if len(examine_string) > 1:
@@ -355,9 +328,12 @@ def choose_action(room,rooms,room_number,action):
             print("You can only go forwards from here")
     elif action == "inventory":
         room.player.display_inventory()
-        room.player.inventory_options()
     elif action == "status":
-        room.player.status()
+        room.player.status()  
+    elif action.startswith("equip"):
+        room.player.inv_equip(action)
+    elif action.startswith("use"):
+        room.player.inv_use(action)
     else:
         print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
@@ -394,6 +370,14 @@ def examine(room,action):
             if examine_object==feature.description:
                 print(feature.details)
                 feature.examine(room.player)
+        item_list=[]
+        for item in room.player.inventory:
+                if item.description in item_list:
+                    continue
+                item_list.append(item.description)
+                examine_options.append(item.description)
+                if examine_object == item.description:
+                    print(item.details) 
         if examine_object=="room":
                 room.examine()
         if examine_object not in examine_options:  
