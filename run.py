@@ -54,7 +54,7 @@ class Potion(Item):
         self.stat=stat
         self.effect=effect
 class Monster:
-    def __init__(self,description,details,hp,strength,agility,armor,weapon):
+    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
         self.description=description
         self.details=details
         self.hp=int( (rnd.random()*hp + 2*hp)/3 )
@@ -63,6 +63,11 @@ class Monster:
         self.agility=agility
         self.armor=armor
         self.weapon=weapon
+        self.loot=loot
+        if self.armor.type != "none":
+            self.loot.append(self.armor)
+        if self.weapon.type != "none":
+            self.loot.append(self.weapon)
     
     def attack(self,target):
         print(f'{self.description} attacks {target.description}...')
@@ -76,18 +81,10 @@ class Monster:
             target.hp = 0 if target.hp < 0 else target.hp
         else:
             print(f'{self.description} misses')
-
-    def loot(self):
-        lootables=[]
-        if self.armor.type != "none":
-            lootables.append(self.armor)
-        if self.weapon.type != "none":
-            lootables.append(self.weapon)
-        return lootables
-
+        
 class Player(Monster):
-    def __init__(self,description,details,hp,strength,agility,armor,weapon):
-        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon)
+    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
+        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot)
         self.inventory=[]
         
     def display_inventory(self):
@@ -393,7 +390,7 @@ def kill_monster(room, target_number):
         dead_monster=room.monsters.pop(target_number-1)
         description=f'dead {dead_monster.description}'
         details="you examine the corpse"
-        loot=dead_monster.loot()
+        loot=dead_monster.loot
         corpse=Feature(description,details,loot,False)
         room.features.append(corpse)
 
@@ -403,11 +400,11 @@ def main ():
     dagger=Weapon("dagger", "a small stabby weapon", "weapon", [3,6], 1)
     club=Weapon("club", "a large blunt weapon", "weapon", [10,12], -1)
     healing_potion=Potion("healing potion","potion that restores hp", "potion", "hp",50)
-    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists)
+    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
     player.inventory=[dagger,dagger,healing_potion]
-    drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
-    troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club)
+    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
+    drunk_goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
+    troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club,[])
     chest=Feature("chest","a wooden chest", [dagger],False)
     features=[
         [chest],
