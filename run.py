@@ -2,9 +2,20 @@ import random as rnd
 import os
 from rich import print
 from rich import pretty
+from rich.theme import Theme
+from rich.console import Console
 pretty.install()
 from prettytable import PrettyTable
 import time
+
+custom_theme= Theme({
+    "features": "green",
+    "monsters": "red",
+    "stat": "bright_green",
+    "option": "blue",
+    "header": "blue"
+})
+console=Console(theme=custom_theme)
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -29,11 +40,11 @@ class Room:
             print(self.details_visited)
         print("You see:")
         for monster in self.monsters:
-            print(f'a {monster.description}')
+            console.print(f'a {monster.description}',style="monsters")
         for item in self.items:
-            print(f'a {item.description}')
+            console.print(f'a {item.description}')
         for feature in self.features:
-            print(f'a {feature.description}')
+            console.print(f'a {feature.description}',style="features")
     
 class Item:
     def __init__(self,description,details):
@@ -127,7 +138,7 @@ class Player(Monster):
         table.add_column("Weapons",weapon_data)
         table.add_column("Damage",damage_data)
         table.add_column("Hit bonus",hit_data)
-        print(table)
+        console.print(table,style="purple")
 
     def print_armor(self):
         table = PrettyTable()
@@ -137,7 +148,7 @@ class Player(Monster):
         table.add_column("Armor",armor_data)
         table.add_column("Damage reduction",armor_value_data)
         table.add_column("Dodge Bonus/Penalty",dodge_data)
-        print(table)
+        console.print(table,style="blue")
 
     def print_potions(self):
         table = PrettyTable()
@@ -147,7 +158,7 @@ class Player(Monster):
         table.add_column("Potion",potion_data)
         table.add_column("Stat",stat_data)
         table.add_column("Effect",effect_data)
-        print(table)
+        console.print(table,style="green")
     
     def inv_examine(self,inv_action):
         examine_string=inv_action.split(" ", 1)
@@ -237,19 +248,19 @@ class Player(Monster):
         weapon_table.add_column("Weapon",[self.weapon.description])
         weapon_table.add_column("Damage",[f'{self.weapon.damage[0]}-{self.weapon.damage[1]}'])
         weapon_table.add_column("Hit",['{0:+}'.format(self.weapon.hit)])
-        print(weapon_table)
+        console.print(weapon_table,style="red")
         print("Armor value reduces damage taken, Dodge reduces the chance to be hit")
         armor_table = PrettyTable()      
         armor_table.add_column("Armor",[self.armor.description])
         armor_table.add_column("Armor Value",[self.armor.armor_value])
         armor_table.add_column("Dodge",[self.armor.dodge])
-        print(armor_table)
+        console.print(armor_table,style="cyan")
         stats_table = PrettyTable()      
         print("Strength increase damage, Agility increases hit and dodge")
         stats_table.add_column("HP",[f'{self.hp}/{self.start_hp}'])
         stats_table.add_column("Strength",[self.strength])
         stats_table.add_column("Strength",[self.agility])
-        print(stats_table)
+        console.print(stats_table,style="orange1")
 
 class Feature:
     def __init__(self, description,details, loot, locked):
@@ -297,11 +308,11 @@ def monsters_attack(room):
             monster.attack(room.player)
 
 def choose_action(room,rooms,room_number,action):
-    options=["examine","inventory","forwards","backwards","status","attack"]
+    options=["examine","inventory","forwards","backwards","status","attack","equip","use"]
     if action == "help":
         print("list of available commands:")
         for option in options:
-            print(option)
+            console.print(option,style="option")
         room.monster_action=False
     elif action.startswith("examine"):
         room.monster_action=examine(room,action)
