@@ -426,7 +426,7 @@ def choose_target(room,action):
                     kill_monster(room, target_index)
                 target_index+=1
                 return 
-        else:
+        elif target_count > 1:
             target_number=0
             target_index=-1
             target_dic={}
@@ -435,7 +435,11 @@ def choose_target(room,action):
                     target_number+=1
                     print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
                 target_index+=1
-                target_dic[target_number]=target_index      
+                target_dic[target_number]=target_index     
+        else:
+            room.monster_action=False
+            print("attack what?")
+            return 
     else:
         target_number=0
         target_index=-1
