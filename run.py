@@ -53,6 +53,11 @@ class Potion(Item):
         Item.__init__(self,description,details,item_type)
         self.stat=stat
         self.effect=effect
+
+class Key(Item):
+    def __init__(self,description,details,item_type,keyname):
+        Item.__init__(self,description,details,item_type)
+        self.keyname=keyname
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
         self.description=description
