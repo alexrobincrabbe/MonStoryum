@@ -9,8 +9,9 @@ import time
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 class Room:
-    def __init__(self,details,player,monsters,items,features):
+    def __init__(self,details,details_visited,player,monsters,items,features):
         self.details=details
+        self.details_visited=details_visited
         self.player=player
         self.monsters=monsters
         self.items=items
@@ -19,9 +20,13 @@ class Room:
         self.monster_action=False
         self.door="open"
         self.key_name=""
+        self.visited=False
 
     def examine(self):
-        print(self.details)
+        if self.visited == False:
+            print(self.details)
+        else:
+            print(self.details_visited)
         print("You see:")
         for monster in self.monsters:
             print(f'a {monster.description}')
@@ -297,6 +302,7 @@ def enter_room(rooms,room_number):
     '''
     clear_console()
     rooms[room_number].examine()
+    rooms[room_number].visited=True
     start_turn(rooms, room_number)
 
 def start_turn(rooms,room_number):
@@ -427,36 +433,46 @@ def kill_monster(room, target_number):
         room.features.append(corpse)
 
 def main ():
-    no_armor=Armor("none","none", 0, 0)
-    fists=Weapon("fists", "none", [1,2], 0)
-    dagger=Weapon("dagger", "a small stabby weapon", [3,6], 1)
-    club=Weapon("club", "a large blunt weapon", [10,12], -1)
-    healing_potion=Potion("healing potion","potion that restores hp", "hp",50)
+    #create items
+    #armor
+    no_armor = Armor("none","none", 0, 0)
+    #weapons
+    fists = Weapon("fists", "none", [1,2], 0)
+    dagger = Weapon("dagger", "a small stabby weapon", [3,6], 1)
+    club = Weapon("club", "a large blunt weapon", [10,12], -1)
+    sword = Weapon("sword","a fine steel sword",[6,10],2)
+    #potions
+    healing_potion=Potion("healing potion","it is red and smells fruity", "hp",10)
+    Super_healing_potion=Potion("super healing potion","really potent stuff", "hp",20)
+    #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
-    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
-    player.inventory=[dagger,dagger,healing_potion]
-    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
-    drunk_goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[])
-    troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club,[])
-    chest=Feature("chest","a wooden chest", [dagger],False)
-    features=[
-        [chest],
-        [],
-        [chest]
-    ]
-    print(features)
-    monsters=[]
-    monsters=[
-        [drunk_goblin,drunk_goblin2],
-        [troll],
-        []
-    ]
     items=[]
+    #initialise player
+    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
+    #creat monsters
+    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
+    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -2, no_armor,club,[])
+    monsters=[[drunk_goblin],[troll]]
+    #create features
+    chest=Feature("chest","the chest is made out of wood", [healing_potion],False)
+    features=[[],[chest],[]]
+    #create rooms
+    room_descriptions = [
+        "You have are in a underground jailcell, deep beneath the citadel." 
+        "You hear footsteps outside, the door swings open and a drunk goblin"
+        "stumbles into the cell. He is yelling something at you, but it is in goblin",
+        "You stumble out of the cell, into the guard quarters, you are confronted with"
+        "a large angry looking troll. "
+    ]
+    room_descriptions_visited = [
+        "You are in a dark wet cell. There is a door to the east.",
+        "You are in a dimly lit cave. It smells like trolls have been living here for a long time"
+        ]
     rooms=[]
-    rooms.append (Room("This is the first room",player,monsters[0],items,features[0]))
+    rooms.append (Room(room_descriptions[0],room_descriptions_visited[0],player,monsters[0],items,features[0]))
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
-    rooms.append (Room("This is the second room",player,monsters[1],items,features[1]))
+    rooms.append (Room(room_descriptions[1],room_descriptions_visited[1],player,monsters[1],items,features[1]))
     room_number=0
     enter_room(rooms,room_number)
 
