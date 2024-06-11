@@ -34,6 +34,7 @@ class Room:
         self.visited=False
 
     def examine(self):
+        clear_console()
         if self.visited == False:
             print(self.details)
         else:
@@ -97,13 +98,15 @@ class Monster:
             self.loot.append(self.weapon)
     
     def attack(self,target):
-        print(f'{self.description} attacks {target.description}...')
+        time.sleep(1)
+        print(f'[blue]{self.description}[/blue] attacks [blue]{target.description}[/blue]...')
+        time.sleep(1)
         hit=self.agility+self.weapon.hit + (rnd.random()*10)
         dodge=target.agility + target.armor.dodge + (rnd.random()*10)
         if hit > dodge:
             damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
-            print(f'{self.description} hits for {damage} points of damage')
+            print(f'{self.description} hits for [red]{damage}[/red] points of damage')
             target.hp-=damage
             target.hp = 0 if target.hp < 0 else target.hp
         else:
@@ -188,7 +191,7 @@ class Player(Monster):
                 if equip_object == item.description:
                     if item.type == "weapon":
                         self.weapon=item
-                        print(f'equipped {item.description}')
+                        print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
                         return True
                     elif item.type == "armor":
                         self.armor=item
@@ -289,7 +292,6 @@ def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
     '''
-    clear_console()
     rooms[room_number].examine()
     rooms[room_number].visited=True
     start_turn(rooms, room_number)
@@ -298,7 +300,6 @@ def start_turn(rooms,room_number):
     room=rooms[room_number]
     monsters_attack(room)
     action=input('choose an action:')
-    clear_console()
     choose_action(room,rooms, room_number,action)
     start_turn(rooms, room_number)
     
@@ -450,11 +451,11 @@ def choose_target(room,action):
         target_select = input('Enter a number to choose a target: ')
         try:
             target_select=int(target_select)
-            print(target_select)
             target_selected=True
         except:
             print('Please enter a number')
             room.monster_action=False
+            target_selected=False
         else:
             if target_select < 1 or target_select > target_count:
                 room.monster_action=False
@@ -470,7 +471,8 @@ def choose_target(room,action):
 
 def kill_monster(room, target_index):
     if room.monsters[target_index].hp == 0:
-        print(f'{room.monsters[target_index].description} dies')
+        time.sleep(1)
+        console.print(f'{room.monsters[target_index].description} dies',style="red")
         dead_monster=room.monsters.pop(target_index)
         description=f'dead {dead_monster.description}'
         details="you examine the corpse"
@@ -497,9 +499,9 @@ def main ():
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
     #creat monsters
     drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
-    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -2, no_armor,club,[])
-    goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
-    goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
+    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -1, no_armor,club,[])
+    goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
+    goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
     monsters=[[drunk_goblin],[troll,goblin1,goblin2]]
     #create features
     chest=Feature("chest","the chest is made out of wood", [healing_potion],False)
