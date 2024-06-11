@@ -53,7 +53,6 @@ class Potion(Item):
         Item.__init__(self,description,details,item_type)
         self.stat=stat
         self.effect=effect
-
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon):
         self.description=description
@@ -103,36 +102,138 @@ class Player(Monster):
             if item.type=="potion":
                 self.potions.append(item)
         
-        inv_type=input("weapon, armor, or potion?")
-        table = PrettyTable()
-        if inv_type == "weapon":
-            weapon_data=([weapon.description for weapon in self.weapons])
-            damage_data=([f'{weapon.damage[0]}-{weapon.damage[1]}' for weapon in self.weapons])
-            hit_data=(['{0:+}'.format(weapon.hit) for weapon in self.weapons])
-            table.add_column("Weapons",weapon_data)
-            table.add_column("Damage",damage_data)
-            table.add_column("Hit bonus",hit_data)
-            print(table)
-            equip=input("equip?")
-        if inv_type == "armor":
-            armor_data=([armor.description for armor in self.armors])
-            armor_value_data=([f'{armor.armor_value}' for armor in self.armors])
-            dodge_data=(['{0:+}'.format(armor.dodge) for armor in self.armors])
-            table.add_column("Armor",armor_data)
-            table.add_column("Damage reduction",armor_value_data)
-            table.add_column("Dodge Bonus/Penalty",dodge_data)
-            print(table)
-            equip=input("equip?")
-        if inv_type == "potion":
-            potion_data=([potion.description for potion in self.potions])
-            stat_data=([f'{potion.stat}' for potion in self.potions])
-            effect_data=(['{0:+}'.format(potion.effect) for potion in self.potions])
-            table.add_column("Potion",potion_data)
-            table.add_column("Stat",stat_data)
-            table.add_column("Effect",effect_data)
-            print(table)
-            use=input("use?")
+        self.print_weapons()
+        self.print_armor()
+        self.print_potions()
 
+    def print_weapons(self):
+        table = PrettyTable()
+        weapon_data=([weapon.description for weapon in self.weapons])
+        damage_data=([f'{weapon.damage[0]}-{weapon.damage[1]}' for weapon in self.weapons])
+        hit_data=(['{0:+}'.format(weapon.hit) for weapon in self.weapons])
+        table.add_column("Weapons",weapon_data)
+        table.add_column("Damage",damage_data)
+        table.add_column("Hit bonus",hit_data)
+        print(table)
+
+    def print_armor(self):
+        table = PrettyTable()
+        armor_data=([armor.description for armor in self.armors])
+        armor_value_data=([f'{armor.armor_value}' for armor in self.armors])
+        dodge_data=(['{0:+}'.format(armor.dodge) for armor in self.armors])
+        table.add_column("Armor",armor_data)
+        table.add_column("Damage reduction",armor_value_data)
+        table.add_column("Dodge Bonus/Penalty",dodge_data)
+        print(table)
+
+    def print_potions(self):
+        table = PrettyTable()
+        potion_data=([potion.description for potion in self.potions])
+        stat_data=([f'{potion.stat}' for potion in self.potions])
+        effect_data=(['{0:+}'.format(potion.effect) for potion in self.potions])
+        table.add_column("Potion",potion_data)
+        table.add_column("Stat",stat_data)
+        table.add_column("Effect",effect_data)
+        print(table)
+    
+    def inventory_options(self):
+        exit_inventory = False
+        while exit_inventory == False:
+            inv_action=input("examine/equip/use/exit: ")
+            if inv_action.startswith("examine"):
+                self.inv_examine(inv_action)
+            elif inv_action.startswith("equip"):
+                self.inv_equip(inv_action)
+            elif inv_action.startswith("use"):
+                self.inv_use(inv_action)
+            elif inv_action == "exit":
+                clear_console()
+                exit_inventory=True
+                print("exiting inventory")
+            elif inv_action == "inventory":
+                clear_console()
+                exit_inventory=True
+                self.display_inventory()
+            else:
+                print("please enter a valid option")
+
+
+    def inv_examine(self,inv_action):
+        examine_string=inv_action.split(" ", 1)
+        if len(examine_string) > 1:
+            examine_object=examine_string[1]
+            item_list=[]
+            for item in self.inventory:
+                if item.description in item_list:
+                    continue
+                item_list.append(item.description)
+                if examine_object == item.description:
+                    print(item.details) 
+            if examine_object not in item_list:
+                print("You don't have one of those")
+
+        else:
+            print("choose an object to examine")
+    
+    def inv_equip(self, inv_action):
+        equip_string=inv_action.split(" ", 1)
+        if len(equip_string) > 1:
+            equip_object=equip_string[1]
+            item_list=[]
+            for item in self.inventory:
+                if item.description in item_list:
+                    continue
+                if equip_object == item.description:
+                    if item.type == "weapon":
+                        self.weapon=item
+                        print(f'equipped {item.description}')
+                    if item.type == "armor":
+                        self.armor=item
+                        print(f'equipped {item.description}')
+                    if item.type == "potion":
+                        print("you cant equip that")
+                item_list.append(item.description)
+            if equip_object not in item_list:
+                print("You don't have one of those")
+        else:
+            print("choose an object to equip")
+
+    def inv_use(self, inv_action):
+        use_string=inv_action.split(" ", 1)
+        if len(use_string) > 1:
+            use_object=use_string[1]
+            item_list=[]
+            inventory_index=0
+            for item in self.inventory:
+                if item.description in item_list:
+                    inventory_index+=1
+                    continue
+                if use_object == item.description:
+                    if item.type == "potion":
+                        self.inventory.pop(inventory_index)
+                        self.potion_use(item)
+                    else:
+                        print("you cant use that")
+                item_list.append(item.description)
+                inventory_index+=1
+            if use_object not in item_list:
+                print("You don't have one of those")
+        else:
+            print("choose an object to use")
+    
+    def potion_use(self,potion):
+        print(f'used {potion.description}')
+        if potion.stat == "strength":
+            self.strength+=potion.effect
+            print(f"increased strength by {potion.effect}")
+        if potion.stat == "agility":
+            self.agility+=potion.effect
+            print(f"increased agility by {potion.effect}")
+        if potion.stat == "hp":
+            self.hp+=potion.effect
+            if self.hp > self.start_hp:
+                self.hp = self.start_hp
+            print("Restored hp")
 
 class Feature:
     def __init__(self, description,details, loot, locked):
@@ -216,6 +317,7 @@ def choose_action(room,rooms,room_number,action,options):
             room.monster_action=False
     elif action == "inventory":
         room.player.display_inventory()
+        room.player.inventory_options()
     else:
         print("Please choose a valid option")
         for option in options:
@@ -283,8 +385,9 @@ def main ():
     fists=Weapon("fists", "none", "none", [1,2], 0)
     dagger=Weapon("dagger", "a small stabby weapon", "weapon", [3,6], 1)
     club=Weapon("club", "a large blunt weapon", "weapon", [10,12], -1)
+    healing_potion=Potion("healing potion","potion that restores hp", "potion", "hp",50)
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists)
-    player.inventory=[dagger,dagger]
+    player.inventory=[dagger,dagger,healing_potion]
     drunk_goblin=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     drunk_goblin2=Monster("goblin","a drunk goblin", 10, 1, -5, no_armor,dagger)
     troll=Monster("troll","a large stupid oaf", 25, 5, -2, no_armor,club)
