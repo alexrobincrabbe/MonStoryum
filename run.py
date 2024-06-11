@@ -235,6 +235,26 @@ class Player(Monster):
                 self.hp = self.start_hp
             print("Restored hp")
 
+    def status(self):
+        weapon_table = PrettyTable()      
+        print("Hit increases chance to hit an enemy") 
+        weapon_table.add_column("Weapon",[self.weapon.description])
+        weapon_table.add_column("Damage",[f'{self.weapon.damage[0]}-{self.weapon.damage[1]}'])
+        weapon_table.add_column("Hit",['{0:+}'.format(self.weapon.hit)])
+        print(weapon_table)
+        print("Armor value reduces damage taken, Dodge reduces the chance to be hit")
+        armor_table = PrettyTable()      
+        armor_table.add_column("Armor",[self.armor.description])
+        armor_table.add_column("Armor Value",[self.armor.armor_value])
+        armor_table.add_column("Dodge",[self.armor.dodge])
+        print(armor_table)
+        stats_table = PrettyTable()      
+        print("Strength increase damage, Agility increases hit and dodge")
+        stats_table.add_column("HP",[f'{self.hp}/{self.start_hp}'])
+        stats_table.add_column("Strength",[self.strength])
+        stats_table.add_column("Strength",[self.agility])
+        print(stats_table)
+
 class Feature:
     def __init__(self, description,details, loot, locked):
         self.description=description
@@ -318,6 +338,8 @@ def choose_action(room,rooms,room_number,action,options):
     elif action == "inventory":
         room.player.display_inventory()
         room.player.inventory_options()
+    elif action == "status":
+        room.player.status()
     else:
         print("Please choose a valid option")
         for option in options:
