@@ -178,16 +178,21 @@ class Player(Monster):
                     if item.type == "weapon":
                         self.weapon=item
                         print(f'equipped {item.description}')
+                        return True
                     elif item.type == "armor":
                         self.armor=item
                         print(f'equipped {item.description}')
+                        return True
                     else:
                         print("you cant equip that")
+                        return False
                 item_list.append(item.description)
             if equip_object not in item_list:
                 print("You don't have one of those")
+                return False
         else:
             print("choose an object to equip")
+            return False
 
     def inv_use(self, inv_action):
         use_string=inv_action.split(" ", 1)
@@ -299,8 +304,7 @@ def choose_action(room,rooms,room_number,action):
             print(option)
         room.monster_action=False
     elif action.startswith("examine"):
-        examine(room,action)
-        room.monster_action=False
+        room.monster_action=examine(room,action)
     elif action == "attack":
         if len(room.monsters) > 0:
             choose_target(room)
@@ -328,12 +332,14 @@ def choose_action(room,rooms,room_number,action):
             print("You can only go forwards from here")
     elif action == "inventory":
         room.player.display_inventory()
+        room.monster_action = False
     elif action == "status":
         room.player.status()  
+        room.monster_action = False
     elif action.startswith("equip"):
-        room.player.inv_equip(action)
+        room.monster_action = room.player.inv_equip(action)
     elif action.startswith("use"):
-        room.player.inv_use(action)
+       room.monster_action = room.player.inv_use(action)
     else:
         print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
@@ -361,15 +367,18 @@ def examine(room,action):
             examine_options.append(monster.description)
             if examine_object==monster.description:
                 print(monster.details)
+                return True
         for item in room.items:
             examine_options.append(item.description)
             if examine_object==item.description:
                 print(item.details)
+                return True
         for feature in room.features:
             examine_options.append(feature.description)
             if examine_object==feature.description:
                 print(feature.details)
                 feature.examine(room.player)
+                return True
         item_list=[]
         for item in room.player.inventory:
                 if item.description in item_list:
@@ -377,13 +386,17 @@ def examine(room,action):
                 item_list.append(item.description)
                 examine_options.append(item.description)
                 if examine_object == item.description:
-                    print(item.details) 
+                    print(item.details)
+                    return True
         if examine_object=="room":
                 room.examine()
+                return True
         if examine_object not in examine_options:  
-            print("You don't see that here(hint: try 'examine room')")   
+            print("You don't see that here(hint: try 'examine room')")  
+            return False 
     else:
         print("examine what?(hint: try 'examine room')")
+        return False
 
 def choose_target(room):
     target_index=1
