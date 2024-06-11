@@ -402,46 +402,65 @@ def choose_target(room,action):
     target_string=action.split(" ", 1)
     if len(target_string) > 1:
         target=target_string[1]
-    monsters = [monster.description for monster in room.monsters]
-    target_count=monsters.count(target)
-    if target_count == 1:
-        target_number=1
-        for monster in room.monsters:
-            if monster.description == target:
-                room.player.attack(monster)
-                room.battle_started=True
-                room.monster_action=True
-                kill_monster(room, target_number)
-            target_number+=1
-    else:
-        targets=[]
-        for monster in room.monsters:
-            if monster.description == (target):
-                targets.append(monster)
-        target_index=1
-        for monster in targets:
-            print(f'{target_index}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
-            target_index+=1
-        target_number = input('Enter a number to choose a target: ')
-        try:
-            target_number=int(target_number)
-        except:
-            clear_console()
-            print('Please enter a number')
-            return
-        if target_number > 0 and target_number <= len (room.monsters):
-            room.player.attack(room.monsters[target_number-1])
-            room.battle_started=True
-            room.monster_action=True
-            kill_monster(room, target_number)   
+        monsters = [monster.description for monster in room.monsters]
+        target_count=monsters.count(target)
+        if target_count == 1:
+            target_index=0
+            for monster in room.monsters:
+                if monster.description == target:
+                    room.player.attack(monster)
+                    room.battle_started=True
+                    room.monster_action=True
+                    kill_monster(room, target_index)
+                target_index+=1
+                return 
         else:
-            clear_console()
-            print('Please pick a valid number')
+            target_number=0
+            target_index=-1
+            target_dic={}
+            for monster in room.monsters:
+                if monster.description == (target):
+                    target_number+=1
+                    print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+                target_index+=1
+                target_dic[target_number]=target_index      
+    else:
+        target_number=0
+        target_index=-1
+        target_dic={}
+        for monster in room.monsters:
+                target_number+=1
+                print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+                target_index+=1
+                target_dic[target_number]=target_index
+        target_count=len(target_dic)
+    target_selected=False
+    while target_selected == False:
+        target_select = input('Enter a number to choose a target: ')
+        try:
+            target_select=int(target_select)
+            print(target_select)
+            target_selected=True
+        except:
+            print('Please enter a number')
+            room.monster_action=False
+        else:
+            if target_select < 1 or target_select > target_count:
+                room.monster_action=False
+                target_selected=False
+                print('Please pick a valid number')
 
-def kill_monster(room, target_number):
-    if room.monsters[target_number-1].hp == 0:
-        print(f'{room.monsters[target_number-1].description} dies')
-        dead_monster=room.monsters.pop(target_number-1)
+    target_selected=True
+    room.player.attack(room.monsters[target_dic.get(target_select)])
+    room.battle_started=True
+    room.monster_action=True
+    kill_monster(room, target_dic.get(target_select))   
+
+
+def kill_monster(room, target_index):
+    if room.monsters[target_index].hp == 0:
+        print(f'{room.monsters[target_index].description} dies')
+        dead_monster=room.monsters.pop(target_index)
         description=f'dead {dead_monster.description}'
         details="you examine the corpse"
         loot=dead_monster.loot
