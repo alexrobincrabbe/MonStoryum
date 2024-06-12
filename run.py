@@ -354,7 +354,7 @@ def choose_action(room,rooms,room_number,action):
             room.monster_action=False
     elif action == "backwards":
         if room_number > 0:
-            if len(room.monsters) == 0:
+            if len(room.monsters) == 0 or room.password == True:
                 room_number-=1
                 enter_room(rooms,room_number)
             else:
@@ -716,7 +716,7 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=8
+    room_number=5
     enter_room(rooms,room_number)
 
 main()
