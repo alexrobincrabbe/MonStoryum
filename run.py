@@ -716,7 +716,7 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=8
+    room_number=0
     enter_room(rooms,room_number)
 
 main()
