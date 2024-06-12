@@ -43,11 +43,11 @@ class Room:
             print(self.details_visited)
         print("You see:")
         for monster in self.monsters:
-            console.print(f'a {monster.description}',style="monsters")
+            console.print(f'{monster.description}',style="monsters")
         for item in self.items:
-            console.print(f'a {item.description}')
+            console.print(f'{item.description}')
         for feature in self.features:
-            console.print(f'a {feature.description}',style="features")
+            console.print(f'{feature.description}',style="features")
     
 class Item:
     def __init__(self,description,details):
@@ -265,6 +265,7 @@ class Feature:
         self.locked=locked
     
     def examine(self,player):
+        print(self.details)
         if self.locked == True:
             self.check_locked(player)
         if self.locked == False:
@@ -543,13 +544,18 @@ def main ():
     leather_armor = Armor("leather armor", "it is light, and offers some protection",1,0)
     plate_armor = Armor("plate armor", "it is heavy, but offers good protection",2,-1)
     dragonscale_armor = Armor("dragonscale armor", "it glistens",10,1)
+    scales = Armor("none", "none",10,0)
+    stone_skin = Armor("none", "none", 5, -2)
     #weapons
     stinger = Weapon("stinger", "none", [1,1], 0)
     fists = Weapon("fists", "none", [1,2], 0)
     dagger = Weapon("dagger", "a small stabby weapon", [3,6], 1)
     club = Weapon("club", "a large blunt weapon", [6,12], -1)
-    nimble_sword = Weapon("nimble_sword","a fine steel sword",[6,10],2)
+    nimble_sword = Weapon("sword","a fine steel sword",[6,10],2)
     dragon_lance = Weapon("dragon lance", "it glistens", [20,25],3)
+    claws = Weapon("claws","none",[20,25],0)
+    bite= Weapon("bite","none",[7,10],0)
+    stone_fists = Weapon("fists", "none", [8,15],0)
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
@@ -558,8 +564,8 @@ def main ():
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
     bronze_key=Key("bronze key","It is dusty","bronze chest")
-    silver_key=Key("silver key","It is shiny","bronze chest")
-    golden_key=Key("silver key","It has strange markings","bronze chest")
+    silver_key=Key("silver key","It is shiny","silver chest")
+    golden_key=Key("golden key","It has strange markings","golden chest")
 
     items=[
         [],#1
@@ -570,12 +576,12 @@ def main ():
         [],#6
         [],#7
         [],#8
-        [],#9
-        []#10
+        [plate_armor],#9
+        [dragon_lance]#10
     ]
 
     #initialise player
-    player=Player("Alex", "A warrior", 25, 10, 10, no_armor, fists,[],"")
+    player=Player("Alex", "A warrior", 25, 100, 100, no_armor, fists,[],"")
 
     #creat monsters
     g_speak = "it is probably swearing at you, but you don't understand goblin"
@@ -585,26 +591,38 @@ def main ():
     t_details = "Looks big, stupid and angry. It is carrying a big club."
     s_speak = "it hisses at you"
     s_details = "it is creepy"
-    g_speak = "it remains silent"
+    sg_speak = "it remains silent"
+    sg_details ="it is a living statue, made of pure stone"
+    d_details = "it is huge and scaly"
+    d_speak = ""
+    w_details = "it has really big teeth"
+    w_speak = "it is not a talking wolf"
     drunk_goblin=Monster("goblin",dg_details, 10, 1, -6, no_armor,dagger,[rusty_key],g_speak)
-    troll=Monster("troll",t_details, 25, 2, -1, no_armor,club,[],t_speak)
-    goblin1=Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak)
-    goblin2=Monster("goblin",g_details, 10, 1, 0, no_armor,dagger,[],g_speak)
+    trolls = []
+    for i in range (3):
+        trolls.append(Monster("troll",t_details, 25, 2, -1, no_armor,club,[],t_speak))
+    goblins =[]
+    for i in range (5):
+        goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
+    goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,nimble_sword,[],g_speak)
+    dragon=Monster("dragon", d_details,100,0,0,scales,claws,[],d_speak)
+    wolf = Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak)
+    stone_guardian = Monster("stone guardian", sg_details, 30, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
     spiders=[]
     for i in range(5):
         spiders.append(Monster("spider",s_details, 1,1,0,no_armor,stinger,[],s_speak))
 
     monsters=[
         [drunk_goblin],#1
-        [troll],#2
+        [trolls[0]],#2
         [],#3
         [spider for spider in spiders],#4
         [],#5
-        [],#6
-        [],#7
-        [],#8
-        [],#9
-        []#10
+        [dragon],#6
+        [goblins[0],goblins[1],goblin_captain],#7
+        [trolls[1],goblins[2],goblins[3]],#8
+        [trolls[2], goblins[4],wolf,wolf],#9
+        [stone_guardian]#10
     ]
 
     #create features
@@ -614,16 +632,17 @@ def main ():
     spider_egg=Feature("egg","it is wet and slimey",[],False)
     spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[],False)
-
+    wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
+    table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
     features=[
         [],#1
         [],#2
         [bronze_chest, silver_chest, golden_chest],#3
-        [spider_egg_2,spider_egg,spider_egg],#4
+        [spider_egg,spider_egg_2,spider_egg],#4
         [well],#5
         [],#6
-        [],#7
-        [],#8
+        [wooden_chest],#7
+        [table],#8
         [],#9
         []#10
         ]
@@ -642,8 +661,9 @@ def main ():
         "You find yourself in a huge cavern, with a stone bridge"
         "In the center of the bridge stands a dragon",#6
         "You enter a narrow stone corridoor. There are 3 troll guards standing in your path."   
-        "They grunt at you",#7
-        "room 8",#8
+        "You enter a cavern, and are confronted by a smalle troup of goblin guards. They grunt at you",#7
+        "You see two goblins and a troll sitting around a table. They look annoyed that you"
+        "disturbed them",#8
         "room 9",#9
         "You have reached the final room. Ahead of you is the exit of the dungeon."
         "Daylight dazzles your eyes. In your path stands a stone guardian"#10 
@@ -663,14 +683,14 @@ def main ():
     
     #create rooms
     rooms=[]
-    for i in range(9):
+    for i in range(10):
         print(i)
         rooms.append (Room(room_descriptions[i],room_descriptions_visited[i],player,monsters[i],items[i],features[i]))
     
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
 
-    room_number=3
+    room_number=8
     enter_room(rooms,room_number)
 
 main()
