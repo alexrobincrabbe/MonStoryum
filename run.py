@@ -33,8 +33,9 @@ class Room:
         self.door="open"
         self.key_name=""
         self.visited=False
+        self.description="room"
 
-    def examine(self):
+    def examine(self, player):
         clear_console()
         if self.visited == False:
             print(self.details)
@@ -53,8 +54,8 @@ class Item:
         self.description=description
         self.details=details
     
-    def examine(self):
-        print(self.description)
+    def examine(self, player):
+        print(self.details)
 
 class Weapon(Item):
     def __init__(self,description,details,damage,hit):
@@ -112,6 +113,9 @@ class Monster:
             target.hp = 0 if target.hp < 0 else target.hp
         else:
             print(f'{self.description} misses')
+
+    def examine(self,player):
+        print(self.details)
         
 class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
@@ -163,23 +167,6 @@ class Player(Monster):
         table.add_column("Stat",stat_data)
         table.add_column("Effect",effect_data)
         console.print(table,style="green")
-    
-    def inv_examine(self,inv_action):
-        examine_string=inv_action.split(" ", 1)
-        if len(examine_string) > 1:
-            examine_object=examine_string[1]
-            item_list=[]
-            for item in self.inventory:
-                if item.description in item_list:
-                    continue
-                item_list.append(item.description)
-                if examine_object == item.description:
-                    print(item.details) 
-            if examine_object not in item_list:
-                print("You don't have one of those")
-
-        else:
-            print("choose an object to examine")
     
     def inv_equip(self, inv_action):
         equip_string=inv_action.split(" ", 1)
@@ -306,7 +293,7 @@ def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
     '''
-    rooms[room_number].examine()
+    rooms[room_number].examine(rooms[room_number].player)
     rooms[room_number].visited=True
     start_turn(rooms, room_number)
 
@@ -384,45 +371,71 @@ def check_door(rooms,room_number):
                 enter_room(rooms, room_number)
     print("The door is locked")
 
-def examine(room,action):
-    examine_options=["room"]
+def examine (room,action):
+    examinables=[room]
     examine_string=action.split(" ", 1)
     if len(examine_string) > 1:
         examine_object=examine_string[1]
-        for monster in room.monsters:
-            examine_options.append(monster.description)
-            if examine_object==monster.description:
-                print(monster.details)
-                return True
-        for item in room.items:
-            examine_options.append(item.description)
-            if examine_object==item.description:
-                print(item.details)
-                return True
-        for feature in room.features:
-            examine_options.append(feature.description)
-            if examine_object==feature.description:
-                print(feature.details)
-                feature.examine(room.player)
-                return True
-        item_list=[]
-        for item in room.player.inventory:
-                if item.description in item_list:
-                    continue
-                item_list.append(item.description)
-                examine_options.append(item.description)
-                if examine_object == item.description:
-                    print(item.details)
-                    return True
-        if examine_object=="room":
-                room.examine()
-                return True
-        if examine_object not in examine_options:  
-            print("You don't see that here(hint: try 'examine room')")  
-            return False 
     else:
-        print("examine what?(hint: try 'examine room')")
-        return False
+        print("examine what? (hint: try 'examine room')")
+        room.monster_action=False
+        return
+    for item in room.items:
+        examinables.append(item)
+    for monster in room.monsters:
+        examinables.append(monster)
+    for feature in room.features:
+        examinables.append(feature)
+    for item in room.player.inventory:
+        examinables.append(item)
+    count = [examinable.description for examinable in examinables].count(examine_object)
+    if count == 0:
+        print("you don't see that")
+        room.monster_action=False
+        return
+    if count == 1:
+        for examinable in examinables:
+            if examinable.description == examine_object:
+                examinable.examine(room.player)
+    else:
+        #print numbered list of options
+        object_dic = examine_list(examinables,examine_object)
+        #select object to examine from list
+        object_selected=False
+        while object_selected == False:
+            object_selected , object_select = choose_object_number(room, count)
+
+        object_index=object_dic.get(object_select)
+        examinables[object_index].examine(room.player)
+
+def examine_list(examinables, examine_object):
+    examine_number=0
+    examine_index=-1
+    examine_dic={}
+    for  examinable in examinables:
+        examine_index+=1
+        if examinable.description == examine_object:
+            examine_number+=1
+            print(f'{examine_number}: {examinable.description}')
+            examine_dic[examine_number]=examine_index
+    return examine_dic
+
+def choose_object_number(room, object_count):
+    object_select = input('Enter a number to choose which item to examine: ')
+    try:
+        object_select=int(object_select)
+        object_selected=True
+    except:
+        print('Please enter a number')
+        room.monster_action=False
+        object_selected=False
+    else:
+        if object_select < 1 or object_select > object_count:
+            room.monster_action=False
+            object_selected=False
+            print('Please pick a valid number') 
+    return object_selected,object_select
+    
 
 def choose_target(room,action):
     target_string = action.split(" ", 1)
@@ -620,7 +633,7 @@ def main ():
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
 
-    room_number=0
+    room_number=3
     enter_room(rooms,room_number)
 
 main()
