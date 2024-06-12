@@ -105,8 +105,8 @@ class Monster:
         time.sleep(1)
         print(f'[blue]{self.description}[/blue] attacks [blue]{target.description}[/blue]...')
         time.sleep(1)
-        hit=self.agility+self.weapon.hit + (rnd.random()*10)
-        dodge=target.agility + target.armor.dodge + (rnd.random()*10)
+        hit=self.agility+self.weapon.hit + (rnd.random()*15)
+        dodge=target.agility + target.armor.dodge + (rnd.random()*15)
         if hit > dodge:
             damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
@@ -314,6 +314,13 @@ def monsters_attack(room):
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
             monster.attack(room.player)
+        if room.player.hp < 1:
+            print("you died")
+            time.sleep(5)
+            lose_game()
+
+def lose_game():
+    main()
 
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
@@ -551,15 +558,16 @@ def main ():
     scales = Armor("none", "none",10,0)
     stone_skin = Armor("none", "none", 5, -2)
     #weapons
-    stinger = Weapon("stinger", "none", [1,1], 0)
     fists = Weapon("fists", "none", [1,2], 0)
-    dagger = Weapon("dagger", "a small stabby weapon", [3,6], 1)
-    club = Weapon("club", "a large blunt weapon", [6,12], -1)
-    nimble_sword = Weapon("sword","a fine steel sword",[6,10],2)
-    dragon_lance = Weapon("dragon lance", "it glistens", [20,25],3)
-    claws = Weapon("claws","none",[20,25],0)
-    bite= Weapon("bite","none",[7,10],0)
-    stone_fists = Weapon("fists", "none", [8,15],0)
+    dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
+    club = Weapon("club", "a large blunt weapon", [2,10], -1)
+    sword = Weapon("sword","a fine steel sword",[1,10],1)
+    silver_sword = Weapon("sword","a shiny silver sword",[2,12],2)
+    dragon_lance = Weapon("dragon lance", "it glistens", [10,25],3)
+    stinger = Weapon("stinger", "none", [1,1], 0)
+    claws = Weapon("claws","none",[10,15],0)
+    bite= Weapon("bite","none",[5,5],0)
+    stone_fists = Weapon("fists", "none", [5,10],0)
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
@@ -585,8 +593,9 @@ def main ():
     ]
 
     #initialise player
-    player=Player("Alex", "A warrior", 25, 100, 100, no_armor, fists,[],"")
-
+    player=Player("Alex", "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    player.hp=20
+    player.start_hp=20
     #creat monsters
     g_speak = "it is probably swearing at you, but you don't understand goblin"
     dg_details = "The goblin looks very drunk"
@@ -608,7 +617,7 @@ def main ():
     goblins =[]
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
-    goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,nimble_sword,[],g_speak)
+    goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
     dragon=Monster("dragon", d_details,100,0,0,scales,claws,[],d_speak)
     wolf = Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak)
     stone_guardian = Monster("stone guardian", sg_details, 30, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
@@ -631,8 +640,8 @@ def main ():
 
     #create features
     bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion],True)
-    silver_chest=Feature("silver chest","the chest is smooth and shiny", [healing_potion],True)
-    golden_chest=Feature("golden chest","the chest has strange markings on it", [healing_potion],True)
+    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,agility_potion],True)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,strength_potion],True)
     spider_egg=Feature("egg","it is wet and slimey",[],False)
     spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[],False)
@@ -695,7 +704,7 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=5
+    room_number=9
     enter_room(rooms,room_number)
 
 main()
