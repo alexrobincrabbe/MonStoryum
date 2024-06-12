@@ -7,6 +7,7 @@ from rich.console import Console
 pretty.install()
 from prettytable import PrettyTable
 import time
+import math
 
 custom_theme= Theme({
     "features": "green",
@@ -85,7 +86,7 @@ class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
         self.description=description
         self.details=details
-        self.hp=int( (rnd.random()*hp + 2*hp)/3 )
+        self.hp=int( math.ceil(rnd.random()*hp + 2*hp)/3 )
         self.start_hp=self.hp
         self.strength=strength
         self.agility=agility
@@ -104,7 +105,7 @@ class Monster:
         hit=self.agility+self.weapon.hit + (rnd.random()*10)
         dodge=target.agility + target.armor.dodge + (rnd.random()*10)
         if hit > dodge:
-            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]) - target.armor.armor_value
+            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
             print(f'{self.description} hits for [red]{damage}[/red] points of damage')
             target.hp-=damage
@@ -287,6 +288,8 @@ class Feature:
 
             else:
                 print("You find nothing")
+        else:
+            print("it is locked")
 
 def enter_room(rooms,room_number):
     '''
@@ -494,15 +497,18 @@ def main ():
     #armor
     no_armor = Armor("none","none", 0, 0)
     #weapons
+    stinger = Weapon("stinger", "none", [1,1], 0)
     fists = Weapon("fists", "none", [1,2], 0)
     dagger = Weapon("dagger", "a small stabby weapon", [3,6], 1)
-    club = Weapon("club", "a large blunt weapon", [10,12], -1)
+    club = Weapon("club", "a large blunt weapon", [6,12], -1)
     sword = Weapon("sword","a fine steel sword",[6,10],2)
     #potions
     healing_potion=Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion=Potion("super healing potion","really potent stuff", "hp",20)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
+    bronze_key=Key("bronze key","It is dusty","bronze")
+
     items=[
         [],#1
         [],#2
@@ -515,18 +521,24 @@ def main ():
         [],#9
         []#10
     ]
+
     #initialise player
-    player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
+    player=Player("Alex", "A warrior", 25, 1, 1, no_armor, fists,[])
+
     #creat monsters
-    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -5, no_armor,dagger,[rusty_key])
-    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -1, no_armor,club,[])
+    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -6, no_armor,dagger,[rusty_key])
+    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 2, -1, no_armor,club,[])
     goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
     goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
+    spiders=[]
+    for i in range(5):
+        spiders.append(Monster("spider","it is creepy", 1,1,0,no_armor,stinger,[]))
+
     monsters=[
         [drunk_goblin],#1
-        [troll,goblin1],#2
+        [troll],#2
         [],#3
-        [],#4
+        [spider for spider in spiders],#4
         [],#5
         [],#6
         [],#7
@@ -535,13 +547,19 @@ def main ():
         []#10
     ]
             #create features
-    chest=Feature("chest","the chest is made out of wood", [healing_potion],False)
+    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion],True)
+    silver_chest=Feature("silver chest","the chest is smooth and shiny", [healing_potion],True)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", [healing_potion],True)
+    spider_egg=Feature("egg","it is wet and slimey",[],False)
+    spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
+    well=Feature("well", "You can't see the bottom",[],False)
+
     features=[
         [],#1
-        [chest],#2
-        [],#3
-        [],#4
-        [],#5
+        [],#2
+        [bronze_chest, silver_chest, golden_chest],#3
+        [spider_egg,spider_egg_2,spider_egg],#4
+        [well],#5
         [],#6
         [],#7
         [],#8
@@ -552,16 +570,16 @@ def main ():
     room_descriptions = [
         "You have are in a underground jailcell, deep beneath the citadel." 
         "You hear footsteps outside, the door swings open and a drunk goblin"
-        "stumbles into the cell. He is yelling something at you, but it is in goblin",#1
+        "stumbles into the cell. He is yelling something at you, but you don't speak goblin",#1
         "You stumble out of the cell, into the guard quarters, you are confronted with"
         "a large angry looking troll. ",#2
-        "You enter a small cave. There is a well in the center of the room",#3
-        "You enter a craggy enclosure. Webs cover the ceiling."
+        "You find enter a room. There are 3 chests. One Gold, one silver, one bronze.",#3
+        "You enter a craggy enclosure. Webs cover the ceiling.Eggs line the walls"
         "You see dark shapes moving along the walls."
-        "Dozens of tiny, hungry eyes are starting at you",#4
+        "Dozens of tiny, hungry eyes are staring at you",#4
+        "You enter a small cave. There is a well in the center of the room",#5
         "You find yourself in a huge cavern, with a stone bridge"
-        "In the center of the bridge stands a dragon",#5
-        "You find enter a room. There are 3 chests. One Gold, one silver, one bronze.",#6
+        "In the center of the bridge stands a dragon",#6
         "You enter a narrow stone corridoor. There are 3 troll guards standing in your path."   
         "They grunt at you",#7
         "room 8",#8
