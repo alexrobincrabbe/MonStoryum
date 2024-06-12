@@ -411,67 +411,72 @@ def examine(room,action):
         return False
 
 def choose_target(room,action):
-    target_string=action.split(" ", 1)
+    target_string = action.split(" ", 1)
+    #user specifies target
     if len(target_string) > 1:
-        target=target_string[1]
+        target = target_string[1]
         monsters = [monster.description for monster in room.monsters]
         target_count=monsters.count(target)
         if target_count == 1:
-            target_index=0
+            target_index = 0
             for monster in room.monsters:
                 if monster.description == target:
-                    room.player.attack(monster)
-                    room.battle_started=True
-                    room.monster_action=True
-                    kill_monster(room, target_index)
+                    attack_monster(room, target_index)
                 target_index+=1
-                return 
+            #there is only one target, skip target selection
+            return 
         elif target_count > 1:
-            target_number=0
-            target_index=-1
-            target_dic={}
-            for monster in room.monsters:
-                if monster.description == (target):
-                    target_number+=1
-                    print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
-                target_index+=1
-                target_dic[target_number]=target_index     
+            target_dic = target_list(room,target)
         else:
             room.monster_action=False
             print("attack what?")
             return 
+    #no target specified
     else:
-        target_number=0
-        target_index=-1
-        target_dic={}
-        for monster in room.monsters:
-                target_number+=1
-                print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
-                target_index+=1
-                target_dic[target_number]=target_index
+        target = False
+        target_dic = target_list(room, target)
         target_count=len(target_dic)
+    #select target number from list
     target_selected=False
     while target_selected == False:
-        target_select = input('Enter a number to choose a target: ')
-        try:
-            target_select=int(target_select)
-            target_selected=True
-        except:
-            print('Please enter a number')
-            room.monster_action=False
-            target_selected=False
-        else:
-            if target_select < 1 or target_select > target_count:
-                room.monster_action=False
-                target_selected=False
-                print('Please pick a valid number')
+        target_selected , target_select = choose_target_number(room,target_selected,target_count)
 
-    target_selected=True
-    room.player.attack(room.monsters[target_dic.get(target_select)])
+    target_index=target_dic.get(target_select)
+    attack_monster(room, target_index) 
+
+def attack_monster(room,target_index):
+    room.player.attack(room.monsters[target_index])
     room.battle_started=True
     room.monster_action=True
-    kill_monster(room, target_dic.get(target_select))   
+    kill_monster(room, target_index)  
 
+def target_list(room,target):
+    target_number=0
+    target_index=-1
+    target_dic={}
+    for monster in room.monsters:
+        target_index+=1
+        if monster.description == (target) or target == False:
+            target_number+=1
+            print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+            target_dic[target_number]=target_index
+    return target_dic
+
+def choose_target_number(room,target_selected,target_count):
+    target_select = input('Enter a number to choose a target: ')
+    try:
+        target_select=int(target_select)
+        target_selected=True
+    except:
+        print('Please enter a number')
+        room.monster_action=False
+        target_selected=False
+    else:
+        if target_select < 1 or target_select > target_count:
+            room.monster_action=False
+            target_selected=False
+            print('Please pick a valid number') 
+    return target_selected,target_select
 
 def kill_monster(room, target_index):
     if room.monsters[target_index].hp == 0:
@@ -519,7 +524,7 @@ def main ():
     goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
     monsters=[
         [drunk_goblin],#1
-        [troll,goblin1,goblin2],#2
+        [troll,goblin1],#2
         [],#3
         [],#4
         [],#5
