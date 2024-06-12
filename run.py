@@ -102,9 +102,9 @@ class Monster:
             self.loot.append(self.weapon)
     
     def attack(self,target):
-        time.sleep(1)
+        time.sleep(0.7)
         print(f'[blue]{self.description}[/blue] attacks [blue]{target.description}[/blue]...')
-        time.sleep(1)
+        time.sleep(0.7)
         hit=self.agility+self.weapon.hit + (rnd.random()*15)
         dodge=target.agility + target.armor.dodge + (rnd.random()*15)
         if hit > dodge:
