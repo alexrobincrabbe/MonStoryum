@@ -48,7 +48,7 @@ class Room:
         for item in self.items:
             console.print(f'{item.description}')
         for feature in self.features:
-            console.print(f'{feature.description}',style="features")
+            console.print(f'{feature.alt_description}',style="features")
     
 class Item:
     def __init__(self,description,details):
@@ -264,6 +264,7 @@ class Feature:
         self.details=details
         self.loot=loot
         self.locked=locked
+        self.alt_description = description
     
     def examine(self,player):
         print(self.details)
@@ -546,6 +547,7 @@ def kill_monster(room, target_index):
         details="you examine the corpse"
         loot=dead_monster.loot
         corpse=Feature(description,details,loot,False)
+        corpse.description = f'{dead_monster.description}'
         room.features.append(corpse)
 
 def main ():
@@ -704,7 +706,7 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=9
+    room_number=0
     enter_room(rooms,room_number)
 
 main()
