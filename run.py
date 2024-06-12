@@ -563,9 +563,9 @@ def main ():
     fists = Weapon("fists", "none", [1,2], 0)
     dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
     club = Weapon("club", "a large blunt weapon", [2,10], -1)
-    sword = Weapon("sword","a fine steel sword",[1,10],1)
-    silver_sword = Weapon("sword","a shiny silver sword",[2,12],2)
-    dragon_lance = Weapon("dragon lance", "it glistens", [10,25],3)
+    sword = Weapon("sword","a fine steel sword",[1,10],2)
+    silver_sword = Weapon("sword","a shiny silver sword",[2,12],3)
+    dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
     stinger = Weapon("stinger", "none", [1,1], 0)
     claws = Weapon("claws","none",[10,15],0)
     bite= Weapon("bite","none",[5,5],0)
@@ -615,13 +615,16 @@ def main ():
     drunk_goblin=Monster("goblin",dg_details, 10, 1, -6, no_armor,dagger,[rusty_key],g_speak)
     trolls = []
     for i in range (3):
-        trolls.append(Monster("troll",t_details, 25, 2, -1, no_armor,club,[],t_speak))
+        trolls.append(Monster("troll",t_details, 20, 2, -2, no_armor,club,[],t_speak))
     goblins =[]
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
     goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
     dragon=Monster("dragon", d_details,100,0,0,scales,claws,[],d_speak)
-    wolf = Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak)
+    wolves=[]
+    for i in range(2):
+        wolves.append(Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak))
+
     stone_guardian = Monster("stone guardian", sg_details, 30, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
     spiders=[]
     for i in range(5):
@@ -636,12 +639,13 @@ def main ():
         [dragon],#6
         [goblins[0],goblins[1],goblin_captain],#7
         [trolls[1],goblins[2],goblins[3]],#8
-        [trolls[2], goblins[4],wolf,wolf],#9
+        [trolls[2], goblins[4],wolves[0],wolves[1]],#9
         [stone_guardian]#10
     ]
 
     #create features
-    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion],True)
+    wooden_chest_0=Feature("wooden chest","the chest is old and shabby", [healing_potion],False)
+    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
     silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,agility_potion],True)
     golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,strength_potion],True)
     spider_egg=Feature("egg","it is wet and slimey",[],False)
@@ -652,7 +656,7 @@ def main ():
     features=[
         [],#1
         [],#2
-        [bronze_chest, silver_chest, golden_chest],#3
+        [wooden_chest_0, bronze_chest, silver_chest, golden_chest],#3
         [spider_egg,spider_egg_2,spider_egg],#4
         [well],#5
         [],#6
@@ -668,7 +672,7 @@ def main ():
         "stumbles into the cell. He is yelling something at you, but you don't speak goblin",#1
         "You stumble out of the cell, into the guard quarters, you are confronted with"
         "a large angry looking troll. ",#2
-        "You find enter a room. There are 3 chests. One Gold, one silver, one bronze.",#3
+        "You find enter a room. There are 4 chests. One Gold, one silver, one bronze, one wooden.",#3
         "You enter a craggy enclosure. Webs cover the ceiling.Eggs line the walls"
         "You see dark shapes moving along the walls."
         "Dozens of tiny, hungry eyes are staring at you",#4
@@ -699,7 +703,6 @@ def main ():
     #create rooms
     rooms=[]
     for i in range(10):
-        print(i)
         rooms.append (Room(room_descriptions[i],room_descriptions_visited[i],player,monsters[i],items[i],features[i]))
     
     rooms[0].door="locked"
