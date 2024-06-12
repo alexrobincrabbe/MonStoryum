@@ -498,7 +498,18 @@ def main ():
     Super_healing_potion=Potion("super healing potion","really potent stuff", "hp",20)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
-    items=[]
+    items=[
+        [],#1
+        [],#2
+        [],#3
+        [],#4
+        [],#5
+        [],#6
+        [],#7
+        [],#8
+        [],#9
+        []#10
+    ]
     #initialise player
     player=Player("Alex", "A warrior", 25, 5, 5, no_armor, fists,[])
     #creat monsters
@@ -506,27 +517,75 @@ def main ():
     troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 5, -1, no_armor,club,[])
     goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
     goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
-    monsters=[[drunk_goblin],[troll,goblin1,goblin2]]
-    #create features
+    monsters=[
+        [drunk_goblin],#1
+        [troll,goblin1,goblin2],#2
+        [],#3
+        [],#4
+        [],#5
+        [],#6
+        [],#7
+        [],#8
+        [],#9
+        []#10
+    ]
+            #create features
     chest=Feature("chest","the chest is made out of wood", [healing_potion],False)
-    features=[[],[chest],[]]
+    features=[
+        [],#1
+        [chest],#2
+        [],#3
+        [],#4
+        [],#5
+        [],#6
+        [],#7
+        [],#8
+        [],#9
+        []#10
+        ]
     #create rooms
     room_descriptions = [
         "You have are in a underground jailcell, deep beneath the citadel." 
         "You hear footsteps outside, the door swings open and a drunk goblin"
-        "stumbles into the cell. He is yelling something at you, but it is in goblin",
+        "stumbles into the cell. He is yelling something at you, but it is in goblin",#1
         "You stumble out of the cell, into the guard quarters, you are confronted with"
-        "a large angry looking troll. "
+        "a large angry looking troll. ",#2
+        "You enter a small cave. There is a well in the center of the room",#3
+        "You enter a craggy enclosure. Webs cover the ceiling."
+        "You see dark shapes moving along the walls."
+        "Dozens of tiny, hungry eyes are starting at you",#4
+        "You find yourself in a huge cavern, with a stone bridge"
+        "In the center of the bridge stands a dragon",#5
+        "You find enter a room. There are 3 chests. One Gold, one silver, one bronze.",#6
+        "You enter a narrow stone corridoor. There are 3 troll guards standing in your path."   
+        "They grunt at you",#7
+        "room 8",#8
+        "room 9",#9
+        "You have reached the final room. Ahead of you is the exit of the dungeon."
+        "Daylight dazzles your eyes. In your path stands a stone guardian"#10 
     ]
     room_descriptions_visited = [
         "You are in a dark wet cell. There is a door to the east.",
-        "You are in a dimly lit cave. It smells like trolls have been living here for a long time"
+        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",
+        "You are in a small cave with a well at the center of the room",
+        "You are in a cavern, webs cover the walls and ceiling.",
+        "room 5",
+        "room 6",
+        "room 7",
+        "room 8",
+        "room 9",
+        "room 10"
         ]
+    
+    #create rooms
     rooms=[]
-    rooms.append (Room(room_descriptions[0],room_descriptions_visited[0],player,monsters[0],items,features[0]))
+    for i in range(9):
+        print(i)
+        rooms.append (Room(room_descriptions[i],room_descriptions_visited[i],player,monsters[i],items[i],features[i]))
+    
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
-    rooms.append (Room(room_descriptions[1],room_descriptions_visited[1],player,monsters[1],items,features[1]))
+
     room_number=0
     enter_room(rooms,room_number)
 
