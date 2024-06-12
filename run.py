@@ -274,6 +274,8 @@ class Feature:
         self.locked=locked
     
     def examine(self,player):
+        if self.locked == True:
+            self.check_locked(player)
         if self.locked == False:
             if len(self.loot) > 0:
                 print("You find:")
@@ -290,6 +292,15 @@ class Feature:
                 print("You find nothing")
         else:
             print("it is locked")
+    
+    def check_locked(self,player):
+        items=[item for item in player.inventory]
+        for item in items:
+            if item.type == "key":
+                if item.key_name == self.description:
+                    print(f"you unlock the {self.description} with the {item.description}")
+                    self.locked=False
+                    time.sleep(1.5)
 
 def enter_room(rooms,room_number):
     '''
@@ -507,7 +518,7 @@ def main ():
     Super_healing_potion=Potion("super healing potion","really potent stuff", "hp",20)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
-    bronze_key=Key("bronze key","It is dusty","bronze")
+    bronze_key=Key("bronze key","It is dusty","bronze chest")
 
     items=[
         [],#1
@@ -523,7 +534,7 @@ def main ():
     ]
 
     #initialise player
-    player=Player("Alex", "A warrior", 25, 1, 1, no_armor, fists,[])
+    player=Player("Alex", "A warrior", 25, 10, 10, no_armor, fists,[])
 
     #creat monsters
     drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -6, no_armor,dagger,[rusty_key])
@@ -558,7 +569,7 @@ def main ():
         [],#1
         [],#2
         [bronze_chest, silver_chest, golden_chest],#3
-        [spider_egg,spider_egg_2,spider_egg],#4
+        [spider_egg_2,spider_egg,spider_egg],#4
         [well],#5
         [],#6
         [],#7
