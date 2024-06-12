@@ -34,6 +34,7 @@ class Room:
         self.key_name=""
         self.visited=False
         self.description="room"
+        self.password=False
 
     def examine(self, player):
         clear_console()
@@ -331,8 +332,11 @@ def choose_action(room,rooms,room_number,action):
         else:
             print("There is nothing to attack")
     elif action == "forwards":
-        if len(room.monsters) == 0:
+        if len(room.monsters) == 0 or room.password == True:
             if room.door == "open":
+                if room.password == True:
+                    print("the dragon allows you to pass")
+                    time.sleep(2)
                 room_number+=1
                 enter_room(rooms,room_number)
             else:
@@ -689,8 +693,9 @@ def main ():
     
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
+    rooms[5].password=True
 
-    room_number=8
+    room_number=5
     enter_room(rooms,room_number)
 
 main()
