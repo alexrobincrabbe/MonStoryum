@@ -84,7 +84,7 @@ class Key(Item):
         self.key_name=key_name
         self.type="key"
 class Monster:
-    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
+    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         self.description=description
         self.details=details
         self.hp=int( math.ceil(rnd.random()*hp + 2*hp)/3 )
@@ -94,9 +94,10 @@ class Monster:
         self.armor=armor
         self.weapon=weapon
         self.loot=loot
-        if self.armor.description != "none":
+        self.speak = speak
+        if self.armor.details != "none":
             self.loot.append(self.armor)
-        if self.weapon.description != "none":
+        if self.weapon.details != "none":
             self.loot.append(self.weapon)
     
     def attack(self,target):
@@ -116,10 +117,13 @@ class Monster:
 
     def examine(self,player):
         print(self.details)
+    
+    def talk(self):
+        print(self.speak)
         
 class Player(Monster):
-    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot):
-        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot)
+    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
+        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
         self.inventory=[]
         
     def display_inventory(self):
@@ -310,7 +314,7 @@ def monsters_attack(room):
             monster.attack(room.player)
 
 def choose_action(room,rooms,room_number,action):
-    options=["examine","inventory","forwards","backwards","status","attack","equip","use"]
+    options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
     if action == "help":
         print("list of available commands:")
         for option in options:
@@ -318,6 +322,8 @@ def choose_action(room,rooms,room_number,action):
         room.monster_action=False
     elif action.startswith("examine"):
         room.monster_action=examine(room,action)
+    elif action.startswith("talk"):
+        talk(room,action)
     elif action.startswith("attack"):
         if len(room.monsters) > 0:
             choose_target(room,action)
@@ -356,6 +362,20 @@ def choose_action(room,rooms,room_number,action):
     else:
         print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
+
+def talk(room, action):
+    talk_string=action.split(" ", 2)
+    if len(talk_string) > 2:
+        monster_string=talk_string[2]
+    else:
+        print("talk to what (hint: try 'talk to <name>')")
+        room.monster_action=False
+        return
+    for monster in room.monsters:
+        if monster.description == monster_string:
+            monster.talk()
+            return
+    print("talk to what?")
 
 def check_door(rooms,room_number):
     room=rooms[room_number]
@@ -520,18 +540,26 @@ def main ():
     #create items
     #armor
     no_armor = Armor("none","none", 0, 0)
+    leather_armor = Armor("leather armor", "it is light, and offers some protection",1,0)
+    plate_armor = Armor("plate armor", "it is heavy, but offers good protection",2,-1)
+    dragonscale_armor = Armor("dragonscale armor", "it glistens",10,1)
     #weapons
     stinger = Weapon("stinger", "none", [1,1], 0)
     fists = Weapon("fists", "none", [1,2], 0)
     dagger = Weapon("dagger", "a small stabby weapon", [3,6], 1)
     club = Weapon("club", "a large blunt weapon", [6,12], -1)
-    sword = Weapon("sword","a fine steel sword",[6,10],2)
+    nimble_sword = Weapon("nimble_sword","a fine steel sword",[6,10],2)
+    dragon_lance = Weapon("dragon lance", "it glistens", [20,25],3)
     #potions
-    healing_potion=Potion("healing potion","it is red and smells fruity", "hp",10)
-    Super_healing_potion=Potion("super healing potion","really potent stuff", "hp",20)
+    healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
+    Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
+    agility_potion = Potion("agility potion", "it is green and sticky","agility",1)
+    strength_potion = Potion("strength potion", "orange and bubbly", "strength",1)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
     bronze_key=Key("bronze key","It is dusty","bronze chest")
+    silver_key=Key("silver key","It is shiny","bronze chest")
+    golden_key=Key("silver key","It has strange markings","bronze chest")
 
     items=[
         [],#1
@@ -547,16 +575,24 @@ def main ():
     ]
 
     #initialise player
-    player=Player("Alex", "A warrior", 25, 10, 10, no_armor, fists,[])
+    player=Player("Alex", "A warrior", 25, 10, 10, no_armor, fists,[],"")
 
     #creat monsters
-    drunk_goblin=Monster("goblin","The goblin looks very drunk", 10, 1, -6, no_armor,dagger,[rusty_key])
-    troll=Monster("troll","Looks big, stupid and angry. It is carrying a big club.", 25, 2, -1, no_armor,club,[])
-    goblin1=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
-    goblin2=Monster("goblin","The goblin looks very drunk", 10, 1, 0, no_armor,dagger,[])
+    g_speak = "it is probably swearing at you, but you don't understand goblin"
+    dg_details = "The goblin looks very drunk"
+    g_details = "goblins are funny looking creatures"
+    t_speak = "it grunts at you"
+    t_details = "Looks big, stupid and angry. It is carrying a big club."
+    s_speak = "it hisses at you"
+    s_details = "it is creepy"
+    g_speak = "it remains silent"
+    drunk_goblin=Monster("goblin",dg_details, 10, 1, -6, no_armor,dagger,[rusty_key],g_speak)
+    troll=Monster("troll",t_details, 25, 2, -1, no_armor,club,[],t_speak)
+    goblin1=Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak)
+    goblin2=Monster("goblin",g_details, 10, 1, 0, no_armor,dagger,[],g_speak)
     spiders=[]
     for i in range(5):
-        spiders.append(Monster("spider","it is creepy", 1,1,0,no_armor,stinger,[]))
+        spiders.append(Monster("spider",s_details, 1,1,0,no_armor,stinger,[],s_speak))
 
     monsters=[
         [drunk_goblin],#1
@@ -570,7 +606,8 @@ def main ():
         [],#9
         []#10
     ]
-            #create features
+
+    #create features
     bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion],True)
     silver_chest=Feature("silver chest","the chest is smooth and shiny", [healing_potion],True)
     golden_chest=Feature("golden chest","the chest has strange markings on it", [healing_potion],True)
