@@ -554,8 +554,9 @@ def main ():
     #create items
     #armor
     no_armor = Armor("none","none", 0, 0)
-    leather_armor = Armor("leather armor", "it is light, and offers some protection",1,0)
-    plate_armor = Armor("plate armor", "it is heavy, but offers good protection",2,-1)
+    rusty_armour= Armor("rusty armor", "it has seen better days",2,-1)
+    leather_armor = Armor("leather armor", "it is light, and offers some protection",3,0)
+    plate_armor = Armor("plate armor", "it is heavy, but offers good protection",5,-1)
     dragonscale_armor = Armor("dragonscale armor", "it glistens",10,1)
     scales = Armor("none", "none",10,0)
     stone_skin = Armor("none", "none", 5, -2)
@@ -573,8 +574,8 @@ def main ():
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
-    agility_potion = Potion("agility potion", "it is green and sticky","agility",1)
-    strength_potion = Potion("strength potion", "orange and bubbly", "strength",1)
+    agility_potion = Potion("agility potion", "it is green and sticky","agility",2)
+    strength_potion = Potion("strength potion", "orange and bubbly", "strength",2)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
     bronze_key=Key("bronze key","It is dusty","bronze chest")
@@ -612,10 +613,10 @@ def main ():
     d_speak = ""
     w_details = "it has really big teeth"
     w_speak = "it is not a talking wolf"
-    drunk_goblin=Monster("goblin",dg_details, 10, 1, -6, no_armor,dagger,[rusty_key],g_speak)
+    drunk_goblin=Monster("goblin",dg_details, 10, 1, -7, no_armor,dagger,[rusty_key],g_speak)
     trolls = []
     for i in range (3):
-        trolls.append(Monster("troll",t_details, 20, 2, -2, no_armor,club,[],t_speak))
+        trolls.append(Monster("troll",t_details, 20, 2, -4, no_armor,club,[],t_speak))
     goblins =[]
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
@@ -650,7 +651,7 @@ def main ():
     golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,strength_potion],True)
     spider_egg=Feature("egg","it is wet and slimey",[],False)
     spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
-    well=Feature("well", "You can't see the bottom",[],False)
+    well=Feature("well", "You can't see the bottom",[rusty_armour],False)
     wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
     features=[
