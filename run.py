@@ -591,8 +591,9 @@ def main ():
         [],#6
         [],#7
         [],#8
-        [plate_armor],#9
-        [dragon_lance]#10
+        [],#9
+        [plate_armor],#10
+        [dragon_lance]#11
     ]
 
     #initialise player
@@ -640,8 +641,9 @@ def main ():
         [dragon],#6
         [goblins[0],goblins[1],goblin_captain],#7
         [trolls[1],goblins[2],goblins[3]],#8
-        [trolls[2], goblins[4],wolves[0],wolves[1]],#9
-        [stone_guardian]#10
+        [],#9
+        [trolls[2], goblins[4],wolves[0],wolves[1]],#10
+        [stone_guardian]#11
     ]
 
     #create features
@@ -654,6 +656,7 @@ def main ():
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
     wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
+    bag_of_potions = Feature("bag of potions","someone left this here for Leda",[Super_healing_potion,Super_healing_potion,Super_healing_potion],False)
     features=[
         [],#1
         [],#2
@@ -663,8 +666,9 @@ def main ():
         [],#6
         [wooden_chest],#7
         [table],#8
-        [],#9
-        []#10
+        [bag_of_potions],#9
+        [],#10
+        []#11
         ]
     #create rooms
     room_descriptions = [
@@ -685,8 +689,9 @@ def main ():
         "You see two goblins and a troll sitting around a table. They look annoyed that you"
         "disturbed them",#8
         "room 9",#9
+        "hi leda",#10
         "You have reached the final room. Ahead of you is the exit of the dungeon."
-        "Daylight dazzles your eyes. In your path stands a stone guardian"#10 
+        "Daylight dazzles your eyes. In your path stands a stone guardian"#11 
     ]
     room_descriptions_visited = [
         "You are in a dark wet cell. There is a door to the east.",
@@ -698,19 +703,20 @@ def main ():
         "room 7",
         "room 8",
         "room 9",
-        "room 10"
+        "room 10",
+        "room 11"
         ]
     
     #create rooms
     rooms=[]
-    for i in range(10):
+    for i in range(11):
         rooms.append (Room(room_descriptions[i],room_descriptions_visited[i],player,monsters[i],items[i],features[i]))
     
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=0
+    room_number=8
     enter_room(rooms,room_number)
 
 main()
