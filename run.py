@@ -12,6 +12,8 @@ pretty.install()
 from prettytable import PrettyTable
 import time
 import math
+
+#my function imports
 from hangman import hangman
 
 SCOPE = [
@@ -459,6 +461,7 @@ def take(room, action):
         item_string=take_string[1]
     else:
         console.print("take what? (hint: try 'take <name>')", style = "info")
+        room.monster_action = False
         return
     if item_string in [item.description for item in room.items]:
         if len(room.monsters) > 0:
@@ -469,6 +472,7 @@ def take(room, action):
                     room.player.inventory.append(item)
     else:
         console.print("You don't see that here", style = "info")
+        room.monster_action = False
 
 
 def talk(room, action):
@@ -522,6 +526,7 @@ def examine (room,action):
         room.monster_action=False
         return
     if count == 1:
+        room.monster_action = True
         for examinable in examinables:
             if examinable.description == examine_object:
                 examinable.examine(room.player)
@@ -777,18 +782,18 @@ def main ():
     #create rooms
     room_descriptions = [
         "Regaining consciousness, you open your eyes and realise you are in a dark, "
-        "dank-smelling dungeon. From the faint sounds above you, you realise you are" 
+        "dank-smelling dungeon. From the faint sounds above you, you realise you are " 
         "in the depths of the citadel, controlled by the evil sorceress queen, Achlys. "
         "It dawns on you that by wrongfully imprisoning you, Achlys has removed the "
         "last obstacle to her malicious schemes. You must find a way to escape, "
         "though you know that her loyal monsters will fight you to the death. "
         "The innocent citizens of Greystorm will be counting on you to "
-        "save them."
+        "save them. "
         "You hear clumsy, heavy footsteps approaching your cell, "
         "the door creaks open and an evidently inebriated goblin stumbles in. "
         "You reach for your weapon but…your scabbard is empty. "
         "He begins to berate you, but you don’t know what he’s saying - "
-        "you don’t speak Goblish."
+        "you don’t speak Goblish. "
         "He lunges towards you and you see a dagger in his gnarly hand: ",#1
 
         "You lurch out of your cell and find yourself in the guard quarters. "
