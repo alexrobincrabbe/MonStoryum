@@ -6,7 +6,7 @@ import os
 from rich import print
 from rich import pretty
 from rich.theme import Theme
-from rich import prompt
+from rich.prompt import Prompt
 from rich.console import Console
 pretty.install()
 from prettytable import PrettyTable
@@ -26,11 +26,12 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Hall_of_fame')
 
 custom_theme= Theme({
-    "features": "green",
-    "monsters": "red",
-    "stat": "bright_green",
-    "option": "blue",
-    "header": "blue"
+    "info" : "grey62",
+    "features" : "green",
+    "monsters" : "red",
+    "stat" : "bright_green",
+    "option" : "blue",
+    "header" : "blue"
 })
 console=Console(theme=custom_theme)
 
@@ -55,9 +56,9 @@ class Room:
     def examine(self, player):
         clear_console()
         if self.visited == False:
-            print(self.details)
+            console.print(f'{self.details}',style="info")
         else:
-            print(self.details_visited)
+            console.print(f'{self.details_visited}',style="info")
         print("You see:")
         for monster in self.monsters:
             console.print(f'{monster.description}',style="monsters")
@@ -72,7 +73,7 @@ class Item:
         self.details=details
     
     def examine(self, player):
-        print(self.details)
+        console.print(f'{self.details}', style = "info")
 
 class Weapon(Item):
     def __init__(self,description,details,damage,hit):
@@ -126,19 +127,21 @@ class Monster:
         if hit > dodge:
             damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
-            print(f'{self.description} hits for [red1]{damage}[/red1] points of damage')
+            print(f'[blue]{self.description}[/blue] hits for [red1]{damage}[/red1] points of damage')
             target.hp-=damage
             target.hp = 0 if target.hp < 0 else target.hp
-            print(f'{target.description} has [green1]{target.hp}[/green1]/{target.start_hp} remaining')
+            print(f'[blue]{target.description}[/blue] has '
+                  f'[green1]{target.hp}[/green1]/[chartreuse4]{target.start_hp}[/chartreuse4] remaining')
+            
 
         else:
-            print(f'{self.description} misses')
+            print(f'[blue]{self.description}[/blue] misses')
 
     def examine(self,player):
-        print(self.details)
+        console.print(f'{self.details}', style = "info")
     
     def talk(self,room):
-        print(self.speak)
+        console.print(f'{self.speak}', style = "info")
         
 class Dragon(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
@@ -322,15 +325,15 @@ class Feature:
         self.alt_description = description
     
     def examine(self,player):
-        print(self.details)
+        console.print(f'{self.details}', style = "info")
         if self.locked == True:
             self.check_locked(player)
         if self.locked == False:
             if len(self.loot) > 0:
                 print("You find:")
                 for items in self.loot:
-                    print(items.description)
-                take_items = input("take items?(yes/no)")
+                    print(f'[turquoise2]{items.description}[/turquoise2]')
+                take_items = Prompt.ask(f"[gold3]take items?(yes/no)[/gold3]")
                 if take_items == "yes":
                     for item in self.loot:
                         player.inventory.append(item)
@@ -364,7 +367,7 @@ def enter_room(rooms,room_number):
 def start_turn(rooms,room_number):
     room=rooms[room_number]
     monsters_attack(room)
-    action=input('choose an action:')
+    action = Prompt.ask('[gold3]choose an action[gold3] ')
     choose_action(room,rooms, room_number,action)
     start_turn(rooms, room_number)
     
@@ -424,7 +427,7 @@ def choose_action(room,rooms,room_number,action):
             else:
                 check_door(rooms,room_number)
         else:
-            print("You must clear the path first")
+            console.print("You must clear the path first", style = "info")
             room.monster_action=False
     elif action == "backwards":
         if room_number > 0:
@@ -432,10 +435,10 @@ def choose_action(room,rooms,room_number,action):
                 room_number-=1
                 enter_room(rooms,room_number)
             else:
-                print("You don't run away from a fight!")
+                console.print("You don't run away from a fight!", style = "info")
                 room.monster_action=False
         else:
-            print("You can only go forwards from here")
+            console.print("You can only go forwards from here", style = "info")
     elif action == "inventory":
         room.player.display_inventory()
         room.monster_action = False
@@ -447,7 +450,7 @@ def choose_action(room,rooms,room_number,action):
     elif action.startswith("use"):
        room.monster_action = room.player.inv_use(action)
     else:
-        print("Please choose a valid option (type 'help' for list of commands)")
+        console.print("Please choose a valid option (type 'help' for list of commands)", style = "info")
         room.monster_action=False
 
 def take(room, action):
@@ -455,7 +458,7 @@ def take(room, action):
     if len(take_string) > 1:
         item_string=take_string[1]
     else:
-        print("take what? (hint: try 'take <name>')")
+        console.print("take what? (hint: try 'take <name>')", style = "info")
         return
     if item_string in [item.description for item in room.items]:
         if len(room.monsters) > 0:
@@ -465,7 +468,7 @@ def take(room, action):
                     room.items.pop(room.items.index(item))
                     room.player.inventory.append(item)
     else:
-        print("You don't see that here")
+        console.print("You don't see that here", style = "info")
 
 
 def talk(room, action):
@@ -473,14 +476,14 @@ def talk(room, action):
     if len(talk_string) > 2:
         monster_string=talk_string[2]
     else:
-        print("talk to what? (hint: try 'talk to <name>')")
+        console.print("talk to what? (hint: try 'talk to <name>')", style = "info")
         room.monster_action=False
         return
     for monster in room.monsters:
         if monster.description == monster_string:
             monster.talk(room)
             return
-    print("talk to what?")
+    console.print("talk to what?", style = "info")
 
 def check_door(rooms,room_number):
     room=rooms[room_number]
@@ -502,7 +505,7 @@ def examine (room,action):
     if len(examine_string) > 1:
         examine_object=examine_string[1]
     else:
-        print("examine what? (hint: try 'examine room')")
+        console. print("examine what? (hint: try 'examine room')", style = "info")
         room.monster_action=False
         return
     for item in room.items:
@@ -515,7 +518,7 @@ def examine (room,action):
         examinables.append(item)
     count = [examinable.description for examinable in examinables].count(examine_object)
     if count == 0:
-        print("you don't see that")
+        console.print("you don't see that", style = "info")
         room.monster_action=False
         return
     if count == 1:
@@ -551,14 +554,14 @@ def choose_object_number(room, object_count):
         object_select=int(object_select)
         object_selected=True
     except:
-        print('Please enter a number')
+        console.print('Please enter a number', style = "info")
         room.monster_action=False
         object_selected=False
     else:
         if object_select < 1 or object_select > object_count:
             room.monster_action=False
             object_selected=False
-            print('Please pick a valid number') 
+            console.print('Please pick a valid number', stlye = "info") 
     return object_selected,object_select
     
 
@@ -581,7 +584,7 @@ def choose_target(room,action):
             target_dic = target_list(room,target)
         else:
             room.monster_action=False
-            print("attack what?")
+            console.print("attack what?", style = "info")
             return 
     #no target specified
     else:
@@ -610,12 +613,12 @@ def target_list(room,target):
         target_index+=1
         if monster.description == (target) or target == False:
             target_number+=1
-            print(f'{target_number}: {monster.description} HP - {monster.hp}/{monster.start_hp  }')
+            print(f'[bright_white]{target_number}[/bright_white]: [red1]{monster.description}[/red1] HP - [green1]{monster.hp}[/green1]/[chartreuse4]{monster.start_hp}[/chartreuse4]')
             target_dic[target_number]=target_index
     return target_dic
 
 def choose_target_number(room,target_selected,target_count):
-    target_select = input('Enter a number to choose a target: ')
+    target_select = Prompt.ask(f'[gold3]Enter a number to choose a target: [/gold3]')
     try:
         target_select=int(target_select)
         target_selected=True
@@ -715,7 +718,7 @@ def main ():
     d_speak = ""
     w_details = "it has really big teeth"
     w_speak = "it is not a talking wolf"
-    drunk_goblin=Monster("goblin",dg_details, 10, 1, -7, no_armor,dagger,[rusty_key],g_speak)
+    drunk_goblin=Monster("goblin",dg_details, 10, 1, -10, no_armor,dagger,[rusty_key],g_speak)
     trolls = []
     for i in range (3):
         trolls.append(Monster("troll",t_details, 20, 2, -4, no_armor,club,[],t_speak))
@@ -779,7 +782,7 @@ def main ():
         "It dawns on you that by wrongfully imprisoning you, Achlys has removed the "
         "last obstacle to her malicious schemes. You must find a way to escape, "
         "though you know that her loyal monsters will fight you to the death. "
-        "The innocent citizens of Greystorm will be counting on you to"
+        "The innocent citizens of Greystorm will be counting on you to "
         "save them."
         "You hear clumsy, heavy footsteps approaching your cell, "
         "the door creaks open and an evidently inebriated goblin stumbles in. "
