@@ -325,6 +325,9 @@ def lose_game():
     input("press enter to restart")
     main()
 
+def win_game():
+    print('Congratulations! you escaped the dungeon!')
+
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
     if action == "help":
@@ -350,6 +353,8 @@ def choose_action(room,rooms,room_number,action):
                     print("the dragon allows you to pass")
                     time.sleep(2)
                 room_number+=1
+                if room_number == 11:
+                    win_game()
                 enter_room(rooms,room_number)
             else:
                 check_door(rooms,room_number)
