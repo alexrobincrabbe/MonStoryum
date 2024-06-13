@@ -387,13 +387,13 @@ def take(room, action):
     else:
         print("take what? (hint: try 'take <name>')")
         return
-    print(item_string)
-    print([item.description for item in room.items])
     if item_string in [item.description for item in room.items]:
-        for item in room.items:
-            if item_string == item.description:
-                room.items.pop(room.items.index(item))
-                room.player.inventory.append(item)
+        if len(room.monsters) > 0:
+            print("you can't reach that right now")
+            for item in room.items:
+                if item_string == item.description:
+                    room.items.pop(room.items.index(item))
+                    room.player.inventory.append(item)
     else:
         print("You don't see that here")
 
@@ -739,7 +739,7 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=0
+    room_number=9
     enter_room(rooms,room_number)
 
 main()
