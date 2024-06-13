@@ -319,10 +319,10 @@ def monsters_attack(room):
             monster.attack(room.player)
         if room.player.hp < 1:
             print("you died")
-            time.sleep(5)
             lose_game()
 
 def lose_game():
+    input("press enter to restart")
     main()
 
 def choose_action(room,rooms,room_number,action):
