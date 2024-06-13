@@ -110,9 +110,11 @@ class Monster:
         if hit > dodge:
             damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
-            print(f'{self.description} hits for [red]{damage}[/red] points of damage')
+            print(f'{self.description} hits for [red1]{damage}[/red1] points of damage')
             target.hp-=damage
             target.hp = 0 if target.hp < 0 else target.hp
+            print(f'{target.description} has [green1]{target.hp}[/green1]/{target.start_hp} remaining')
+
         else:
             print(f'{self.description} misses')
 
@@ -591,7 +593,7 @@ def main ():
     stinger = Weapon("stinger", "none", [1,1], 0)
     claws = Weapon("claws","none",[10,15],0)
     bite= Weapon("bite","none",[5,5],0)
-    stone_fists = Weapon("fists", "none", [5,10],0)
+    stone_fists = Weapon("fists", "none", [5,10],4)
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
@@ -648,7 +650,7 @@ def main ():
     for i in range(2):
         wolves.append(Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak))
 
-    stone_guardian = Monster("stone guardian", sg_details, 30, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
+    stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
     spiders=[]
     for i in range(5):
         spiders.append(Monster("spider",s_details, 1,0,0,no_armor,stinger,[],s_speak))
@@ -670,8 +672,8 @@ def main ():
     #create features
     wooden_chest_0=Feature("wooden chest","the chest is old and shabby", [healing_potion],False)
     bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
-    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,agility_potion],True)
-    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,strength_potion],True)
+    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,Super_healing_potion],True)
     spider_egg=Feature("egg","it is wet and slimey",[],False)
     spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
