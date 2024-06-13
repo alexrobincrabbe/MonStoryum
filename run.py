@@ -799,7 +799,10 @@ def main ():
         "You lurch out of your cell and find yourself in the guard quarters. "
         "You are confronted by a large troll. He glares angrily at you.",#2
 
-        "You find enter a room. There are 4 chests. One Gold, one silver, one bronze, one wooden.",#3
+        "Leaving the troll’s lifeless body behind, you enter a small room. "
+        "You hear water dripping. In the dim light, cast by a torch high "
+        "up on the wall, you spy 4 chests; one wooden, one bronze, one "
+        "silver, one gold..",#3
         "You enter a craggy enclosure. Webs cover the ceiling.Eggs line the walls"
         "You see dark shapes moving along the walls."
         "Dozens of tiny, hungry eyes are staring at you",#4
