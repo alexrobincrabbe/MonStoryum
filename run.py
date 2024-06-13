@@ -816,18 +816,31 @@ def main ():
 
         "Leaving the troll’s lifeless body behind, you enter a small room. "
         "You hear water dripping. In the dim light, cast by a torch high "
-        "up on the wall, you spy 4 chests; one wooden, one bronze, one "
+        "up on the wall, you spy four chests; one wooden, one bronze, one "
         "silver, one gold..",#3
-        "You enter a craggy enclosure. Webs cover the ceiling.Eggs line the walls"
-        "You see dark shapes moving along the walls."
-        "Dozens of tiny, hungry eyes are staring at you",#4
+
+        "You stagger down a narrow corridor and spot a gap in the walls. "
+        "You feel your way carefully through the gap, along jagged rock "
+        "walls until you edge your way into an opening. You feel "
+        "something enshroud your face, sticking to you, pulling at you. "
+        "You reach out with your hands and desperately rip it away. You "
+        "look down and see three big white egg sacs. They seem to be wriggling. "
+        "You look up and see thick webs and dark shapes moving hurriedly "
+        "across the ceiling. Dozens of glowing, hungry eyes are fixed on you.", #4
+
         "You enter a small cave. There is a well in the center of the room",#5
-        "You find yourself in a huge cavern, with a stone bridge"
-        "In the center of the bridge stands a dragon",#6
-        "You enter a narrow stone corridoor. There are 3 troll guards standing in your path."   
-        "You enter a cavern, and are confronted by a smalle troup of goblin guards. They grunt at you",#7
+
+        "You find yourself in another cavern, this time it’s huge. There is "
+        "a large stone bridge.  Standing in the middle is an enormous, yellow-eyed "
+        "dragon.\n\nThe dragon looks curiously at you and lowers its scaly head.",#6
+
+        "You hurry past the dragon, down a passageway. You dash through the next "
+        "unlocked door you find and are met by a trio of goblins, one appears to "
+        "be in charge. They grunt at you.",#7
+
         "You see two goblins and a troll sitting around a table. They look annoyed that you"
         "disturbed them",#8
+
         "room 9",#9
         "hi leda",#10
         "You have reached the final room. Ahead of you is the exit of the dungeon."
@@ -858,6 +871,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=0
+    room_number=7
     enter_room(rooms,room_number)
 main()
