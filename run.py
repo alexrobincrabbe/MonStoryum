@@ -332,6 +332,8 @@ def choose_action(room,rooms,room_number,action):
         room.monster_action=False
     elif action.startswith("examine"):
         room.monster_action=examine(room,action)
+    elif action.startswith("take"):
+        take(room, action)
     elif action.startswith("talk"):
         talk(room,action)
     elif action.startswith("attack"):
@@ -376,12 +378,30 @@ def choose_action(room,rooms,room_number,action):
         print("Please choose a valid option (type 'help' for list of commands)")
         room.monster_action=False
 
+def take(room, action):
+    take_string=action.split(" ", 1)
+    if len(take_string) > 1:
+        item_string=take_string[1]
+    else:
+        print("take what? (hint: try 'take <name>')")
+        return
+    print(item_string)
+    print([item.description for item in room.items])
+    if item_string in [item.description for item in room.items]:
+        for item in room.items:
+            if item_string == item.description:
+                room.items.pop(room.items.index(item))
+                room.player.inventory.append(item)
+    else:
+        print("You don't see that here")
+
+
 def talk(room, action):
     talk_string=action.split(" ", 2)
     if len(talk_string) > 2:
         monster_string=talk_string[2]
     else:
-        print("talk to what (hint: try 'talk to <name>')")
+        print("talk to what? (hint: try 'talk to <name>')")
         room.monster_action=False
         return
     for monster in room.monsters:
@@ -549,6 +569,7 @@ def kill_monster(room, target_index):
         corpse=Feature(description,details,loot,False)
         corpse.description = f'{dead_monster.description}'
         room.features.append(corpse)
+
 
 def main ():
     #create items
