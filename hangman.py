@@ -31,5 +31,3 @@ def hangman():
                 return win
             else:
                 print(f"you have {guesses_remaining} wrong guesses left")
-
-print(hangman())

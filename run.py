@@ -11,6 +11,7 @@ pretty.install()
 from prettytable import PrettyTable
 import time
 import math
+from hangman import hangman
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -135,9 +136,38 @@ class Monster:
     def examine(self,player):
         print(self.details)
     
-    def talk(self):
+    def talk(self,room):
         print(self.speak)
         
+class Dragon(Monster):
+    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
+        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
+
+    def talk(self,room):
+        print(
+            "The dragon looks up at you, and raises it's enormous head."
+            "'I will allow you to pass if you solve a riddle'"
+            )
+        answer = input("'would you like to play?'")
+        if answer == "yes":
+            print ("'Very well, the rules of the game are simple:\n"
+                   "You must guess the letters of a word. For each"
+                   "correct guess, I will reveal one letter."
+                   "if you guess the word, I will allow you to pass.\n"
+                   "if you guess wrong 5 times, I will eat you")
+            answer_2 = input (" 'are you you sure you want to play?' ")
+            if answer_2 == "yes":
+                win = hangman()
+                if win == False:
+                    print(" 'disappointing...' ")
+                    room.monster_action = True
+                    room.battle_started = True
+            else:
+                print(" 'very well' ")
+                print("the dragon returns to its slumber")
+        else:
+            print(" 'very well' ")
+            
 class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
@@ -440,7 +470,7 @@ def talk(room, action):
         return
     for monster in room.monsters:
         if monster.description == monster_string:
-            monster.talk()
+            monster.talk(room)
             return
     print("talk to what?")
 
@@ -685,7 +715,7 @@ def main ():
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
     goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
-    dragon=Monster("dragon", d_details,100,0,0,scales,claws,[],d_speak)
+    dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[],d_speak)
     wolves=[]
     for i in range(2):
         wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
@@ -779,6 +809,6 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
 main()
