@@ -630,9 +630,9 @@ def main ():
     silver_sword = Weapon("silver sword","a shiny silver sword",[2,12],3)
     dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
     stinger = Weapon("stinger", "none", [1,1], 0)
-    claws = Weapon("claws","none",[10,15],0)
+    claws = Weapon("claws","none",[10,20],5)
     bite= Weapon("bite","none",[4,9],4)
-    stone_fists = Weapon("fists", "none", [5,10],4)
+    stone_fists = Weapon("fists", "none", [5,15],4)
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
