@@ -1,4 +1,6 @@
 import random as rnd
+from rich.prompt import Prompt
+from rich import print
 
 def hangman():
     '''
@@ -17,27 +19,34 @@ def hangman():
     show_word=""
     for step in range(number_of_letters):
         show_word+=" _"
-    print(show_word)
+
+    print(f'[green3]{show_word}[/green3]')
     # check if the letter is in the word and replace the underscore
     while win == False:
-        guess = input("guess a letter: ")
-        if guess in word:
-            index=0
-            for letter in word:
-                if guess == letter:
-                    show_word = show_word[:index*2+1] + letter + show_word[index*2 + 2:]
-                index+=1
-            print(show_word)
-            #if all letters have been guessed, win the game
-            if show_word.replace(" ","") == word:
-                print("you win")
-                win = True
-                return win
+        guess = Prompt.ask("[deep_sky_blue1]guess a letter: [deep_sky_blue1]")
+        if len(guess) > 1:
+            print("just one letter please")
         else:
-            print("incorrect")
-            guesses_remaining-=1
-            if guesses_remaining == 0:
-                print("you lose")
-                return win
+            if guess in word:
+                if guess in show_word:
+                    print("you have already guessed that letter")
+                else:
+                    index=0
+                    for letter in word:
+                        if guess == letter:
+                            show_word = show_word[:index*2+1] + letter + show_word[index*2 + 2:]
+                        index+=1
+                    print(show_word)
+                    #if all letters have been guessed, win the game
+                    if show_word.replace(" ","") == word:
+                        print("[green3]you win[green3]")
+                        win = True
+                        return win
             else:
-                print(f"you have {guesses_remaining} wrong guesses left")
+                print("[bright_red]incorrect[/bright_red]")
+                guesses_remaining-=1
+                if guesses_remaining == 0:
+                    print("you lose")
+                    return win
+                else:
+                    print(f"you have [orange3]{guesses_remaining}[/orange3] wrong guesses left")

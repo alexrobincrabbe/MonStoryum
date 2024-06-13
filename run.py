@@ -6,6 +6,7 @@ import os
 from rich import print
 from rich import pretty
 from rich.theme import Theme
+from rich import prompt
 from rich.console import Console
 pretty.install()
 from prettytable import PrettyTable
@@ -162,6 +163,13 @@ class Dragon(Monster):
                     print(" 'disappointing...' ")
                     room.monster_action = True
                     room.battle_started = True
+                else:
+                    print(
+                        " The dragon says 'Very well...I will allow you to pass.', "
+                        " then returns to its slumber."
+                        )
+                    room.password = True
+
             else:
                 print(" 'very well' ")
                 print("the dragon returns to its slumber")
@@ -420,7 +428,7 @@ def choose_action(room,rooms,room_number,action):
             room.monster_action=False
     elif action == "backwards":
         if room_number > 0:
-            if len(room.monsters) == 0 or room.password == True:
+            if len(room.monsters) == 0 or room_number == 5:
                 room_number-=1
                 enter_room(rooms,room_number)
             else:
@@ -809,6 +817,6 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[5].password=True
 
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
 main()
