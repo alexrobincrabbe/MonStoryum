@@ -33,7 +33,7 @@ custom_theme= Theme({
     "monsters" : "red",
     "stat" : "bright_green",
     "option" : "blue",
-    "header" : "blue"
+    "items" : "turquoise2"
 })
 console=Console(theme=custom_theme)
 
@@ -65,7 +65,7 @@ class Room:
         for monster in self.monsters:
             console.print(f'{monster.description}',style="monsters")
         for item in self.items:
-            console.print(f'{item.description}')
+            console.print(f'{item.description}', style = "items")
         for feature in self.features:
             console.print(f'{feature.alt_description}',style="features")
     
@@ -479,10 +479,12 @@ def take(room, action):
     if item_string in [item.description for item in room.items]:
         if len(room.monsters) > 0:
             print("you can't reach that right now")
+        else:
             for item in room.items:
                 if item_string == item.description:
                     room.items.pop(room.items.index(item))
                     room.player.inventory.append(item)
+                    print(f'you take the [turquoise2]{item.description}[/turquoise2]')
     else:
         console.print("You don't see that here", style = "info")
         room.monster_action = False
