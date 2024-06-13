@@ -142,6 +142,7 @@ class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
         self.inventory=[]
+        self.room_reached=0
         
     def display_inventory(self):
         self.weapons=[]
@@ -316,6 +317,8 @@ def enter_room(rooms,room_number):
     '''
     initiate game state when the player enters a room
     '''
+    if rooms[room_number].player.room_reached < room_number+1:
+        rooms[room_number].player.room_reached = room_number+1
     rooms[room_number].examine(rooms[room_number].player)
     rooms[room_number].visited=True
     start_turn(rooms, room_number)
@@ -331,12 +334,22 @@ def monsters_attack(room):
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
             monster.attack(room.player)
-        if room.player.hp < 1:
-            print("you died")
-            lose_game()
+            if room.player.hp < 1:
+                print("you died")
+                killed_by=monster.description
+                lose_game(room,killed_by)
 
-def lose_game():
-    input("press enter to restart")
+def lose_game(room,killed_by):
+    escaped = "no"
+    killed_dragon = "no"
+    results = (room.player.description,room.player.room_reached,killed_by,escaped,killed_dragon)
+    hof=SHEET.worksheet('Sheet1')
+    hof.append_row(results)
+    see_HOF = input("See Hall of Fame? (yes/no)")
+    if see_HOF == "yes":
+        hall_of_fame=SHEET.worksheet('Sheet1')
+        print(hall_of_fame.get_all_values())
+    input("press enter to continue")
     main()
 
 def win_game():
