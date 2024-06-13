@@ -871,6 +871,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=7
+    room_number=0
     enter_room(rooms,room_number)
 main()
