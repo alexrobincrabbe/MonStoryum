@@ -604,7 +604,14 @@ def kill_monster(room, target_index):
         corpse.description = f'{dead_monster.description}'
         room.features.append(corpse)
 
-
+def choose_name():
+    name = input("please choose your name: ")
+    if len(name) > 10:
+        print("maximum of 10 characters")
+        choose_name()
+    else:
+        return name
+    
 def main ():
     #create items
     #armor
@@ -652,7 +659,8 @@ def main ():
     ]
 
     #initialise player
-    player=Player("Alex", "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    name = choose_name()
+    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -773,5 +781,4 @@ def main ():
 
     room_number=0
     enter_room(rooms,room_number)
-
 main()
