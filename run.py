@@ -592,7 +592,7 @@ def main ():
     dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
     stinger = Weapon("stinger", "none", [1,1], 0)
     claws = Weapon("claws","none",[10,15],0)
-    bite= Weapon("bite","none",[5,5],0)
+    bite= Weapon("bite","none",[4,9],4)
     stone_fists = Weapon("fists", "none", [5,10],4)
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
@@ -648,7 +648,7 @@ def main ():
     dragon=Monster("dragon", d_details,100,0,0,scales,claws,[],d_speak)
     wolves=[]
     for i in range(2):
-        wolves.append(Monster("wolf", w_details, 10,0,1, no_armor,bite, [], w_speak))
+        wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
 
     stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
     spiders=[]
