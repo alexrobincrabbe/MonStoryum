@@ -2,4 +2,3 @@
 rich
 prettytable
 gspread
-google.oauth2
