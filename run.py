@@ -588,7 +588,7 @@ def main ():
     dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
     club = Weapon("club", "a large blunt weapon", [2,10], -1)
     sword = Weapon("sword","a fine steel sword",[1,10],2)
-    silver_sword = Weapon("sword","a shiny silver sword",[2,12],3)
+    silver_sword = Weapon("silver sword","a shiny silver sword",[2,12],3)
     dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
     stinger = Weapon("stinger", "none", [1,1], 0)
     claws = Weapon("claws","none",[10,15],0)
