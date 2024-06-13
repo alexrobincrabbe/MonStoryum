@@ -1,3 +1,5 @@
 # Your requirements go here
 rich
 prettytable
+gspread
+google.oauth2
