@@ -574,7 +574,7 @@ def main ():
     #potions
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
     Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
-    agility_potion = Potion("agility potion", "it is green and sticky","agility",2)
+    agility_potion = Potion("agility potion", "it is green and sticky","agility",3)
     strength_potion = Potion("strength potion", "orange and bubbly", "strength",2)
     #keys
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
@@ -630,7 +630,7 @@ def main ():
     stone_guardian = Monster("stone guardian", sg_details, 30, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
     spiders=[]
     for i in range(5):
-        spiders.append(Monster("spider",s_details, 1,1,0,no_armor,stinger,[],s_speak))
+        spiders.append(Monster("spider",s_details, 1,0,0,no_armor,stinger,[],s_speak))
 
     monsters=[
         [drunk_goblin],#1
