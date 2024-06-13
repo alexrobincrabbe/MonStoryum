@@ -188,20 +188,24 @@ class Player(Monster):
         self.room_reached=0
         
     def display_inventory(self):
-        self.weapons=[]
-        self.armors=[]
-        self.potions=[]
+        self.weapons = []
+        self.armors = []
+        self.potions = []
+        self.keys = []
         for item in self.inventory:
-            if item.type=="weapon":
+            if item.type == "weapon":
                 self.weapons.append(item)
-            if item.type=="armor":
+            if item.type == "armor":
                 self.armors.append(item)
-            if item.type=="potion":
+            if item.type == "potion":
                 self.potions.append(item)
+            if item.type == "key":
+                self.keys.append(item)
         
         self.print_weapons()
         self.print_armor()
         self.print_potions()
+        self.print_keys()
 
     def print_weapons(self):
         table = PrettyTable()
@@ -232,6 +236,15 @@ class Player(Monster):
         table.add_column("Stat",stat_data)
         table.add_column("Effect",effect_data)
         console.print(table,style="green")
+
+    def print_keys(self):
+        key_string=""
+        for key in self.keys:
+            key_string+=f'{key.description}, '
+        if len(key_string) >= 2:
+            key_string = key_string[:-2]
+        print(f'Keys : [turquoise2]{key_string}[/turquoise2]')
+
     
     def inv_equip(self, inv_action):
         equip_string=inv_action.split(" ", 1)
@@ -403,7 +416,7 @@ def choose_action(room,rooms,room_number,action):
     if action == "help":
         print("list of available commands:")
         for option in options:
-            console.print(option,style="option")
+            console.print(option,style="info")
         room.monster_action=False
     elif action.startswith("examine"):
         room.monster_action=examine(room,action)
