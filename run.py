@@ -773,11 +773,24 @@ def main ():
         ]
     #create rooms
     room_descriptions = [
-        "You have are in a underground jailcell, deep beneath the citadel." 
-        "You hear footsteps outside, the door swings open and a drunk goblin"
-        "stumbles into the cell. He is yelling something at you, but you don't speak goblin",#1
-        "You stumble out of the cell, into the guard quarters, you are confronted with"
-        "a large angry looking troll. ",#2
+        "Regaining consciousness, you open your eyes and realise you are in a dark, "
+        "dank-smelling dungeon. From the faint sounds above you, you realise you are" 
+        "in the depths of the citadel, controlled by the evil sorceress queen, Achlys. "
+        "It dawns on you that by wrongfully imprisoning you, Achlys has removed the "
+        "last obstacle to her malicious schemes. You must find a way to escape, "
+        "though you know that her loyal monsters will fight you to the death. "
+        "The innocent citizens of Greystorm will be counting on you to"
+        "save them."
+        "You hear clumsy, heavy footsteps approaching your cell, "
+        "the door creaks open and an evidently inebriated goblin stumbles in. "
+        "You reach for your weapon but…your scabbard is empty. "
+        "He begins to berate you, but you don’t know what he’s saying - "
+        "you don’t speak Goblish."
+        "He lunges towards you and you see a dagger in his gnarly hand: ",#1
+
+        "You lurch out of your cell and find yourself in the guard quarters. "
+        "You are confronted by a large troll. He glares angrily at you.",#2
+
         "You find enter a room. There are 4 chests. One Gold, one silver, one bronze, one wooden.",#3
         "You enter a craggy enclosure. Webs cover the ceiling.Eggs line the walls"
         "You see dark shapes moving along the walls."
@@ -815,8 +828,10 @@ def main ():
     
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
+    rooms[0].monster_action = True
+    rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=5
+    room_number=0
     enter_room(rooms,room_number)
 main()
