@@ -416,10 +416,11 @@ def win_game(room):
     time.sleep(1)
     print('Congratulations! you escaped the dungeon!')
     escaped= "yes"
-    results(room,escaped)
+    killed_by = "survived"
+    results(room, killed_by, escaped)
 
 def results(room,killed_by,escaped):
-    if "gold medallion" in [item.description for item in room.player.items]:
+    if "gold medallion" in [item.description for item in room.player.inventory]:
         gold_medallion = "yes"
     else:
         gold_medallion = "no"
@@ -458,7 +459,7 @@ def choose_action(room,rooms,room_number,action):
     elif action == "forwards":
         if len(room.monsters) == 0 or room.password == True:
             if room.door == "open":
-                if room.password == True:
+                if room.password == True and len(room.monsters) > 0:
                     print("the dragon allows you to pass")
                     time.sleep(2)
                 room_number+=1
@@ -748,7 +749,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    player=Player(name, "A warrior", 25, 1000, 1000, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
