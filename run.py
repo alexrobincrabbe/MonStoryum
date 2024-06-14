@@ -412,6 +412,7 @@ def lose_game(room,killed_by):
     print("GAME OVER")
     results(room,killed_by,escaped)
 
+
 def win_game(room):
     clear_console()
     time.sleep(1)
@@ -711,6 +712,7 @@ def kill_monster(room, target_index):
         room.features.append(corpse)
 
 def choose_name():
+    clear_console()
     name = input("please choose your name: ")
     if len(name) > 10:
         print("maximum of 10 characters")
@@ -767,7 +769,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 1000, 1000, no_armor, fists,[],"")
+    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -917,6 +919,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=10
+    room_number=0
     enter_room(rooms,room_number)
 main()
