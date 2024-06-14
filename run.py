@@ -12,6 +12,7 @@ pretty.install()
 from prettytable import PrettyTable
 import time
 import math
+from operator import itemgetter, attrgetter
 
 #my function imports
 from hangman import hangman
@@ -430,13 +431,30 @@ def results(room,killed_by,escaped):
     see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
     while True:
         if see_HOF == "yes" or see_HOF == "y":
-            hall_of_fame=SHEET.worksheet('Sheet1')
-            print(hall_of_fame.get_all_values())
+            show_HOF()
             break
         if see_HOF == "no" or see_HOF == "n":
             break
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
+
+def show_HOF():
+    hall_of_fame=SHEET.worksheet('Sheet1')
+    HOF = hall_of_fame.get_all_values()
+    HOF.pop(0)
+    for row in HOF:
+        row[1]=int(row[1])
+
+    HOF.sort(key=itemgetter(4,3,1),reverse=True)
+    table = PrettyTable()
+    table.field_names=["NAME", "ROOM REACHED", "KILLED BY", "ESCAPED" ,"GOLD MEDALLION"]
+    for row in HOF:
+        table.add_row(row)
+    
+    console.print(table,style="purple")
+
+
+
 
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
@@ -899,6 +917,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=5
+    room_number=10
     enter_room(rooms,room_number)
 main()
