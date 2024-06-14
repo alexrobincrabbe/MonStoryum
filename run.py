@@ -152,17 +152,23 @@ class Dragon(Monster):
 
     def talk(self,room):
         print(
-            "The dragon looks up at you, and raises it's enormous head."
-            "'I will allow you to pass if you solve a riddle'"
-            )
+            "The walls shake as, in a booming, gravelly voice, "
+            "the dragon suddenly speaks! "
+            " 'I have been here for centuries and you are the first "
+            "to say a single word to me. Usually they all run away! "
+            "I will let you pass by me unharmed, but only if you play "
+            "my game…and win!”' ")
         while True:
             answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
             if answer == "yes" or answer == "y":
-                print (" 'Very well, the rules of the game are simple:' \n"
-                    " 'You must guess the letters of a word. For each"
-                    "correct guess, I will reveal one letter."
-                    "if you guess the word, I will allow you to pass.' \n"
-                    " 'if you guess wrong 5 times, I will eat you' ")
+                print (
+                    " [chartreuse4]'Let us begin, the rules of my game are simple. \n"
+                    "You must guess the letters for the word I am thinking of. "
+                    "For each correct guess, I will reveal where that letter "
+                    "belongs in my word. \n"
+                    "If you guess my word, you are free to go. If you guess incorrectly "
+                    "five times…I will eat you.' [/chartreuse4]"
+                )
                 break
             if answer == "no" or answer == "n":
                 print(" 'very well' ")
@@ -178,13 +184,18 @@ class Dragon(Monster):
                 return
         win = hangman()
         if win == False:
-            print(" 'disappointing...' ")
+            print(" 'It has been so long since my last meal...' ")
             room.monster_action = True
             room.battle_started = True
         else:
             room.password = True
-            print(" 'very well...I will allow you to pass' ")
-            print("the dragon returns to its slumber")
+            print(
+                " [chartreuse4]'You’ve beaten me at my own game, "
+                " I will allow you to pass.' [/chartreuse4]\n The dragon " 
+                "steps aside, allowing you just enough space to pass by. "
+                "Taking a deep breath, you brave the bridge and scurry past "
+                "as fast as you can.' "
+                )
 
             
 class Player(Monster):
@@ -748,7 +759,7 @@ def main ():
     rusty_armour= Armor("rusty armor", "it has seen better days",2,-1)
     leather_armor = Armor("leather armor", "it is light, and offers some protection",3,0)
     plate_armor = Armor("plate armor", "it is heavy, but offers good protection",5,-1)
-    dragonscale_armor = Armor("dragonscale armor", "it glistens",10,1)
+    dragonscale_armor = Armor("dragonscale armor", "it glistens",11,1)
     scales = Armor("none", "none",10,0)
     stone_skin = Armor("none", "none", 5, -2)
     #weapons
@@ -790,7 +801,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 3, 4, dragonscale_armor, dragon_lance,[Super_healing_potion,Super_healing_potion],"")
+    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -843,9 +854,9 @@ def main ():
     wooden_chest_0=Feature("wooden chest","the chest is old and shabby", [healing_potion],False)
     bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
     silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
-    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,Super_healing_potion],True)
-    spider_egg=Feature("egg","it is wet and slimey",[],False)
-    spider_egg_2=Feature("egg","it is wet and slimey",[bronze_key],False)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,Super_healing_potion,Super_healing_potion],True)
+    spider_egg=Feature("egg","it is wet and slimy",[],False)
+    spider_egg_2=Feature("egg","it is wet and slimy",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
     wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
@@ -877,7 +888,7 @@ def main ():
         "the door creaks open and an evidently inebriated goblin stumbles in. "
         "You reach for your weapon but…your scabbard is empty. "
         "He begins to berate you, but you don’t know what he’s saying - "
-        "you don’t speak Goblish. "
+        "you don’t speak Goblin. "
         "He lunges towards you and you see a dagger in his gnarly hand: ",#1
 
         "You lurch out of your cell and find yourself in the guard quarters. "
@@ -897,7 +908,14 @@ def main ():
         "You look up and see thick webs and dark shapes moving hurriedly "
         "across the ceiling. Dozens of glowing, hungry eyes are fixed on you.", #4
 
-        "You enter a small cave. There is a well in the center of the room",#5
+        "Climbing a few roughly hewn steps you see ahead of you a shaft of light "
+        "shining down upon an old stone well. \n"
+        "An anvil sits on a stone pile next to the well and discarded bottles are "
+        "strewn about the floor. A stack of buckets has been knocked over and left "
+        "where they fell. \n"
+        "Goblins and trolls are not renowned for their housekeeping! \n"
+        "As you approach, something inside the well catches your eye "
+        "- is that metal?",#5
 
         "You find yourself in another cavern, this time it’s huge. There is "
         "a large stone bridge.  Standing in the middle is an enormous, yellow-eyed "
@@ -916,11 +934,12 @@ def main ():
         "Daylight dazzles your eyes. In your path stands a stone guardian"#11 
     ]
     room_descriptions_visited = [
-        "You are in a dark wet cell. There is a door to the east.",
-        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",
-        "You are in a small cave with a well at the center of the room",
-        "You are in a cavern, webs cover the walls and ceiling.",
-        "room 5",
+        "You are in a dark wet cell. There is a door to the east.",#1
+        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
+        "You are in a cavern, webs cover the walls and ceiling. ",#3
+        "You are in a small cave with a well at the center of the room"
+        "Something is splashing about in that well…best not draw attention to yourself.",#4
+        "room 5",#5
         "room 6",
         "room 7",
         "room 8",
@@ -940,6 +959,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=5
+    room_number=0
     enter_room(rooms,room_number)
 main()
