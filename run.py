@@ -421,11 +421,15 @@ def results(room,killed_by,escaped):
     results = (room.player.description,room.player.room_reached,killed_by,escaped,gold_medallion)
     hof=SHEET.worksheet('Sheet1')
     hof.append_row(results)
-    see_HOF = input("See Hall of Fame? (yes/no)")
-    if see_HOF == "yes":
-        hall_of_fame=SHEET.worksheet('Sheet1')
-        print(hall_of_fame.get_all_values())
-    input("press enter to restart")
+    see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
+    while True:
+        if see_HOF == "yes" or see_HOF == "y":
+            hall_of_fame=SHEET.worksheet('Sheet1')
+            print(hall_of_fame.get_all_values())
+            break
+        if see_HOF == "no" or see_HOF == "n":
+            break
+    Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
 
 def choose_action(room,rooms,room_number,action):
