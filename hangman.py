@@ -12,7 +12,7 @@ def hangman():
     win = False
     guesses_remaining = 5 
     #
-    word_list = ["monster", "bunnies", "mouse","pirate", "magical"]
+    word_list = ["dinner", "breakfast", "hungry", "delicious"]
     word = rnd.choice(word_list)
     #create string with a space and an underscore for each letter in the word
     number_of_letters=len(word)

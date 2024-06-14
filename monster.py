@@ -60,53 +60,58 @@ class Monster:
 class Dragon(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
+        self.riddle_solved = False
 
     def talk(self,room):
-        print(
-            "The walls shake as, in a booming, gravelly voice, "
-            "the dragon suddenly speaks! "
-            " 'I have been here for centuries and you are the first "
-            "to say a single word to me. Usually they all run away! "
-            "I will let you pass by me unharmed, but only if you play "
-            "my game…and win!”' ")
-        while True:
-            answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
-            if answer == "yes" or answer == "y":
-                print (
-                    " [chartreuse4]'Let us begin, the rules of my game are simple. \n"
-                    "You must guess the letters for the word I am thinking of. "
-                    "For each correct guess, I will reveal where that letter "
-                    "belongs in my word. \n"
-                    "If you guess my word, you are free to go. If you guess incorrectly "
-                    "five times…I will eat you.' [/chartreuse4]"
-                )
-                break
-            if answer == "no" or answer == "n":
-                print(" 'very well' ")
-                print("the dragon returns to its slumber")
-                return
-        while True:
-            answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want to play?'[/chartreuse4] (yes/no) ")
-            if answer_2 == "yes" or answer_2 == "y":
-                break
-            if answer_2 == "no" or answer_2 == "n":
-                print(" 'very well' ")
-                print("the dragon returns to its slumber")
-                return
-        win = hangman()
-        if win == False:
-            print(" 'It has been so long since my last meal...' ")
-            room.monster_action = True
-            room.battle_started = True
-        else:
-            room.password = True
+        if self.riddle_solved == False:
             print(
-                " [chartreuse4]'You’ve beaten me at my own game, "
-                " I will allow you to pass.' [/chartreuse4]\n The dragon " 
-                "steps aside, allowing you just enough space to pass by. "
-                "Taking a deep breath, you brave the bridge and scurry past "
-                "as fast as you can.' "
-                )
+                "The walls shake as, in a booming, gravelly voice, "
+                "the dragon suddenly speaks! "
+                " 'I have been here for centuries and you are the first "
+                "to say a single word to me. Usually they all run away! "
+                "I will let you pass by me unharmed, but only if you play "
+                "my game…and win!”' ")
+            while True:
+                answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
+                if answer == "yes" or answer == "y":
+                    print (
+                        " [chartreuse4]'Let us begin, the rules of my game are simple. \n"
+                        "You must guess the letters for the word I am thinking of. "
+                        "For each correct guess, I will reveal where that letter "
+                        "belongs in my word. \n"
+                        "If you guess my word, you are free to go. If you guess incorrectly "
+                        "five times…I will eat you.' [/chartreuse4]"
+                    )
+                    break
+                if answer == "no" or answer == "n":
+                    print(" 'very well' ")
+                    print("the dragon returns to its slumber")
+                    return
+            while True:
+                answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want to play?'[/chartreuse4] (yes/no) ")
+                if answer_2 == "yes" or answer_2 == "y":
+                    break
+                if answer_2 == "no" or answer_2 == "n":
+                    print(" 'very well' ")
+                    print("the dragon returns to its slumber")
+                    return
+            win = hangman()
+            if win == False:
+                print(" 'It has been so long since my last meal...' ")
+                room.monster_action = True
+                room.battle_started = True
+            else:
+                self.riddle_solved = True
+                room.password = True
+                print(
+                    " [chartreuse4]'You’ve beaten me at my own game, "
+                    " I will allow you to pass.' [/chartreuse4]\n The dragon " 
+                    "steps aside, allowing you just enough space to pass by. "
+                    "Taking a deep breath, you brave the bridge and scurry past "
+                    "as fast as you can.' "
+                    )
+        else:
+            print("[chartreuse4]'you have already bested my game human. Leave quickly before I change my mind'[/chartreuse4]")
 class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)

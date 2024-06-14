@@ -159,9 +159,10 @@ def choose_action(room,rooms,room_number,action):
     elif action == "forwards":
         if len(room.monsters) == 0 or room.password == True:
             if room.door == "open":
-                if room.password == True and len(room.monsters) > 0:
-                    print("the dragon allows you to pass")
-                    time.sleep(2)
+                if room_number == 5:
+                    if room.password == True and len(room.monsters) > 0:
+                        print("the dragon allows you to pass")
+                        time.sleep(2)
                 room_number+=1
                 if room_number == 11:
                     room_number = 10
@@ -176,7 +177,13 @@ def choose_action(room,rooms,room_number,action):
             room.monster_action=False
     elif action == "backwards":
         if room_number > 0:
-            if len(room.monsters) == 0 or room_number == 5:
+            if room_number == 5:
+                if room.battle_started == False or len(room.monsters) == 0:
+                    room_number-=1
+                    enter_room(rooms,room_number)
+                else:
+                    console.print("The dragon will not let you get away like that", style ="info")
+            elif len(room.monsters) == 0:
                 room_number-=1
                 enter_room(rooms,room_number)
             else:
@@ -641,9 +648,8 @@ def main ():
     rooms[0].key_name="prison_door"
     rooms[0].monster_action = True
     rooms[0].battle_started = True
-    rooms[5].password=True
 
-    room_number=10
+    room_number=5
     enter_room(rooms,room_number)
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
