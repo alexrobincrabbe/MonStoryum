@@ -192,6 +192,7 @@ class Player(Monster):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
         self.inventory=[]
         self.room_reached=0
+        self.dragon_killed=False
         
     def display_inventory(self):
         self.weapons = []
@@ -414,6 +415,17 @@ def lose_game(room,killed_by):
 
 
 def win_game(room):
+    if room.player.dragon_killed == False:
+        print(
+            "You can escape the dungeon now, however the dragon is still "
+            "back there in the dungeon")
+        while True:
+            answer = Prompt.ask( "[gold3]Are you sure you want to leave? [gold3](yes/no)")
+            if answer == "yes" or answer == "y":
+                break
+            if answer == "no" or answer == "n":
+                room
+                return
     clear_console()
     time.sleep(1)
     print('Congratulations! you escaped the dungeon!')
@@ -483,6 +495,7 @@ def choose_action(room,rooms,room_number,action):
                     time.sleep(2)
                 room_number+=1
                 if room_number == 11:
+                    room_number = 10
                     win_game(room)
                 enter_room(rooms,room_number)
             else:
@@ -703,6 +716,8 @@ def kill_monster(room, target_index):
     if room.monsters[target_index].hp == 0:
         time.sleep(1)
         console.print(f'{room.monsters[target_index].description} dies',style="red")
+        if room.monsters[target_index].description == "dragon":
+            room.player.dragon_killed = True
         dead_monster=room.monsters.pop(target_index)
         description=f'dead {dead_monster.description}'
         details="you examine the corpse"
