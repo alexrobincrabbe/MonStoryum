@@ -17,6 +17,10 @@ from operator import itemgetter, attrgetter
 #my function imports
 from hangman import hangman
 
+#my class imports
+from items import Weapon,Armor,Potion,Key
+
+
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -41,6 +45,9 @@ console=Console(theme=custom_theme)
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 class Room:
+    '''
+    Main class, contains object instances of all other classes as attributes.
+    '''
     def __init__(self,details,details_visited,player,monsters,items,features):
         self.details=details
         self.details_visited=details_visited
@@ -57,6 +64,10 @@ class Room:
         self.password=False
 
     def examine(self, player):
+        '''
+        prints description of room, as well as description of all:
+        items,features, monsters that are in the room.
+        '''
         clear_console()
         if self.visited == False:
             console.print(f'{self.details}',style="info")
@@ -70,40 +81,7 @@ class Room:
         for feature in self.features:
             console.print(f'{feature.alt_description}',style="features")
     
-class Item:
-    def __init__(self,description,details):
-        self.description=description
-        self.details=details
-    
-    def examine(self, player):
-        console.print(f'{self.details}', style = "info")
 
-class Weapon(Item):
-    def __init__(self,description,details,damage,hit):
-        Item.__init__(self,description,details)
-        self.damage=damage
-        self.hit=hit
-        self.type="weapon"
-
-class Armor(Item):
-    def __init__(self,description,details,armor_value,dodge):
-        Item.__init__(self,description,details)
-        self.armor_value=armor_value
-        self.dodge=dodge
-        self.type="armor"
-
-class Potion(Item):
-    def __init__(self,description,details,stat,effect):
-        Item.__init__(self,description,details)
-        self.stat=stat
-        self.effect=effect
-        self.type="potion"
-
-class Key(Item):
-    def __init__(self,description,details,key_name):
-        Item.__init__(self,description,details)
-        self.key_name=key_name
-        self.type="key"
 class Monster:
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         self.description=description
@@ -406,7 +384,7 @@ def enter_room(rooms,room_number):
     rooms[room_number].visited=True
     start_turn(rooms, room_number)
 
-def start_turn(rooms,room_number):
+def start_turn(rooms,room_number:int):
     room=rooms[room_number]
     monsters_attack(room)
     action = Prompt.ask("[gold3]choose an action[/gold3] (type 'help' for options) ")
@@ -414,6 +392,9 @@ def start_turn(rooms,room_number):
     start_turn(rooms, room_number)
     
 def monsters_attack(room):
+    '''
+    
+    '''
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
             monster.attack(room.player)
@@ -936,10 +917,10 @@ def main ():
     room_descriptions_visited = [
         "You are in a dark wet cell. There is a door to the east.",#1
         "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
-        "You are in a cavern, webs cover the walls and ceiling. ",#3
+        "room 3",#3
+        "You are in a cavern, webs cover the walls and ceiling. ",#4
         "You are in a small cave with a well at the center of the room"
-        "Something is splashing about in that well…best not draw attention to yourself.",#4
-        "room 5",#5
+        "Something is splashing about in that well…best not draw attention to yourself.",#5
         "room 6",
         "room 7",
         "room 8",
