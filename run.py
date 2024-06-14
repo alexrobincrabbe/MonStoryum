@@ -394,7 +394,7 @@ def enter_room(rooms,room_number):
 def start_turn(rooms,room_number):
     room=rooms[room_number]
     monsters_attack(room)
-    action = Prompt.ask('[gold3]choose an action[gold3] ')
+    action = Prompt.ask("[gold3]choose an action[/gold3] (type 'help' for options) ")
     choose_action(room,rooms, room_number,action)
     start_turn(rooms, room_number)
     
