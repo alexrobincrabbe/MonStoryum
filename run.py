@@ -1,4 +1,4 @@
-
+import time
 from rich import print
 from rich import pretty
 from rich.theme import Theme
@@ -6,10 +6,10 @@ from rich.prompt import Prompt
 from rich.console import Console
 from rich.theme import Theme
 pretty.install()
-import time
+
 
 #my class imports
-from items import Weapon, Armor, Potion,Key
+from game.items import Weapon, Armor, Potion,Key
 from monster import Monster, Dragon, Player
 
 #my function imports
@@ -459,7 +459,7 @@ def main ():
     player.hp=20
     player.start_hp=20
     #creat monsters
-    g_speak = "it is probably swearing at you, but you don't understand goblin"
+    g_speak = "it is probably swearing at you, but you don't understand goblish"
     dg_details = "The goblin looks very drunk"
     g_details = "goblins are funny looking creatures"
     t_speak = "it grunts at you"
@@ -542,7 +542,7 @@ def main ():
         "the door creaks open and an evidently inebriated goblin stumbles in. "
         "You reach for your weapon but…your scabbard is empty. "
         "He begins to berate you, but you don’t know what he’s saying - "
-        "you don’t speak Goblin. "
+        "you don’t speak Goblish. "
         "He lunges towards you and you see a dagger in his gnarly hand: ",#1
 
         "You lurch out of your cell and find yourself in the guard quarters. "
@@ -579,25 +579,41 @@ def main ():
         "unlocked door you find and are met by a trio of goblins, one appears to "
         "be in charge. They grunt at you.",#7
 
-        "You see two goblins and a troll sitting around a table. They look annoyed that you"
-        "disturbed them",#8
+        "As you turn the corner, you hear guffawing and the snorts of Goblish being"
+        "spoken and the grunts of a troll. You see them, quaffing a dark brew, two "
+        "goblins and a troll sitting at a table, their drinks spilling as they see you. "
+        "They appear startled - and then irritated - that you’ve disturbed their fun.",#8
 
-        "room 9",#9
-        "hi leda",#10
-        "You have reached the final room. Ahead of you is the exit of the dungeon."
-        "Daylight dazzles your eyes. In your path stands a stone guardian"#11 
+        "They must have heard you coming, because this goblin and troll have a couple "
+        "of ferocious wolves to back them up. The beasts stare into your soul, circling, "
+        "as saliva drips from their snarling mouths.",#9
+        "What is this I see before me? Somebody has left an ornately embroidered bag "
+        "full of potions just lying here. It looks very out of place…perhaps you are "
+        "going to need these?",#10
+        "Pushing open a door that is much heavier than the others, daylight dazzles "
+        "you. Shielding your eyes, you see a hulking shape ahead of you, blocking "
+        "the exit to this hellish place. You have fought so hard and freedom is so close. "
+        "A Stone Guardian stomps towards you."#11 
     ]
     room_descriptions_visited = [
         "You are in a dark wet cell. There is a door to the east.",#1
         "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
         "room 3",#3
-        "You are in a cavern, webs cover the walls and ceiling. ",#4
-        "You are in a small cave with a well at the center of the room"
+        "room 4",#4
+        "A shaft of light shines down upon an old stone well. "
+        "An anvil sits on a stone pile next to the well and discarded bottles are "
+        "strewn about the floor. A stack of buckets has been knocked over and left "
+        "where they fell. \n"   
+        "Goblins and trolls are not renowned for their housekeeping! \n  "
         "Something is splashing about in that well…best not draw attention to yourself.",#5
         "room 6",
         "room 7",
-        "room 8",
-        "room 9",
+        "The stench of sweet booze lingers in the room, your feet stick to spilled liquid "
+        "and your eyes sting - that stuff is potent! The chairs and table are knocked over, "
+        "there is broken glass everywhere, tread carefully.", #8
+        "What a mess! Patches of red-stained fur all over. Those wolves are almost as "
+        "frightening in death as they were when alive. Their gigantic fangs are still "
+        "sharp, someone might slip in the blood and land on those!",#9
         "room 10",
         "room 11"
         ]
