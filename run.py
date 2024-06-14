@@ -397,8 +397,23 @@ def monsters_attack(room):
 
 def lose_game(room,killed_by):
     escaped = "no"
-    killed_dragon = "no"
-    results = (room.player.description,room.player.room_reached,killed_by,escaped,killed_dragon)
+    time.sleep(3)
+    print("GAME OVER")
+    results(room,killed_by,escaped)
+
+def win_game(room):
+    clear_console()
+    time.sleep(1)
+    print('Congratulations! you escaped the dungeon!')
+    escaped= "yes"
+    results(room,escaped)
+
+def results(room,killed_by,escaped):
+    if "gold medallion" in [item.description for item in room.player.items]:
+        gold_medallion = "yes"
+    else:
+        gold_medallion = "no"
+    results = (room.player.description,room.player.room_reached,killed_by,escaped,gold_medallion)
     hof=SHEET.worksheet('Sheet1')
     hof.append_row(results)
     see_HOF = input("See Hall of Fame? (yes/no)")
@@ -407,9 +422,6 @@ def lose_game(room,killed_by):
         print(hall_of_fame.get_all_values())
     input("press enter to continue")
     main()
-
-def win_game():
-    print('Congratulations! you escaped the dungeon!')
 
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
@@ -437,7 +449,7 @@ def choose_action(room,rooms,room_number,action):
                     time.sleep(2)
                 room_number+=1
                 if room_number == 11:
-                    win_game()
+                    win_game(room)
                 enter_room(rooms,room_number)
             else:
                 check_door(rooms,room_number)
@@ -704,6 +716,7 @@ def main ():
     bronze_key=Key("bronze key","It is dusty","bronze chest")
     silver_key=Key("silver key","It is shiny","silver chest")
     golden_key=Key("golden key","It has strange markings","golden chest")
+    gold_medallion = Key("gold medallion", "it is proof that you killed the dragon", "none")
 
     items=[
         [],#1
@@ -746,7 +759,7 @@ def main ():
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
     goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
-    dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[],d_speak)
+    dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[gold_medallion],d_speak)
     wolves=[]
     for i in range(2):
         wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
