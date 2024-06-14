@@ -165,8 +165,8 @@ def choose_action(room,rooms,room_number,action):
                 room_number+=1
                 if room_number == 11:
                     room_number = 10
-                    win_game = win_game(room)
-                    if win_game == True:
+                    room.game_won = win_game(room)
+                    if room.game_won == True:
                         return
                 enter_room(rooms,room_number)
             else:
