@@ -165,7 +165,9 @@ def choose_action(room,rooms,room_number,action):
                 room_number+=1
                 if room_number == 11:
                     room_number = 10
-                    room.game_won = win_game(room)
+                    win_game = win_game(room)
+                    if win_game == True:
+                        return
                 enter_room(rooms,room_number)
             else:
                 check_door(rooms,room_number)
@@ -455,7 +457,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    player=Player(name, "A warrior", 25, 1000, 1000, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -584,12 +586,24 @@ def main ():
         "goblins and a troll sitting at a table, their drinks spilling as they see you. "
         "They appear startled - and then irritated - that you've disturbed their fun.",#8
 
-        "They must have heard you coming, because this goblin and troll have a couple "
-        "of ferocious wolves to back them up. The beasts stare into your soul, circling, "
-        "as saliva drips from their snarling mouths.",#9
+        "The room is deadly silent but you are unnerved by the feeling that you're not "
+        "alone. Taking a few careful steps forward, you hear the slow scraping sound of "
+        "metal against concrete. \n"
+        "Two deep growls echo together, bouncing off the walls. They vibrate through your"
+        " body and the hair on the back of your neck stands on end. \n"
+        "Then you see them, waiting for you. \n"
+        "They must have heard you coming…because this goblin and troll have their weapons "
+        "ready in-hand….and have a couple of massive, ferocious wolves guarding them. " 
+        "The hairy beasts raise their hackles…and stare into your soul, circling, they "
+        "appear to be starving…saliva drips from their snarling mouths. They are ready "
+        "to pounce, just waiting for the order. \n"
+        "The troll lumbers forward as the goblin lets out an ungodly screeching sound." 
+        "You see a flash of teeth and claws",#9
+
         "What is this I see before me? Somebody has left an ornately embroidered bag "
         "full of potions just lying here. It looks very out of place…perhaps you are "
         "going to need these?",#10
+
         "Pushing open a door that is much heavier than the others, daylight dazzles "
         "you. Shielding your eyes, you see a hulking shape ahead of you, blocking "
         "the exit to this hellish place. You have fought so hard and freedom is so close. "
