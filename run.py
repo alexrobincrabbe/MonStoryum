@@ -295,14 +295,18 @@ class Player(Monster):
                     if item.type == "potion":
                         self.inventory.pop(inventory_index)
                         self.potion_use(item)
+                        return True
                     else:
                         print("you cant use that right now")
+                        return False
                 item_list.append(item.description)
                 inventory_index+=1
             if use_object not in item_list:
                 print("You don't have one of those")
+                return False
         else:
             print("choose an object to use")
+            return False
     
     def potion_use(self,potion):
         print(f'used {potion.description}')
@@ -477,7 +481,7 @@ def choose_action(room,rooms,room_number,action):
             console.print(option,style="info")
         room.monster_action=False
     elif action.startswith("examine"):
-        room.monster_action=examine(room,action)
+        examine(room,action)
     elif action.startswith("take"):
         take(room, action)
     elif action.startswith("talk"):
@@ -527,6 +531,7 @@ def choose_action(room,rooms,room_number,action):
         console.print("Please choose a valid option (type 'help' for list of commands)", style = "info")
         room.monster_action=False
 
+
 def take(room, action):
     take_string=action.split(" ", 1)
     if len(take_string) > 1:
@@ -560,6 +565,7 @@ def talk(room, action):
     for monster in room.monsters:
         if monster.description == monster_string:
             monster.talk(room)
+            room.monster_action = True
             return
     console.print("talk to what?", style = "info")
 
