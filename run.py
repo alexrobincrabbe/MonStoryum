@@ -348,12 +348,17 @@ class Feature:
                 print("You find:")
                 for items in self.loot:
                     print(f'[turquoise2]{items.description}[/turquoise2]')
-                take_items = Prompt.ask(f"[gold3]take items?(yes/no)[/gold3]")
-                if take_items == "yes":
-                    for item in self.loot:
-                        player.inventory.append(item)
-                    self.loot=[]
-                    print("you take the items")
+                while True:
+                    take_items = Prompt.ask(f"[gold3]take items?(yes/no)[/gold3]")
+                    if take_items == "yes" or take_items =="y":
+                        for item in self.loot:
+                            player.inventory.append(item)
+                        self.loot=[]
+                        print(f"[chartreuse4]you take the items[/chartreuse4]")
+                        break
+                    if take_items == "no" or take_items == "n":
+                        print("[chartreuse4]You leave the items[/chartreuse4]")
+                        break
 
             else:
                 print("You find nothing")
@@ -420,7 +425,7 @@ def results(room,killed_by,escaped):
     if see_HOF == "yes":
         hall_of_fame=SHEET.worksheet('Sheet1')
         print(hall_of_fame.get_all_values())
-    input("press enter to continue")
+    input("press enter to restart")
     main()
 
 def choose_action(room,rooms,room_number,action):
