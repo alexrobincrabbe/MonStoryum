@@ -2,7 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 import random as rnd
-import os
+
 from rich import print
 from rich import pretty
 from rich.theme import Theme
@@ -14,12 +14,12 @@ import time
 import math
 from operator import itemgetter, attrgetter
 
-#my function imports
-from hangman import hangman
-
 #my class imports
 from items import Weapon,Armor,Potion,Key
 
+#my function imports
+from hangman import hangman
+from clear import clear_console
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -42,8 +42,7 @@ custom_theme= Theme({
 })
 console=Console(theme=custom_theme)
 
-def clear_console():
-    os.system('cls' if os.name == 'nt' else 'clear')
+
 class Room:
     '''
     Main class, contains object instances of all other classes as attributes.
