@@ -25,11 +25,11 @@ def hangman():
     while win == False:
         guess = Prompt.ask("[deep_sky_blue1]guess a letter: [deep_sky_blue1]")
         if len(guess) > 1:
-            print("just one letter please")
+            print(" 'just one letter please...' ")
         else:
             if guess in word:
                 if guess in show_word:
-                    print("you have already guessed that letter")
+                    print(" 'you have already guessed that letter, I already tire of you little human...' ")
                 else:
                     index=0
                     for letter in word:
@@ -49,4 +49,5 @@ def hangman():
                     print("you lose")
                     return win
                 else:
-                    print(f"you have [orange3]{guesses_remaining}[/orange3] wrong guesses left")
+                    print(f" 'you have [orange3]{guesses_remaining}[/orange3] wrong guesses left..' ")
+                    print(f"The dragon licks it's lips")

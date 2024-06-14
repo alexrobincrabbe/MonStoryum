@@ -154,32 +154,37 @@ class Dragon(Monster):
             "The dragon looks up at you, and raises it's enormous head."
             "'I will allow you to pass if you solve a riddle'"
             )
-        answer = input("'would you like to play?'")
-        if answer == "yes":
-            print ("'Very well, the rules of the game are simple:\n"
-                   "You must guess the letters of a word. For each"
-                   "correct guess, I will reveal one letter."
-                   "if you guess the word, I will allow you to pass.\n"
-                   "if you guess wrong 5 times, I will eat you")
-            answer_2 = input (" 'are you you sure you want to play?' ")
-            if answer_2 == "yes":
-                win = hangman()
-                if win == False:
-                    print(" 'disappointing...' ")
-                    room.monster_action = True
-                    room.battle_started = True
-                else:
-                    print(
-                        " The dragon says 'Very well...I will allow you to pass.', "
-                        " then returns to its slumber."
-                        )
-                    room.password = True
-
-            else:
+        while True:
+            answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
+            if answer == "yes" or answer == "y":
+                print (" 'Very well, the rules of the game are simple:' \n"
+                    " 'You must guess the letters of a word. For each"
+                    "correct guess, I will reveal one letter."
+                    "if you guess the word, I will allow you to pass.' \n"
+                    " 'if you guess wrong 5 times, I will eat you' ")
+                break
+            if answer == "no" or answer == "n":
                 print(" 'very well' ")
                 print("the dragon returns to its slumber")
+                return
+        while True:
+            answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want to play?'[/chartreuse4] (yes/no) ")
+            if answer_2 == "yes" or answer_2 == "y":
+                break
+            if answer_2 == "no" or answer_2 == "n":
+                print(" 'very well' ")
+                print("the dragon returns to its slumber")
+                return
+        win = hangman()
+        if win == False:
+            print(" 'disappointing...' ")
+            room.monster_action = True
+            room.battle_started = True
         else:
-            print(" 'very well' ")
+            room.password = True
+            print(" 'very well...I will allow you to pass' ")
+            print("the dragon returns to its slumber")
+
             
 class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
@@ -893,6 +898,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
 main()
