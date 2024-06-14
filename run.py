@@ -448,8 +448,8 @@ def main ():
         [],#6
         [],#7
         [],#8
-        [],#9
-        [plate_armor],#10
+        [plate_armor],#9
+        [],#10
         [dragon_lance]#11
     ]
 
@@ -499,13 +499,13 @@ def main ():
         [dragon],#6
         [goblins[0],goblins[1],goblin_captain],#7
         [trolls[1],goblins[2],goblins[3]],#8
-        [],#9
-        [trolls[2], goblins[4],wolves[0],wolves[1]],#10
+        [trolls[2], goblins[4],wolves[0],wolves[1]],#9
+        [],#10
         [stone_guardian]#11
     ]
 
     #create features
-    wooden_chest_0=Feature("wooden chest","the chest is old and shabby", [healing_potion],False)
+    wooden_chest_0=Feature("wooden chest","the chest is rickety and smells damp", [healing_potion],False)
     bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
     silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
     golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,Super_healing_potion,Super_healing_potion],True)
@@ -524,8 +524,8 @@ def main ():
         [],#6
         [wooden_chest],#7
         [table],#8
-        [bag_of_potions],#9
-        [],#10
+        [],#9
+        [bag_of_potions],#10
         []#11
         ]
     #create room descriptions
@@ -541,14 +541,14 @@ def main ():
         "You hear clumsy, heavy footsteps approaching your cell, "
         "the door creaks open and an evidently inebriated goblin stumbles in. "
         "You reach for your weapon but…your scabbard is empty. "
-        "He begins to berate you, but you don’t know what he’s saying - "
-        "you don’t speak Goblish. "
+        "He begins to berate you, but you don't know what he's saying - "
+        "you don't speak Goblish. "
         "He lunges towards you and you see a dagger in his gnarly hand: ",#1
 
         "You lurch out of your cell and find yourself in the guard quarters. "
         "You are confronted by a large troll. He glares angrily at you.",#2
 
-        "Leaving the troll’s lifeless body behind, you enter a small room. "
+        "Leaving the troll's lifeless body behind, you enter a small room. "
         "You hear water dripping. In the dim light, cast by a torch high "
         "up on the wall, you spy four chests; one wooden, one bronze, one "
         "silver, one gold..",#3
@@ -571,7 +571,7 @@ def main ():
         "As you approach, something inside the well catches your eye "
         "- is that metal?",#5
 
-        "You find yourself in another cavern, this time it’s huge. There is "
+        "You find yourself in another cavern, this time it's huge. There is "
         "a large stone bridge.  Standing in the middle is an enormous, yellow-eyed "
         "dragon.\n\nThe dragon looks curiously at you and lowers its scaly head.",#6
 
@@ -582,7 +582,7 @@ def main ():
         "As you turn the corner, you hear guffawing and the snorts of Goblish being"
         "spoken and the grunts of a troll. You see them, quaffing a dark brew, two "
         "goblins and a troll sitting at a table, their drinks spilling as they see you. "
-        "They appear startled - and then irritated - that you’ve disturbed their fun.",#8
+        "They appear startled - and then irritated - that you've disturbed their fun.",#8
 
         "They must have heard you coming, because this goblin and troll have a couple "
         "of ferocious wolves to back them up. The beasts stare into your soul, circling, "
@@ -596,10 +596,10 @@ def main ():
         "A Stone Guardian stomps towards you."#11 
     ]
     room_descriptions_visited = [
-        "You are in a dark wet cell. There is a door to the east.",#1
+        "You are in a foul-smelling cell. There is a door to the east.",#1
         "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
         "room 3",#3
-        "room 4",#4
+        "You are in the spiders' nest…watch where you walk…those egg sacs look like they are wriggling!",#4
         "A shaft of light shines down upon an old stone well. "
         "An anvil sits on a stone pile next to the well and discarded bottles are "
         "strewn about the floor. A stack of buckets has been knocked over and left "
@@ -607,15 +607,15 @@ def main ():
         "Goblins and trolls are not renowned for their housekeeping! \n  "
         "Something is splashing about in that well…best not draw attention to yourself.",#5
         "room 6",
-        "room 7",
-        "The stench of sweet booze lingers in the room, your feet stick to spilled liquid "
-        "and your eyes sting - that stuff is potent! The chairs and table are knocked over, "
-        "there is broken glass everywhere, tread carefully.", #8
+        "This looks like the guards' quarters",
+        "The stench of sweet booze lingers in the room, - that stuff is potent! "
+        "The chairs and table are knocked over, "
+        "there is broken glass everywhere.", #8
         "What a mess! Patches of red-stained fur all over. Those wolves are almost as "
         "frightening in death as they were when alive. Their gigantic fangs are still "
         "sharp, someone might slip in the blood and land on those!",#9
-        "room 10",
-        "room 11"
+        "You are in some kind of storage room",
+        "This is the last room before freedom. Daylight dazzles your eyes."
         ]
     
     #create rooms
@@ -629,7 +629,7 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=0
+    room_number=10
     enter_room(rooms,room_number)
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
