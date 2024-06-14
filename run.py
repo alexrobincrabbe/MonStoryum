@@ -190,7 +190,7 @@ class Dragon(Monster):
 class Player(Monster):
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
-        self.inventory=[]
+        self.inventory=loot
         self.room_reached=0
         self.dragon_killed=False
         
@@ -790,7 +790,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    player=Player(name, "A warrior", 25, 3, 4, dragonscale_armor, dragon_lance,[Super_healing_potion,Super_healing_potion],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -940,6 +940,6 @@ def main ():
     rooms[0].battle_started = True
     rooms[5].password=True
 
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
 main()
