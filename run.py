@@ -464,7 +464,7 @@ def main ():
 
     #initialise player
     name = choose_name()
-    player=Player(name, "A warrior", 25, 1000, 1000, no_armor, fists,[],"")
+    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
     player.hp=20
     player.start_hp=20
     #creat monsters
@@ -649,7 +649,7 @@ def main ():
     rooms[0].monster_action = True
     rooms[0].battle_started = True
 
-    room_number=5
+    room_number=0
     enter_room(rooms,room_number)
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
