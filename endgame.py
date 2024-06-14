@@ -34,7 +34,8 @@ SHEET = GSPREAD_CLIENT.open('Hall_of_fame')
 def lose_game(room,killed_by):
     escaped = "no"
     time.sleep(3)
-    print("GAME OVER")
+    print("You tried your best but, sadly, have perished…who "
+          "will stop Achlys and her monsters now?")
     results(room,killed_by,escaped)
 
 
@@ -52,7 +53,11 @@ def win_game(room):
                 return
     clear_console()
     time.sleep(1)
-    print('Congratulations! you escaped the dungeon!')
+    print("It has never been done before, but you have succeeded where "
+          "so many before you have failed. Congratulations, you are no "
+          "longer Achlys' prisoner - you have fought heroically and you "
+          "have your freedom. But now you must go on and save Greystorm, "
+          "it is your destiny…")
     escaped= "yes"
     killed_by = "survived"
     results(room, killed_by, escaped)
