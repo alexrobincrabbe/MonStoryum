@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.theme import Theme
 from rich.prompt import Prompt
 from prettytable import PrettyTable
+from rich import print
 
 #my function imports
 from hangman import hangman

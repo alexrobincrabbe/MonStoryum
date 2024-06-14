@@ -1,36 +1,20 @@
-import gspread
-from google.oauth2.service_account import Credentials
-
-import random as rnd
 
 from rich import print
 from rich import pretty
 from rich.theme import Theme
 from rich.prompt import Prompt
 from rich.console import Console
+from rich.theme import Theme
 pretty.install()
-from prettytable import PrettyTable
 import time
-import math
-from operator import itemgetter, attrgetter
 
 #my class imports
-from items import Weapon,Armor,Potion,Key
+from items import Weapon, Armor, Potion,Key
+from monster import Monster, Dragon, Player
 
 #my function imports
-from hangman import hangman
 from clear import clear_console
-
-SCOPE = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive"
-    ]
-
-CREDS = Credentials.from_service_account_file('creds.json')
-SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open('Hall_of_fame')
+from endgame import win_game,lose_game
 
 custom_theme= Theme({
     "info" : "grey62",
@@ -41,8 +25,6 @@ custom_theme= Theme({
     "items" : "turquoise2"
 })
 console=Console(theme=custom_theme)
-
-
 class Room:
     '''
     Main class, contains object instances of all other classes as attributes.
@@ -59,8 +41,9 @@ class Room:
         self.door="open"
         self.key_name=""
         self.visited=False
-        self.description="room"
-        self.password=False
+        self.description = "room"
+        self.password = False
+        self.game_won = False
 
     def examine(self, player):
         '''
@@ -79,256 +62,6 @@ class Room:
             console.print(f'{item.description}', style = "items")
         for feature in self.features:
             console.print(f'{feature.alt_description}',style="features")
-    
-
-class Monster:
-    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
-        self.description=description
-        self.details=details
-        self.hp=int( math.ceil(rnd.random()*hp + 2*hp)/3 )
-        self.start_hp=self.hp
-        self.strength=strength
-        self.agility=agility
-        self.armor=armor
-        self.weapon=weapon
-        self.loot=loot
-        self.speak = speak
-        if self.armor.details != "none":
-            self.loot.append(self.armor)
-        if self.weapon.details != "none":
-            self.loot.append(self.weapon)
-    
-    def attack(self,target):
-        time.sleep(0.7)
-        print(f'[blue]{self.description}[/blue] attacks [blue]{target.description}[/blue]...')
-        time.sleep(0.7)
-        hit=self.agility+self.weapon.hit + (rnd.random()*15)
-        dodge=target.agility + target.armor.dodge + (rnd.random()*15)
-        if hit > dodge:
-            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
-            damage = 1 if damage < 1 else damage
-            print(f'[blue]{self.description}[/blue] hits for [red1]{damage}[/red1] points of damage')
-            target.hp-=damage
-            target.hp = 0 if target.hp < 0 else target.hp
-            print(f'[blue]{target.description}[/blue] has '
-                  f'[green1]{target.hp}[/green1]/[chartreuse4]{target.start_hp}[/chartreuse4] remaining')
-            
-
-        else:
-            print(f'[blue]{self.description}[/blue] misses')
-
-    def examine(self,player):
-        console.print(f'{self.details}', style = "info")
-    
-    def talk(self,room):
-        console.print(f'{self.speak}', style = "info")
-        
-class Dragon(Monster):
-    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
-        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
-
-    def talk(self,room):
-        print(
-            "The walls shake as, in a booming, gravelly voice, "
-            "the dragon suddenly speaks! "
-            " 'I have been here for centuries and you are the first "
-            "to say a single word to me. Usually they all run away! "
-            "I will let you pass by me unharmed, but only if you play "
-            "my game…and win!”' ")
-        while True:
-            answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
-            if answer == "yes" or answer == "y":
-                print (
-                    " [chartreuse4]'Let us begin, the rules of my game are simple. \n"
-                    "You must guess the letters for the word I am thinking of. "
-                    "For each correct guess, I will reveal where that letter "
-                    "belongs in my word. \n"
-                    "If you guess my word, you are free to go. If you guess incorrectly "
-                    "five times…I will eat you.' [/chartreuse4]"
-                )
-                break
-            if answer == "no" or answer == "n":
-                print(" 'very well' ")
-                print("the dragon returns to its slumber")
-                return
-        while True:
-            answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want to play?'[/chartreuse4] (yes/no) ")
-            if answer_2 == "yes" or answer_2 == "y":
-                break
-            if answer_2 == "no" or answer_2 == "n":
-                print(" 'very well' ")
-                print("the dragon returns to its slumber")
-                return
-        win = hangman()
-        if win == False:
-            print(" 'It has been so long since my last meal...' ")
-            room.monster_action = True
-            room.battle_started = True
-        else:
-            room.password = True
-            print(
-                " [chartreuse4]'You’ve beaten me at my own game, "
-                " I will allow you to pass.' [/chartreuse4]\n The dragon " 
-                "steps aside, allowing you just enough space to pass by. "
-                "Taking a deep breath, you brave the bridge and scurry past "
-                "as fast as you can.' "
-                )
-
-            
-class Player(Monster):
-    def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
-        Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
-        self.inventory=loot
-        self.room_reached=0
-        self.dragon_killed=False
-        
-    def display_inventory(self):
-        self.weapons = []
-        self.armors = []
-        self.potions = []
-        self.keys = []
-        for item in self.inventory:
-            if item.type == "weapon":
-                self.weapons.append(item)
-            if item.type == "armor":
-                self.armors.append(item)
-            if item.type == "potion":
-                self.potions.append(item)
-            if item.type == "key":
-                self.keys.append(item)
-        
-        self.print_weapons()
-        self.print_armor()
-        self.print_potions()
-        self.print_keys()
-
-    def print_weapons(self):
-        table = PrettyTable()
-        weapon_data=([weapon.description for weapon in self.weapons])
-        damage_data=([f'{weapon.damage[0]}-{weapon.damage[1]}' for weapon in self.weapons])
-        hit_data=(['{0:+}'.format(weapon.hit) for weapon in self.weapons])
-        table.add_column("Weapons",weapon_data)
-        table.add_column("Damage",damage_data)
-        table.add_column("Hit bonus",hit_data)
-        console.print(table,style="purple")
-
-    def print_armor(self):
-        table = PrettyTable()
-        armor_data=([armor.description for armor in self.armors])
-        armor_value_data=([f'{armor.armor_value}' for armor in self.armors])
-        dodge_data=(['{0:+}'.format(armor.dodge) for armor in self.armors])
-        table.add_column("Armor",armor_data)
-        table.add_column("Damage reduction",armor_value_data)
-        table.add_column("Dodge Bonus/Penalty",dodge_data)
-        console.print(table,style="blue")
-
-    def print_potions(self):
-        table = PrettyTable()
-        potion_data=([potion.description for potion in self.potions])
-        stat_data=([f'{potion.stat}' for potion in self.potions])
-        effect_data=(['{0:+}'.format(potion.effect) for potion in self.potions])
-        table.add_column("Potion",potion_data)
-        table.add_column("Stat",stat_data)
-        table.add_column("Effect",effect_data)
-        console.print(table,style="green")
-
-    def print_keys(self):
-        key_string=""
-        for key in self.keys:
-            key_string+=f'{key.description}, '
-        if len(key_string) >= 2:
-            key_string = key_string[:-2]
-        print(f'Keys : [turquoise2]{key_string}[/turquoise2]')
-
-    
-    def inv_equip(self, inv_action):
-        equip_string=inv_action.split(" ", 1)
-        if len(equip_string) > 1:
-            equip_object=equip_string[1]
-            item_list=[]
-            for item in self.inventory:
-                if item.description in item_list:
-                    continue
-                if equip_object == item.description:
-                    if item.type == "weapon":
-                        self.weapon=item
-                        print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
-                        return True
-                    elif item.type == "armor":
-                        self.armor=item
-                        print(f'equipped {item.description}')
-                        return True
-                    else:
-                        print("you cant equip that")
-                        return False
-                item_list.append(item.description)
-            if equip_object not in item_list:
-                print("You don't have one of those")
-                return False
-        else:
-            print("choose an object to equip")
-            return False
-
-    def inv_use(self, inv_action):
-        use_string=inv_action.split(" ", 1)
-        if len(use_string) > 1:
-            use_object=use_string[1]
-            item_list=[]
-            inventory_index=0
-            for item in self.inventory:
-                if item.description in item_list:
-                    inventory_index+=1
-                    continue
-                if use_object == item.description:
-                    if item.type == "potion":
-                        self.inventory.pop(inventory_index)
-                        self.potion_use(item)
-                        return True
-                    else:
-                        print("you cant use that right now")
-                        return False
-                item_list.append(item.description)
-                inventory_index+=1
-            if use_object not in item_list:
-                print("You don't have one of those")
-                return False
-        else:
-            print("choose an object to use")
-            return False
-    
-    def potion_use(self,potion):
-        print(f'used {potion.description}')
-        if potion.stat == "strength":
-            self.strength+=potion.effect
-            print(f"increased strength by {potion.effect}")
-        if potion.stat == "agility":
-            self.agility+=potion.effect
-            print(f"increased agility by {potion.effect}")
-        if potion.stat == "hp":
-            self.hp+=potion.effect
-            if self.hp > self.start_hp:
-                self.hp = self.start_hp
-            print("Restored hp")
-
-    def status(self):
-        weapon_table = PrettyTable()      
-        print("Hit increases chance to hit an enemy") 
-        weapon_table.add_column("Weapon",[self.weapon.description])
-        weapon_table.add_column("Damage",[f'{self.weapon.damage[0]}-{self.weapon.damage[1]}'])
-        weapon_table.add_column("Hit",['{0:+}'.format(self.weapon.hit)])
-        console.print(weapon_table,style="red")
-        print("Armor value reduces damage taken, Dodge reduces the chance to be hit")
-        armor_table = PrettyTable()      
-        armor_table.add_column("Armor",[self.armor.description])
-        armor_table.add_column("Armor Value",[self.armor.armor_value])
-        armor_table.add_column("Dodge",[self.armor.dodge])
-        console.print(armor_table,style="cyan")
-        stats_table = PrettyTable()      
-        print("Strength increase damage, Agility increases hit and dodge")
-        stats_table.add_column("HP",[f'{self.hp}/{self.start_hp}'])
-        stats_table.add_column("Strength",[self.strength])
-        stats_table.add_column("Strength",[self.agility])
-        console.print(stats_table,style="orange1")
 
 class Feature:
     def __init__(self, description,details, loot, locked):
@@ -384,6 +117,8 @@ def enter_room(rooms,room_number):
     start_turn(rooms, room_number)
 
 def start_turn(rooms,room_number:int):
+    if rooms[room_number].game_won == True:
+        return
     room=rooms[room_number]
     monsters_attack(room)
     action = Prompt.ask("[gold3]choose an action[/gold3] (type 'help' for options) ")
@@ -392,7 +127,8 @@ def start_turn(rooms,room_number:int):
     
 def monsters_attack(room):
     '''
-    
+    checks for conditions and iterates through monsters. 
+    each monster attacks until the play is killed or the round is ended
     '''
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
@@ -401,68 +137,6 @@ def monsters_attack(room):
                 print("you died")
                 killed_by=monster.description
                 lose_game(room,killed_by)
-
-def lose_game(room,killed_by):
-    escaped = "no"
-    time.sleep(3)
-    print("GAME OVER")
-    results(room,killed_by,escaped)
-
-
-def win_game(room):
-    if room.player.dragon_killed == False:
-        print(
-            "You can escape the dungeon now, however the dragon is still "
-            "back there in the dungeon")
-        while True:
-            answer = Prompt.ask( "[gold3]Are you sure you want to leave? [gold3](yes/no)")
-            if answer == "yes" or answer == "y":
-                break
-            if answer == "no" or answer == "n":
-                room
-                return
-    clear_console()
-    time.sleep(1)
-    print('Congratulations! you escaped the dungeon!')
-    escaped= "yes"
-    killed_by = "survived"
-    results(room, killed_by, escaped)
-
-def results(room,killed_by,escaped):
-    if "gold medallion" in [item.description for item in room.player.inventory]:
-        gold_medallion = "yes"
-    else:
-        gold_medallion = "no"
-    results = (room.player.description,room.player.room_reached,killed_by,escaped,gold_medallion)
-    hof=SHEET.worksheet('Sheet1')
-    hof.append_row(results)
-    see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
-    while True:
-        if see_HOF == "yes" or see_HOF == "y":
-            show_HOF()
-            break
-        if see_HOF == "no" or see_HOF == "n":
-            break
-    Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
-    main()
-
-def show_HOF():
-    hall_of_fame=SHEET.worksheet('Sheet1')
-    HOF = hall_of_fame.get_all_values()
-    HOF.pop(0)
-    for row in HOF:
-        row[1]=int(row[1])
-
-    HOF.sort(key=itemgetter(4,3,1),reverse=True)
-    table = PrettyTable()
-    table.field_names=["NAME", "ROOM REACHED", "KILLED BY", "ESCAPED" ,"GOLD MEDALLION"]
-    for row in HOF:
-        table.add_row(row)
-    
-    console.print(table,style="purple")
-
-
-
 
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
@@ -491,7 +165,7 @@ def choose_action(room,rooms,room_number,action):
                 room_number+=1
                 if room_number == 11:
                     room_number = 10
-                    win_game(room)
+                    room.game_won = win_game(room)
                 enter_room(rooms,room_number)
             else:
                 check_door(rooms,room_number)
@@ -854,7 +528,7 @@ def main ():
         [],#10
         []#11
         ]
-    #create rooms
+    #create room descriptions
     room_descriptions = [
         "Regaining consciousness, you open your eyes and realise you are in a dark, "
         "dank-smelling dungeon. From the faint sounds above you, you realise you are " 
@@ -941,4 +615,6 @@ def main ():
 
     room_number=0
     enter_room(rooms,room_number)
+    Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
+    main()
 main()
