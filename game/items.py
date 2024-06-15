@@ -9,6 +9,10 @@ custom_theme= Theme({
 console=Console(theme=custom_theme)
 
 class Item:
+    '''
+    Item superclass.
+    initialises description attributes and examine method
+    '''
     def __init__(self,description,details):
         self.description=description
         self.details=details
@@ -37,6 +41,9 @@ class Armor(Item):
         self.type="armor"
 
 class Potion(Item):
+    '''
+    Potion specific attributes added to Item class
+    '''
     def __init__(self,description,details,stat,effect):
         Item.__init__(self,description,details)
         self.stat=stat
@@ -44,6 +51,9 @@ class Potion(Item):
         self.type="potion"
 
 class Key(Item):
+    '''
+    Key specific attributes added to Item class
+    '''
     def __init__(self,description,details,key_name):
         Item.__init__(self,description,details)
         self.key_name=key_name
