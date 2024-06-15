@@ -6,34 +6,43 @@ from rich import print
 from rich.theme import Theme
 from rich.console import Console
 
-#my function imports
+# my function imports
 from game.clear import clear_console
 
-custom_theme= Theme({
-    "info" : "grey62",
-    "features" : "green",
-    "monsters" : "red",
-    "items" : "turquoise2"
+custom_theme = Theme({
+    "info": "grey62",
+    "features": "green",
+    "monsters": "red",
+    "items": "turquoise2"
 })
 
-console=Console(theme=custom_theme)
+console = Console(theme=custom_theme)
+
 
 class Room:
     '''
     Main class, contains object instances of all other classes as attributes.
     '''
-    def __init__(self,details,details_visited,player,monsters,items,features):
-        self.details=details
-        self.details_visited=details_visited
-        self.player=player
-        self.monsters=monsters
-        self.items=items
-        self.features=features
-        self.battle_started=False
-        self.monster_action=False
-        self.door="open"
-        self.key_name=""
-        self.visited=False
+
+    def __init__(
+            self,
+            details,
+            details_visited,
+            player,
+            monsters,
+            items,
+            features):
+        self.details = details
+        self.details_visited = details_visited
+        self.player = player
+        self.monsters = monsters
+        self.items = items
+        self.features = features
+        self.battle_started = False
+        self.monster_action = False
+        self.door = "open"
+        self.key_name = ""
+        self.visited = False
         self.description = "room"
         self.password = False
         self.game_won = False
@@ -46,13 +55,13 @@ class Room:
         '''
         clear_console()
         if self.visited is False:
-            console.print(f'{self.details}',style="info")
+            console.print(f'{self.details}', style="info")
         else:
-            console.print(f'{self.details_visited}',style="info")
+            console.print(f'{self.details_visited}', style="info")
         print("You see:")
         for monster in self.monsters:
-            console.print(f'{monster.description}',style = "monsters")
+            console.print(f'{monster.description}', style="monsters")
         for item in self.items:
-            console.print(f'{item.description}', style = "items")
+            console.print(f'{item.description}', style="items")
         for feature in self.features:
-            console.print(f'{feature.alt_description}',style="features")
+            console.print(f'{feature.alt_description}', style="features")
