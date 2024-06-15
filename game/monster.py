@@ -189,13 +189,17 @@ class Player(Monster):
                 if equip_object == item.description:
                     if item.type == "weapon":
                         if self.weapon.description == item.description:
-                            print(f"[blue]{item.description}[/blue] is already equipped")
-                        self.weapon=item
-                        print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
+                            print(f"[green]{item.description}[/green] is already equipped")
+                        else:
+                            self.weapon=item
+                            print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
                         return True
                     elif item.type == "armor":
-                        self.armor=item
-                        print(f'equipped {item.description}')
+                        if self.armor.description == item.description:
+                            print(f"[green]{item.description}[/green] is already equipped")
+                        else:
+                            self.armor=item
+                            print(f'equipped {item.description}')
                         return True
                     else:
                         print("you cant equip that")
