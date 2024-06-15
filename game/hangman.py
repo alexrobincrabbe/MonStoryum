@@ -49,5 +49,5 @@ def hangman():
                     print("you lose")
                     return win
                 else:
-                    print(f" 'you have [orange3]{guesses_remaining}[/orange3] wrong guesses left..' ")
+                    print(f" [chartreuse4]'you have [red1]{guesses_remaining}[/red1] wrong guesses left..'[chartreuse4] ")
                     print(f"The dragon licks it's lips")
