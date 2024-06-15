@@ -121,6 +121,8 @@ def start_turn(rooms,room_number:int):
         return
     room=rooms[room_number]
     monsters_attack(room)
+    if room.player.hp == 0:
+        return
     action = Prompt.ask("[gold3]choose an action[/gold3] (type 'help' for options) ")
     choose_action(room,rooms, room_number,action)
     start_turn(rooms, room_number)
@@ -128,7 +130,7 @@ def start_turn(rooms,room_number:int):
 def monsters_attack(room):
     '''
     checks for conditions and iterates through monsters. 
-    each monster attacks until the play is killed or the round is ended
+    each monster attacks until the play is killed
     '''
     if room.battle_started == True and room.monster_action == True:
         for monster in room.monsters:
@@ -137,6 +139,7 @@ def monsters_attack(room):
                 print("you died")
                 killed_by=monster.description
                 lose_game(room,killed_by)
+
 
 def choose_action(room,rooms,room_number,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
@@ -523,7 +526,7 @@ def main ():
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
     wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
-    bag_of_potions = Feature("bag of potions","someone left this here for Leda",[Super_healing_potion,Super_healing_potion,Super_healing_potion],False)
+    bag_of_potions = Feature("bag of potions","someone just left this lying around here",[Super_healing_potion,Super_healing_potion,Super_healing_potion],False)
     features=[
         [],#1
         [],#2
@@ -648,7 +651,7 @@ def main ():
 
         "Spanning the centre of the familiar cavern is a grand bridge made of cut stone. "
         "Torches line one side and appear to go on forever, glowing in the darkness, dimly "
-        "lighting the path. You can’t see where it leads - a mighty, thick fog is blocking "
+        "lighting the path. You can't see where it leads - a mighty, thick fog is blocking "
         "the view. Anything could be lurking inside.",#6
 
         "This looks like the guards' quarters",#7
@@ -676,7 +679,7 @@ def main ():
     rooms[0].monster_action = True
     rooms[0].battle_started = True
 
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
