@@ -87,8 +87,8 @@ def results(room,killed_by,escaped):
     results = (room.player.description,room.player.room_reached,killed_by,escaped,gold_medallion)
     hof=SHEET.worksheet('Sheet1')
     hof.append_row(results)
-    see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
     while True:
+        see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
         if see_HOF == "yes" or see_HOF == "y":
             show_HOF()
             break
