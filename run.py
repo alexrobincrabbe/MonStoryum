@@ -8,7 +8,7 @@ def main ():
     #create the game
     rooms = create_rooms()
     #start the game
-    room_number=0
+    room_number=5
     enter_room(rooms,room_number)
     #end the game or restart
     while True:
@@ -16,6 +16,7 @@ def main ():
         if play_again == "yes" or play_again == "y":
             main()
         elif play_again == "no" or play_again == "n":
+            print('goodbye')
             return
 
 if __name__ == "__main__":

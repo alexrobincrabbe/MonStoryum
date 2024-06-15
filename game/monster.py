@@ -83,7 +83,7 @@ class Dragon(Monster):
                 " 'I have been here for centuries and you are the first "
                 "to say a single word to me. Usually they all run away! "
                 "I will let you pass by me unharmed, but only if you play "
-                "my game…and win!”' ")
+                "my game…and win!' ")
             while True:
                 answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
                 if answer == "yes" or answer == "y":
