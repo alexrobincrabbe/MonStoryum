@@ -1,4 +1,4 @@
-from time import time
+import time
 from rich import print
 from rich.theme import Theme
 from rich.prompt import Prompt
@@ -35,6 +35,8 @@ def start_turn(rooms,room_number:int):
         return
     room=rooms[room_number]
     monsters_attack(room)
+    if rooms[room_number].game_lost == True:
+        return
     if room.player.hp == 0:
         return
     action = Prompt.ask("[gold3]choose an action[/gold3] (type 'help' for options) ")
@@ -53,6 +55,7 @@ def monsters_attack(room):
                 print("you died")
                 killed_by=monster.description
                 lose_game(room,killed_by)
+                room.game_lost = True
 
 def choose_action(room,rooms,room_number,action):
     '''
@@ -185,7 +188,7 @@ def check_door(rooms,room_number):
     for item in items:
         if item.type == "key":
             if item.key_name == key_name:
-                print(f"you unlock the door with the {item.description}")
+                print(f"you unlock the door with the [gold3]{item.description}[/gold3]")
                 room.door="open"
                 time.sleep(3)
                 room_number += 1

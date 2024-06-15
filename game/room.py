@@ -34,6 +34,7 @@ class Room:
         self.description = "room"
         self.password = False
         self.game_won = False
+        self.game_lost = False
     
     def examine(self, player):
         '''
