@@ -17,6 +17,10 @@ custom_theme= Theme({
 console=Console(theme=custom_theme)
 
 class Monster:
+    '''
+    Class is used to create the game monsters,
+    also as a Superclass for Player and Dragon
+    '''
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         self.description=description
         self.details=details
@@ -34,6 +38,9 @@ class Monster:
             self.loot.append(self.weapon)
     
     def attack(self,target):
+        '''
+        attack target
+        '''
         time.sleep(0.7)
         print(f'[blue]{self.description}[/blue] attacks [blue]{target.description}[/blue]...')
         time.sleep(0.7)
@@ -58,11 +65,17 @@ class Monster:
     def talk(self,room):
         console.print(f'{self.speak}', style = "info")
 class Dragon(Monster):
+    '''
+    Adds a special talk method for the dragon
+    '''
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
         self.riddle_solved = False
 
     def talk(self,room):
+        '''
+        initate a game of hangman with the dragon
+        '''
         if self.riddle_solved == False:
             print(
                 "The walls shake as, in a booming, gravelly voice, "
@@ -113,6 +126,10 @@ class Dragon(Monster):
         else:
             print("[chartreuse4]'you have already bested my game human. Leave quickly before I change my mind'[/chartreuse4]")
 class Player(Monster):
+    '''
+    Add methods required for the player object,
+    inventory, and status
+    '''
     def __init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak):
         Monster.__init__(self,description,details,hp,strength,agility,armor,weapon,loot,speak)
         self.inventory=loot
