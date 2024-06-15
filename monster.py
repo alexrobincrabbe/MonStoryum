@@ -188,6 +188,8 @@ class Player(Monster):
                     continue
                 if equip_object == item.description:
                     if item.type == "weapon":
+                        if self.weapon.description == item.description:
+                            print(f"[blue]{item.description}[/blue] is already equipped")
                         self.weapon=item
                         print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
                         return True
@@ -203,7 +205,7 @@ class Player(Monster):
                 print("You don't have one of those")
                 return False
         else:
-            print("choose an object to equip")
+            console.print("choose an object to equip",style = "info")
             return False
 
     def inv_use(self, inv_action):
@@ -230,7 +232,7 @@ class Player(Monster):
                 print("You don't have one of those")
                 return False
         else:
-            print("choose an object to use")
+            console.print("choose an object to use", style = "info")
             return False
     
     def potion_use(self,potion):

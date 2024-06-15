@@ -81,7 +81,7 @@ class Feature:
                 for items in self.loot:
                     print(f'[turquoise2]{items.description}[/turquoise2]')
                 while True:
-                    take_items = Prompt.ask(f"[gold3]take items?(yes/no)[/gold3]")
+                    take_items = Prompt.ask(f"[gold3]take items?[/gold3](yes/no)")
                     if take_items == "yes" or take_items =="y":
                         for item in self.loot:
                             player.inventory.append(item)
@@ -142,72 +142,91 @@ def monsters_attack(room):
 
 
 def choose_action(room,rooms,room_number,action):
+    '''
+    checks the input of the player and calls the appropriate action fucntion
+    '''
+    match action:
+        case "help":
+            help(room,action)
+        case action if action.startswith("examine"):
+            examine(room,action)
+        case action if action.startswith("take"):
+            take(room, action)
+        case action if action.startswith("talk"):
+            talk(room,action)
+        case action if action.startswith("attack"):
+            if len(room.monsters) > 0:
+                choose_target(room,action)
+            else:
+                print("There is nothing to attack")
+        case "forwards":
+            go_forwards(rooms,room_number)
+        case "backwards":
+            go_backwards(rooms,room_number)
+        case "inventory":
+            room.player.display_inventory()
+            room.monster_action = False
+        case "status":
+            room.player.status()  
+            room.monster_action = False
+        case action if action.startswith("equip"):
+            room.monster_action = room.player.inv_equip(action)
+        case action if action.startswith("use"):
+            room.monster_action = room.player.inv_use(action)
+        case _:
+            console.print("Please choose a valid option (type 'help' for list of commands)", style = "info")
+            room.monster_action=False
+
+def help(room,action):
     options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
-    if action == "help":
-        print("list of available commands:")
-        for option in options:
-            console.print(option,style="info")
-        room.monster_action=False
-    elif action.startswith("examine"):
-        examine(room,action)
-    elif action.startswith("take"):
-        take(room, action)
-    elif action.startswith("talk"):
-        talk(room,action)
-    elif action.startswith("attack"):
-        if len(room.monsters) > 0:
-            choose_target(room,action)
-        else:
-            print("There is nothing to attack")
-    elif action == "forwards":
-        if len(room.monsters) == 0 or room.password == True:
-            if room.door == "open":
-                if room_number == 5:
-                    if room.password == True and len(room.monsters) > 0:
-                        print("the dragon allows you to pass")
-                        time.sleep(2)
-                room_number+=1
-                if room_number == 11:
-                    room_number = 10
+    print("list of available commands:")
+    for option in options:
+        console.print(option,style="info")
+    room.monster_action=False
+
+def go_forwards(rooms,room_number):
+    room = rooms [room_number]
+    if len(room.monsters) == 0:
+        if room.door == "open":
+            room_number+=1
+            #if last room, win game and return
+            if room_number == 11:
                     room.game_won = win_game(room)
                     if room.game_won == True:
                         return
-                enter_room(rooms,room_number)
-            else:
-                check_door(rooms,room_number)
+                    else:
+                        #if player chooses not to exit the dungeon, return to last room
+                        room_number = 10 
+            enter_room(rooms,room_number)
         else:
-            console.print("You must clear the path first", style = "info")
-            room.monster_action=False
-    elif action == "backwards":
-        if room_number > 0:
-            if room_number == 5:
-                if room.battle_started == False or len(room.monsters) == 0:
-                    room_number-=1
-                    enter_room(rooms,room_number)
-                else:
-                    console.print("The dragon will not let you get away like that", style ="info")
-            elif len(room.monsters) == 0:
+            #check if player has key to locked door
+            check_door(rooms,room_number)
+    elif room_number == 5 and room.password == True:
+            print("the dragon allows you to pass")
+            time.sleep(2)
+            room_number+=1
+            enter_room(rooms,room_number)
+    else:
+        console.print("You must clear the path first", style = "info")
+        room.monster_action=True
+
+def go_backwards(rooms,room_number):
+    room = rooms[room_number]
+    if room_number > 0:
+        if room_number == 5:
+            if room.battle_started == False or len(room.monsters) == 0:
                 room_number-=1
                 enter_room(rooms,room_number)
             else:
-                console.print("You don't run away from a fight!", style = "info")
-                room.monster_action=False
+                console.print("The dragon will not let you get away like that", style ="info")
+        elif len(room.monsters) == 0:
+            room_number-=1
+            enter_room(rooms,room_number)
         else:
-            console.print("You can only go forwards from here", style = "info")
-    elif action == "inventory":
-        room.player.display_inventory()
-        room.monster_action = False
-    elif action == "status":
-        room.player.status()  
-        room.monster_action = False
-    elif action.startswith("equip"):
-        room.monster_action = room.player.inv_equip(action)
-    elif action.startswith("use"):
-       room.monster_action = room.player.inv_use(action)
+            console.print("You don't run away from a fight!", style = "info")
+            room.monster_action=True
     else:
-        console.print("Please choose a valid option (type 'help' for list of commands)", style = "info")
-        room.monster_action=False
-
+        console.print("You can only go forwards from here", style = "info")
 
 def take(room, action):
     take_string=action.split(" ", 1)
@@ -679,7 +698,7 @@ def main ():
     rooms[0].monster_action = True
     rooms[0].battle_started = True
 
-    room_number=5
+    room_number=0
     enter_room(rooms,room_number)
     Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
     main()
