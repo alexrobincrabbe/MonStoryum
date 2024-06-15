@@ -216,7 +216,7 @@ class Player(Monster):
                             print(f"[green]{item.description}[/green] is already equipped")
                         else:
                             self.armor=item
-                            print(f'equipped {item.description}')
+                            print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
                         return True
                     else:
                         print("you cant equip that")

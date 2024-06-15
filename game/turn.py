@@ -1,3 +1,9 @@
+'''
+contains all of the functions that run once the game has started,
+except for the endgame functions, and functions that are methods 
+of classes
+'''
+
 import time
 from rich import print
 from rich.theme import Theme
@@ -303,6 +309,12 @@ def attack_monster(room,target_index):
     kill_monster(room, target_index)  
 
 def target_list(room,target):
+    '''
+    procuces a list of targets, if no target is specified,
+    or there are multiple instances of the same target.
+    returns a dictionary that maps the number on the printed list 
+    to the correct index in the monsters array
+    '''
     target_number=0
     target_index=-1
     target_dic={}
@@ -314,7 +326,11 @@ def target_list(room,target):
             target_dic[target_number]=target_index
     return target_dic
 
-def choose_target_number(room,target_selected,target_count):
+def choose_target_number(room,target_selected,target_count) -> int:
+    '''
+    validates player input and returns and integer, to select a target
+    from the target list
+    '''
     target_select = Prompt.ask(f'[gold3]Enter a number to choose a target: [/gold3]')
     try:
         target_select=int(target_select)
@@ -331,6 +347,12 @@ def choose_target_number(room,target_selected,target_count):
     return target_selected,target_select
 
 def kill_monster(room, target_index):
+    '''
+    prints message that monster is killed,
+    removes monster from list of monsters in the room,
+    creates a feature, with the prefix "dead" and items
+    carried by the monster
+    '''
     if room.monsters[target_index].hp == 0:
         time.sleep(1)
         console.print(f'{room.monsters[target_index].description} dies',style="red")

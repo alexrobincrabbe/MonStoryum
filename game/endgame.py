@@ -1,3 +1,9 @@
+'''
+contains the functions that end the game, 
+as well as recording the players score 
+and displaying the hall of fame using the google sheets API
+'''
+
 import time
 from rich.prompt import Prompt
 from game.clear import clear_console
@@ -32,6 +38,9 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Hall_of_fame')
 
 def lose_game(room,killed_by):
+    '''
+    ends the game
+    '''
     escaped = "no"
     time.sleep(3)
     print("You tried your best but, sadly, have perished…who "
@@ -40,6 +49,10 @@ def lose_game(room,killed_by):
 
 
 def win_game(room):
+    '''
+    checks if player wants to leave the dungeon
+    and ends the game
+    '''
     if room.player.dragon_killed == False:
         print(
             "You can escape the dungeon now, however the dragon is still "
@@ -64,6 +77,9 @@ def win_game(room):
     return True
 
 def results(room,killed_by,escaped):
+    '''
+    adds the players results to the HoF
+    '''
     if "gold medallion" in [item.description for item in room.player.inventory]:
         gold_medallion = "yes"
     else:
@@ -80,16 +96,20 @@ def results(room,killed_by,escaped):
             break
 
 def show_HOF():
+    '''
+    prints the HoF in a table
+    '''
     hall_of_fame=SHEET.worksheet('Sheet1')
     HOF = hall_of_fame.get_all_values()
+    #remove headings row
     HOF.pop(0)
     for row in HOF:
         row[1]=int(row[1])
-
+    #sort the HoF by:gold medallion, escaped, room reached
     HOF.sort(key=itemgetter(4,3,1),reverse=True)
     table = PrettyTable()
     table.field_names=["NAME", "ROOM REACHED", "KILLED BY", "ESCAPED" ,"GOLD MEDALLION"]
     for row in HOF:
         table.add_row(row)
-    
+    #show the HoF
     console.print(table,style="purple")

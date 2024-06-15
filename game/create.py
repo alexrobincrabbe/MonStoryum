@@ -1,3 +1,10 @@
+'''
+contains functions to create all of the game elements,
+rooms,
+monsters,
+features,
+items.
+'''
 #my class imports
 from game.room import Room
 from game.monster import Monster, Dragon, Player
@@ -37,6 +44,8 @@ def create_rooms() -> list:
     g_speak = "it is probably swearing at you, but you don't understand goblish"
     dg_details = "The goblin looks very drunk"
     g_details = "goblins are funny looking creatures"
+    gc_details = "it looks taller than the other goblins, and is brandishing a longer \
+                weapon. It is clad in fine leather armor"
     t_speak = "it grunts at you"
     t_details = "Looks big, stupid and angry. It is carrying a big club."
     s_speak = "it hisses at you"
@@ -51,7 +60,7 @@ def create_rooms() -> list:
     goblins =[]
     for i in range (5):
         goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
-    goblin_captain = Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
+    goblin_captain = Monster("goblin captain",gc_details, 13, 1, 0, leather_armor,sword,[],g_speak)
     drunk_goblin=Monster("goblin",dg_details, 10, 1, -10, no_armor,dagger,[rusty_key],g_speak)
     #spiders
     spiders=[]
