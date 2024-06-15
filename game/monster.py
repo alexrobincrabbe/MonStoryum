@@ -36,7 +36,7 @@ class Monster:
             self.loot.append(self.armor)
         if self.weapon.details != "none":
             self.loot.append(self.weapon)
-    
+
     def attack(self,target):
         '''
         attack target

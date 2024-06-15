@@ -15,7 +15,7 @@ def main ():
     #create the game
     rooms = create_rooms()
     #start the game
-    room_number=4
+    room_number=0
     enter_room(rooms,room_number)
     #end the game or restart
     while True:

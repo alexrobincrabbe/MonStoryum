@@ -36,7 +36,7 @@ def create_rooms() -> list:
     #initialise player
     name = choose_name()
     player=Player(name, "A warrior", 20, 1, 1, no_armor, fists,[],"")
-    player.hp=1
+    player.hp=20
     player.start_hp=20
 
     #create monsters
