@@ -7,187 +7,7 @@ from game.items import Armor,Weapon,Potion,Key
 #my function imports
 from game.clear import clear_console
 
-def choose_name():
-    clear_console()
-    name = input("please choose your name: ")
-    if len(name) > 10:
-        print("maximum of 10 characters")
-        choose_name()
-    else:
-        return name
-    
-def create_armor():
-    no_armor = Armor("none","none", 0, 0)
-    rusty_armour= Armor("rusty armor", "it has seen better days",2,-1)
-    leather_armor = Armor("leather armor", "it is light, and offers some protection",3,0)
-    plate_armor = Armor("plate armor", "it is heavy, but offers good protection",5,-1)
-    dragonscale_armor = Armor("dragonscale armor", "it glistens",11,1)
-    scales = Armor("none", "none",10,0)
-    stone_skin = Armor("none", "none", 5, -2)
-    return no_armor, rusty_armour, leather_armor, plate_armor, dragonscale_armor, \
-            scales, stone_skin
-
-def create_weapons():
-    fists = Weapon("fists", "none", [1,2], 0)
-    dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
-    club = Weapon("club", "a large blunt weapon", [2,10], -1)
-    sword = Weapon("sword","a fine steel sword",[1,10],2)
-    silver_sword = Weapon("silver sword","a shiny silver sword",[2,12],3)
-    dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
-    stinger = Weapon("stinger", "none", [1,1], 0)
-    claws = Weapon("claws","none",[20,30],5)
-    bite= Weapon("bite","none",[4,9],4)
-    stone_fists = Weapon("fists", "none", [5,15],4)
-    return fists, dagger, club, sword, silver_sword, dragon_lance, \
-            stinger, claws, bite, stone_fists
-
-def create_potions():
-    healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
-    super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
-    agility_potion = Potion("agility potion", "it is green and sticky","agility",3)
-    strength_potion = Potion("strength potion", "orange and bubbly", "strength",2)
-    return healing_potion, super_healing_potion, agility_potion, strength_potion
-
-def create_keys():
-    rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
-    bronze_key=Key("bronze key","It is dusty","bronze chest")
-    silver_key=Key("silver key","It is shiny","silver chest")
-    golden_key=Key("golden key","It has strange markings","golden chest")
-    gold_medallion = Key("gold medallion", "it is proof that you killed the dragon", "none")
-    return rusty_key, bronze_key, silver_key, golden_key, gold_medallion
-
-def create_room_descriptions():
-    room_descriptions = [
-        "Regaining consciousness, you open your eyes and realise you are in a dark, "
-        "dank-smelling dungeon. From the faint sounds above you, you realise you are " 
-        "in the depths of the citadel, controlled by the evil sorceress queen, Achlys. "
-        "It dawns on you that by wrongfully imprisoning you, Achlys has removed the "
-        "last obstacle to her malicious schemes. You must find a way to escape, "
-        "though you know that her loyal monsters will fight you to the death. "
-        "The innocent citizens of Greystorm will be counting on you to "
-        "save them. "
-        "You hear clumsy, heavy footsteps approaching your cell, "
-        "the door creaks open and an evidently inebriated goblin stumbles in. "
-        "You reach for your weapon but…your scabbard is empty. "
-        "He begins to berate you, but you don't know what he's saying - "
-        "you don't speak Goblish. "
-        "He lunges towards you and you see a dagger in his gnarly hand: ",#1
-
-        "You lurch out of your cell and find yourself in the guard quarters. "
-        "You are confronted by a large troll. He glares angrily at you.",#2
-
-        "Leaving the troll's lifeless body behind, you enter a small room. "
-        "You hear water dripping. In the dim light, cast by a torch high "
-        "up on the wall, you spy four chests; one wooden, one bronze, one "
-        "silver, one gold..",#3
-
-        "You stagger down a narrow corridor and spot a gap in the walls. "
-        "You feel your way carefully through the gap, along jagged rock "
-        "walls until you edge your way into an opening. You feel "
-        "something enshroud your face, sticking to you, pulling at you. "
-        "You reach out with your hands and desperately rip it away. You "
-        "look down and see three big white egg sacs. They seem to be wriggling. "
-        "You look up and see thick webs and dark shapes moving hurriedly "
-        "across the ceiling. Dozens of glowing, hungry eyes are fixed on you.", #4
-
-        "Climbing a few roughly hewn steps you see ahead of you a shaft of light "
-        "shining down upon an old stone well. \n"
-        "An anvil sits on a stone pile next to the well and discarded bottles are "
-        "strewn about the floor. A stack of buckets has been knocked over and left "
-        "where they fell. \n"
-        "Goblins and trolls are not renowned for their housekeeping! \n"
-        "As you approach, something inside the well catches your eye "
-        "- is that metal?",#5
-
-        "You find yourself in another cavern, this time it's huge. You look up and "
-        "wonder if those are stars you see. \n"
-        "You can hear something flying above you, circling - probably  birds, you say to yourself. "
-        "Spanning the centre of the cavern is a grand bridge made of cut stone. Torches line one side "
-        "and appear to go on forever, glowing in the darkness, dimly lighting the path. You can't see "
-        "where it leads - a mighty, thick fog is blocking the view. Anything could be lurking inside. \n "
-        "You gingerly edge closer to the low wall of the bridge and peer over at the blackness below you. "
-        "The air feels electric, alive. \n"
-        "It occurs to you that this bridge is incredibly large, even for trolls. You try not to think "
-        "about what that might mean, but it is a thought that sticks with you as you continue on your way.\n \n"
-
-        "You suddenly hear a slow, rhythmic sound and, as you're getting closer to the source, it's "
-        "becoming so loud it's making the bridge rumble. \n"
-        "It's like the stone is snoring…you can feel the air tremble around you as it breathes in and out. "
-        "A sudden realisation as the monster comes into sight…the rumours of terrorised citizens were true. "
-        "Dragons still exist! \n"
-        "You stare at the dragon in amazement as a flicker of fire escapes its nostrils. \n"
-        "Then a huge yellow eye snaps open and gazes back at you.",#6
-
-        "You hurry past the dragon, down a passageway. You dash through the next "
-        "unlocked door you find and are met by a trio of goblins, one appears to "
-        "be in charge. They grunt at you.",#7
-
-        "As you turn the corner, you hear guffawing and the snorts of Goblish being"
-        "spoken and the grunts of a troll. You see them, quaffing a dark brew, two "
-        "goblins and a troll sitting at a table, their drinks spilling as they see you. "
-        "They appear startled - and then irritated - that you've disturbed their fun.",#8
-
-        "The room is deadly silent but you are unnerved by the feeling that you're not "
-        "alone. Taking a few careful steps forward, you hear the slow scraping sound of "
-        "metal against concrete. \n"
-        "Two deep growls echo together, bouncing off the walls. They vibrate through your"
-        " body and the hair on the back of your neck stands on end. \n"
-        "Then you see them, waiting for you. \n"
-        "They must have heard you coming…because this goblin and troll have their weapons "
-        "ready in-hand….and have a couple of massive, ferocious wolves guarding them. " 
-        "The hairy beasts raise their hackles…and stare into your soul, circling, they "
-        "appear to be starving…saliva drips from their snarling mouths. They are ready "
-        "to pounce, just waiting for the order. \n"
-        "The troll lumbers forward as the goblin lets out an ungodly screeching sound." 
-        "You see a flash of teeth and claws",#9
-
-        "What is this I see before me? Somebody has left an ornately embroidered bag "
-        "full of potions just lying here. It looks very out of place…perhaps you are "
-        "going to need these?",#10
-
-        "Pushing open a door that is much heavier than the others, daylight dazzles "
-        "you. Shielding your eyes, you see a hulking shape ahead of you, blocking "
-        "the exit to this hellish place. You have fought so hard and freedom is so close. "
-        "A Stone Guardian stomps towards you."#11 
-    ]
-
-    room_descriptions_visited = [
-        "You are in a foul-smelling cell. There is a door to the east.",#1
-
-        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
-        "room 3",#3
-
-        "You are in the spiders' nest…watch where you walk…those egg sacs look like they are wriggling!",#4
-
-        "A shaft of light shines down upon an old stone well. "
-        "An anvil sits on a stone pile next to the well and discarded bottles are "
-        "strewn about the floor. A stack of buckets has been knocked over and left "
-        "where they fell. \n"   
-        "Goblins and trolls are not renowned for their housekeeping! \n  "
-        "Something is splashing about in that well…best not draw attention to yourself.",#5
-
-        "Spanning the centre of the familiar cavern is a grand bridge made of cut stone. "
-        "Torches line one side and appear to go on forever, glowing in the darkness, dimly "
-        "lighting the path. You can't see where it leads - a mighty, thick fog is blocking "
-        "the view. Anything could be lurking inside.",#6
-
-        "This looks like the guards' quarters",#7
-
-        "The stench of sweet booze lingers in the room, - that stuff is potent! "
-        "The chairs and table are knocked over, "
-        "there is broken glass everywhere.", #8
-
-        "What a mess! Patches of red-stained fur all over. Those wolves are almost as "
-        "frightening in death as they were when alive. Their gigantic fangs are still "
-        "sharp, someone might slip in the blood and land on those!",#9
-
-        "You are in some kind of storage room",#10
-
-        "This is the last room before freedom. Daylight dazzles your eyes."#11
-        ]
-    return room_descriptions, room_descriptions_visited
-
-def create_rooms():
+def create_rooms() -> list:
     '''
     function to create the game rooms.
     creates all monsters, items, and features in room, creates player object.
@@ -320,3 +140,202 @@ def create_rooms():
     rooms[0].battle_started = True
 
     return rooms
+
+def choose_name() -> str:
+    '''
+    prompts player to input a name of maximum 10 characters.
+    returns name
+    '''
+    clear_console()
+    name = input("please choose your name: ")
+    if len(name) > 10:
+        print("maximum of 10 characters")
+        choose_name()
+    else:
+        return name
+    
+def create_armor() -> tuple:
+    '''
+    intialises all objects of Armor class used in the game
+    '''
+    no_armor = Armor("none","none", 0, 0)
+    rusty_armour= Armor("rusty armor", "it has seen better days",2,-1)
+    leather_armor = Armor("leather armor", "it is light, and offers some protection",3,0)
+    plate_armor = Armor("plate armor", "it is heavy, but offers good protection",5,-1)
+    dragonscale_armor = Armor("dragonscale armor", "it glistens",11,1)
+    scales = Armor("none", "none",10,0)
+    stone_skin = Armor("none", "none", 5, -2)
+    return no_armor, rusty_armour, leather_armor, plate_armor, dragonscale_armor, \
+            scales, stone_skin
+
+def create_weapons() -> tuple:
+    '''
+    initialises all objects of Weapon class used in the game
+    '''
+    fists = Weapon("fists", "none", [1,2], 0)
+    dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
+    club = Weapon("club", "a large blunt weapon", [2,10], -1)
+    sword = Weapon("sword","a fine steel sword",[1,10],2)
+    silver_sword = Weapon("silver sword","a shiny silver sword",[2,12],3)
+    dragon_lance = Weapon("dragon lance", "it glistens", [10,25],4)
+    stinger = Weapon("stinger", "none", [1,1], 0)
+    claws = Weapon("claws","none",[20,30],5)
+    bite= Weapon("bite","none",[4,9],4)
+    stone_fists = Weapon("fists", "none", [5,15],4)
+    return fists, dagger, club, sword, silver_sword, dragon_lance, \
+            stinger, claws, bite, stone_fists
+
+def create_potions() -> tuple:
+    '''
+    initialises all objects of Potion class used in the game
+    '''
+    healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
+    super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
+    agility_potion = Potion("agility potion", "it is green and sticky","agility",3)
+    strength_potion = Potion("strength potion", "orange and bubbly", "strength",2)
+    return healing_potion, super_healing_potion, agility_potion, strength_potion
+
+def create_keys() -> tuple:
+    '''
+    initialises all objects of Key class used in the game
+    '''
+    rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
+    bronze_key=Key("bronze key","It is dusty","bronze chest")
+    silver_key=Key("silver key","It is shiny","silver chest")
+    golden_key=Key("golden key","It has strange markings","golden chest")
+    gold_medallion = Key("gold medallion", "it is proof that you killed the dragon", "none")
+    return rusty_key, bronze_key, silver_key, golden_key, gold_medallion
+
+def create_room_descriptions() -> tuple[list,list]:
+    '''
+    create the descriptions used for the room.details attribute
+    '''
+    room_descriptions = [
+        "Regaining consciousness, you open your eyes and realise you are in a dark, "
+        "dank-smelling dungeon. From the faint sounds above you, you realise you are " 
+        "in the depths of the citadel, controlled by the evil sorceress queen, Achlys. "
+        "It dawns on you that by wrongfully imprisoning you, Achlys has removed the "
+        "last obstacle to her malicious schemes. You must find a way to escape, "
+        "though you know that her loyal monsters will fight you to the death. "
+        "The innocent citizens of Greystorm will be counting on you to "
+        "save them. "
+        "You hear clumsy, heavy footsteps approaching your cell, "
+        "the door creaks open and an evidently inebriated goblin stumbles in. "
+        "You reach for your weapon but…your scabbard is empty. "
+        "He begins to berate you, but you don't know what he's saying - "
+        "you don't speak Goblish. "
+        "He lunges towards you and you see a dagger in his gnarly hand: ",#1
+
+        "You lurch out of your cell and find yourself in the guard quarters. "
+        "You are confronted by a large troll. He glares angrily at you.",#2
+
+        "Leaving the troll's lifeless body behind, you enter a small room. "
+        "You hear water dripping. In the dim light, cast by a torch high "
+        "up on the wall, you spy four chests; one wooden, one bronze, one "
+        "silver, one gold..",#3
+
+        "You stagger down a narrow corridor and spot a gap in the walls. "
+        "You feel your way carefully through the gap, along jagged rock "
+        "walls until you edge your way into an opening. You feel "
+        "something enshroud your face, sticking to you, pulling at you. "
+        "You reach out with your hands and desperately rip it away. You "
+        "look down and see three big white egg sacs. They seem to be wriggling. "
+        "You look up and see thick webs and dark shapes moving hurriedly "
+        "across the ceiling. Dozens of glowing, hungry eyes are fixed on you.", #4
+
+        "Climbing a few roughly hewn steps you see ahead of you a shaft of light "
+        "shining down upon an old stone well. \n"
+        "An anvil sits on a stone pile next to the well and discarded bottles are "
+        "strewn about the floor. A stack of buckets has been knocked over and left "
+        "where they fell. \n"
+        "Goblins and trolls are not renowned for their housekeeping! \n"
+        "As you approach, something inside the well catches your eye "
+        "- is that metal?",#5
+
+        "You find yourself in another cavern, this time it's huge. You look up and "
+        "wonder if those are stars you see. \n"
+        "You can hear something flying above you, circling - probably  birds, you say to yourself. "
+        "Spanning the centre of the cavern is a grand bridge made of cut stone. Torches line one side "
+        "and appear to go on forever, glowing in the darkness, dimly lighting the path. You can't see "
+        "where it leads - a mighty, thick fog is blocking the view. Anything could be lurking inside. \n "
+        "You gingerly edge closer to the low wall of the bridge and peer over at the blackness below you. "
+        "The air feels electric, alive. \n"
+        "It occurs to you that this bridge is incredibly large, even for trolls. You try not to think "
+        "about what that might mean, but it is a thought that sticks with you as you continue on your way.\n \n"
+
+        "You suddenly hear a slow, rhythmic sound and, as you're getting closer to the source, it's "
+        "becoming so loud it's making the bridge rumble. \n"
+        "It's like the stone is snoring…you can feel the air tremble around you as it breathes in and out. "
+        "A sudden realisation as the monster comes into sight…the rumours of terrorised citizens were true. "
+        "Dragons still exist! \n"
+        "You stare at the dragon in amazement as a flicker of fire escapes its nostrils. \n"
+        "Then a huge yellow eye snaps open and gazes back at you.",#6
+
+        "You hurry past the dragon, down a passageway. You dash through the next "
+        "unlocked door you find and are met by a trio of goblins, one appears to "
+        "be in charge. They grunt at you.",#7
+
+        "As you turn the corner, you hear guffawing and the snorts of Goblish being"
+        "spoken and the grunts of a troll. You see them, quaffing a dark brew, two "
+        "goblins and a troll sitting at a table, their drinks spilling as they see you. "
+        "They appear startled - and then irritated - that you've disturbed their fun.",#8
+
+        "The room is deadly silent but you are unnerved by the feeling that you're not "
+        "alone. Taking a few careful steps forward, you hear the slow scraping sound of "
+        "metal against concrete. \n"
+        "Two deep growls echo together, bouncing off the walls. They vibrate through your"
+        " body and the hair on the back of your neck stands on end. \n"
+        "Then you see them, waiting for you. \n"
+        "They must have heard you coming…because this goblin and troll have their weapons "
+        "ready in-hand….and have a couple of massive, ferocious wolves guarding them. " 
+        "The hairy beasts raise their hackles…and stare into your soul, circling, they "
+        "appear to be starving…saliva drips from their snarling mouths. They are ready "
+        "to pounce, just waiting for the order. \n"
+        "The troll lumbers forward as the goblin lets out an ungodly screeching sound." 
+        "You see a flash of teeth and claws",#9
+
+        "What is this I see before me? Somebody has left an ornately embroidered bag "
+        "full of potions just lying here. It looks very out of place…perhaps you are "
+        "going to need these?",#10
+
+        "Pushing open a door that is much heavier than the others, daylight dazzles "
+        "you. Shielding your eyes, you see a hulking shape ahead of you, blocking "
+        "the exit to this hellish place. You have fought so hard and freedom is so close. "
+        "A Stone Guardian stomps towards you."#11 
+    ]
+
+    room_descriptions_visited = [
+        "You are in a foul-smelling cell. There is a door to the east.",#1
+
+        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
+        "room 3",#3
+
+        "You are in the spiders' nest…watch where you walk…those egg sacs look like they are wriggling!",#4
+
+        "A shaft of light shines down upon an old stone well. "
+        "An anvil sits on a stone pile next to the well and discarded bottles are "
+        "strewn about the floor. A stack of buckets has been knocked over and left "
+        "where they fell. \n"   
+        "Goblins and trolls are not renowned for their housekeeping! \n  "
+        "Something is splashing about in that well…best not draw attention to yourself.",#5
+
+        "Spanning the centre of the familiar cavern is a grand bridge made of cut stone. "
+        "Torches line one side and appear to go on forever, glowing in the darkness, dimly "
+        "lighting the path. You can't see where it leads - a mighty, thick fog is blocking "
+        "the view. Anything could be lurking inside.",#6
+
+        "This looks like the guards' quarters",#7
+
+        "The stench of sweet booze lingers in the room, - that stuff is potent! "
+        "The chairs and table are knocked over, "
+        "there is broken glass everywhere.", #8
+
+        "What a mess! Patches of red-stained fur all over. Those wolves are almost as "
+        "frightening in death as they were when alive. Their gigantic fangs are still "
+        "sharp, someone might slip in the blood and land on those!",#9
+
+        "You are in some kind of storage room",#10
+
+        "This is the last room before freedom. Daylight dazzles your eyes."#11
+        ]
+    return room_descriptions, room_descriptions_visited
