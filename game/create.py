@@ -32,11 +32,11 @@ def create_rooms() -> list:
     #keys
     rusty_key, bronze_key, silver_key, golden_key, gold_medallion \
     = create_keys()
-    
+
     #initialise player
     name = choose_name()
     player=Player(name, "A warrior", 20, 1, 1, no_armor, fists,[],"")
-    player.hp=20
+    player.hp=1
     player.start_hp=20
 
     #create monsters
@@ -75,25 +75,32 @@ def create_rooms() -> list:
     for i in range(2):
         wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
     #stone guardian
-    stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
+    stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,\
+                             [golden_key],sg_speak)
     #dragon
     dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[gold_medallion],d_speak)
 
     #create features
-    wooden_chest_0=Feature("wooden chest","the chest is rickety and smells damp", [healing_potion],False)
-    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
-    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
-    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,super_healing_potion,super_healing_potion],True)
+    wooden_chest_0=Feature("wooden chest","the chest is rickety and smells damp",\
+                            [healing_potion],False)
+    bronze_chest=Feature("bronze chest","the chest is dusty", \
+                         [healing_potion,strength_potion, agility_potion],True)
+    silver_chest=Feature("silver chest","the chest is smooth and shiny", \
+                         [silver_sword,healing_potion],True)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", \
+                         [dragonscale_armor,super_healing_potion,super_healing_potion],True)
     spider_egg=Feature("egg","it is wet and slimy",[],False)
     spider_egg_2=Feature("egg","it is wet and slimy",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
-    wooden_chest = Feature("wooden chest","goblins like to store their stuff in chests", [super_healing_potion],False)
+    wooden_chest = Feature("wooden chest","goblins like to store their stuff in chests", \
+                           [super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
-    bag_of_potions = Feature("bag of potions","someone just left this lying around here",[healing_potion,healing_potion,healing_potion],False)
-    
+    bag_of_potions = Feature("bag of potions","someone just left this lying around here", \
+                             [healing_potion,healing_potion,healing_potion],False)
+
     #create room descriptions
     room_descriptions, room_descriptions_visited = create_room_descriptions()
-    
+
     #create rooms
     #populate rooms with monsters
     monsters=[
@@ -142,7 +149,7 @@ def create_rooms() -> list:
     for i in range(11):
         rooms.append (Room(room_descriptions[i],room_descriptions_visited[i], \
                            player,monsters[i],items[i],features[i]))
-    
+
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
     rooms[0].monster_action = True
@@ -162,7 +169,7 @@ def choose_name() -> str:
         choose_name()
     else:
         return name
-    
+
 def create_armor() -> tuple:
     '''
     intialises all objects of Armor class used in the game
@@ -264,19 +271,19 @@ def create_room_descriptions() -> tuple[list,list]:
         "You find yourself in another cavern, this time it's huge. You look up and "
         "wonder if those are stars you see. \n"
         "You can hear something flying above you, circling - probably  birds, you say to yourself. "
-        "Spanning the centre of the cavern is a grand bridge made of cut stone. Torches line one side "
-        "and appear to go on forever, glowing in the darkness, dimly lighting the path. You can't see "
-        "where it leads - a mighty, thick fog is blocking the view. Anything could be lurking inside. \n "
-        "You gingerly edge closer to the low wall of the bridge and peer over at the blackness below you. "
-        "The air feels electric, alive. \n"
-        "It occurs to you that this bridge is incredibly large, even for trolls. You try not to think "
-        "about what that might mean, but it is a thought that sticks with you as you continue on your way.\n \n"
-
-        "You suddenly hear a slow, rhythmic sound and, as you're getting closer to the source, it's "
-        "becoming so loud it's making the bridge rumble. \n"
-        "It's like the stone is snoring…you can feel the air tremble around you as it breathes in and out. "
-        "A sudden realisation as the monster comes into sight…the rumours of terrorised citizens were true. "
-        "Dragons still exist! \n"
+        "Spanning the centre of the cavern is a grand bridge made of cut stone. Torches line one "
+        "side and appear to go on forever, glowing in the darkness, dimly lighting the path. "
+        "You can't see where it leads - a mighty, thick fog is blocking the view. Anything could "
+        "be lurking inside. \n You gingerly edge closer to the low wall of the bridge and peer "
+        "over at the blackness below you. The air feels electric, alive. \n"
+        "It occurs to you that this bridge is incredibly large, even for trolls. "
+        "You try not to think about what that might mean, but it is a thought that sticks with "
+        "you as you continue on your way.\n \n"
+        "You suddenly hear a slow, rhythmic sound and, as you're getting closer to the source, "
+        "it's becoming so loud it's making the bridge rumble. \n"
+        "It's like the stone is snoring…you can feel the air tremble around you as it breathes "
+        "in and out. A sudden realisation as the monster comes into sight…"
+        "the rumours of terrorised citizens were true. Dragons still exist! \n"
         "You stare at the dragon in amazement as a flicker of fire escapes its nostrils. \n"
         "Then a huge yellow eye snaps open and gazes back at you.",#6
 
@@ -316,10 +323,13 @@ def create_room_descriptions() -> tuple[list,list]:
     room_descriptions_visited = [
         "You are in a foul-smelling cell. There is a door to the east.",#1
 
-        "You are in a dimly lit cave. It smells like trolls have been living here for a long time",#2
+        "You are in a dimly lit cave. It smells like trolls have been living here for "
+        "a long time",#2
+
         "room 3",#3
 
-        "You are in the spiders' nest…watch where you walk…those egg sacs look like they are wriggling!",#4
+        "You are in the spiders' nest…watch where you walk…those egg sacs look like "
+        "they are wriggling!",#4
 
         "A shaft of light shines down upon an old stone well. "
         "An anvil sits on a stone pile next to the well and discarded bottles are "

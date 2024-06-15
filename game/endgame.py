@@ -5,16 +5,18 @@ and displaying the hall of fame using the google sheets API
 '''
 
 import time
-from rich.prompt import Prompt
-from game.clear import clear_console
+from operator import itemgetter
+
 import gspread
 from google.oauth2.service_account import Credentials
-from rich import print
 from rich.prompt import Prompt
+from rich import print
 from rich.theme import Theme
 from rich.console import Console
 from prettytable import PrettyTable
-from operator import itemgetter
+
+#my function imports
+from game.clear import clear_console
 
 custom_theme= Theme({
     "info" : "grey62",
@@ -45,7 +47,7 @@ def lose_game(room,killed_by):
     time.sleep(3)
     print("You tried your best but, sadly, have perished…who "
           "will stop Achlys and her monsters now?")
-    results(room,killed_by,escaped)
+    add_results(room,killed_by,escaped)
 
 
 def win_game(room):
@@ -53,7 +55,7 @@ def win_game(room):
     checks if player wants to leave the dungeon
     and ends the game
     '''
-    if room.player.dragon_killed == False:
+    if room.player.dragon_killed is False:
         print(
             "You can escape the dungeon now, however the dragon is still "
             "back there in the dungeon")
@@ -62,7 +64,6 @@ def win_game(room):
             if answer == "yes" or answer == "y":
                 break
             if answer == "no" or answer == "n":
-                room
                 return
     clear_console()
     time.sleep(1)
@@ -73,10 +74,10 @@ def win_game(room):
           "it is your destiny…")
     escaped= "yes"
     killed_by = "survived"
-    results(room, killed_by, escaped)
+    add_results(room, killed_by, escaped)
     return True
 
-def results(room,killed_by,escaped):
+def add_results(room,killed_by,escaped):
     '''
     adds the players results to the HoF
     '''
@@ -88,28 +89,28 @@ def results(room,killed_by,escaped):
     hof=SHEET.worksheet('Sheet1')
     hof.append_row(results)
     while True:
-        see_HOF = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
-        if see_HOF == "yes" or see_HOF == "y":
-            show_HOF()
+        see_hof = Prompt.ask("[chartreuse4]See Hall of Fame? (yes/no)[/chartreuse4]")
+        if see_hof == "yes" or see_hof == "y":
+            show_hof()
             break
-        if see_HOF == "no" or see_HOF == "n":
+        if see_hof == "no" or see_hof == "n":
             break
 
-def show_HOF():
+def show_hof():
     '''
     prints the HoF in a table
     '''
-    hall_of_fame=SHEET.worksheet('Sheet1')
-    HOF = hall_of_fame.get_all_values()
+    hall_of_fame = SHEET.worksheet('Sheet1')
+    hof = hall_of_fame.get_all_values()
     #remove headings row
-    HOF.pop(0)
-    for row in HOF:
+    hof.pop(0)
+    for row in hof:
         row[1]=int(row[1])
     #sort the HoF by:gold medallion, escaped, room reached
-    HOF.sort(key=itemgetter(4,3,1),reverse=True)
+    hof.sort(key=itemgetter(4,3,1),reverse=True)
     table = PrettyTable()
     table.field_names=["NAME", "ROOM REACHED", "KILLED BY", "ESCAPED" ,"GOLD MEDALLION"]
-    for row in HOF:
+    for row in hof:
         table.add_row(row)
     #show the HoF
     console.print(table,style="purple")

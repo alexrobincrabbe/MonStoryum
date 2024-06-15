@@ -1,7 +1,10 @@
+'''
+Contains definition of Room class
+'''
+
 from rich import print
 from rich.theme import Theme
 from rich.console import Console
-from rich.theme import Theme
 
 #my function imports
 from game.clear import clear_console
@@ -35,14 +38,14 @@ class Room:
         self.password = False
         self.game_won = False
         self.game_lost = False
-    
+
     def examine(self, player):
         '''
         prints description of room, as well as description of all:
         items,features, monsters that are in the room.
         '''
         clear_console()
-        if self.visited == False:
+        if self.visited is False:
             console.print(f'{self.details}',style="info")
         else:
             console.print(f'{self.details_visited}',style="info")

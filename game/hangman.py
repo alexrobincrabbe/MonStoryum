@@ -1,3 +1,7 @@
+'''
+Contains hangman function
+'''
+
 import random as rnd
 from rich.prompt import Prompt
 from rich import print
@@ -10,26 +14,27 @@ def hangman():
     returns False if the game is lost
     '''
     win = False
-    guesses_remaining = 5 
+    guesses_remaining = 5
     #
     word_list = ["dinner", "breakfast", "hungry", "delicious"]
     word = rnd.choice(word_list)
     #create string with a space and an underscore for each letter in the word
     number_of_letters=len(word)
     show_word=""
-    for step in range(number_of_letters):
+    for _ in range(number_of_letters):
         show_word+=" _"
 
     print(f'[green3]{show_word}[/green3]')
     # check if the letter is in the word and replace the underscore
-    while win == False:
+    while win is False:
         guess = Prompt.ask("[chartreuse4]'guess a letter' [chartreuse4]")
         if len(guess) > 1:
             print("[chartreuse4] 'just one letter please...'[chartreuse4] ")
         else:
             if guess in word:
                 if guess in show_word:
-                    print(" [chartreuse4]'you have already guessed that letter, I already tire of you little human...' [/chartreuse4]")
+                    print(" [chartreuse4]'you have already guessed that letter,\
+                           I already tire of you little human...' [/chartreuse4]")
                 else:
                     index=0
                     for letter in word:
@@ -49,5 +54,6 @@ def hangman():
                     print("you lose")
                     return win
                 else:
-                    print(f" [chartreuse4]'you have [red1]{guesses_remaining}[/red1] wrong guesses left..'[chartreuse4] ")
-                    print(f"The dragon licks it's lips")
+                    print(f" [chartreuse4]'you have [red1]{guesses_remaining}[/red1] \
+                          wrong guesses left..'[chartreuse4] ")
+                    print("The dragon licks it's lips")

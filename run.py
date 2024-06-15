@@ -1,3 +1,7 @@
+'''
+Runs Monstoryum game
+'''
+
 from rich.prompt import Prompt
 
 #my function imports
@@ -5,10 +9,13 @@ from game.create import create_rooms
 from game.turn import enter_room
 
 def main ():
+    '''
+    main function
+    '''
     #create the game
     rooms = create_rooms()
     #start the game
-    room_number=0
+    room_number=4
     enter_room(rooms,room_number)
     #end the game or restart
     while True:

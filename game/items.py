@@ -1,3 +1,6 @@
+'''
+Contains definitions of Item classes
+'''
 from rich import print
 from rich.theme import Theme
 from rich.console import Console
@@ -16,8 +19,11 @@ class Item:
     def __init__(self,description,details):
         self.description=description
         self.details=details
-    
+
     def examine(self, player):
+        '''
+        describes monster
+        '''
         console.print(f'{self.details}', style = "info")
 
 class Weapon(Item):
