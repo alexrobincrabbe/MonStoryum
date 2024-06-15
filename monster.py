@@ -264,5 +264,5 @@ class Player(Monster):
         print("Strength increase damage, Agility increases hit and dodge")
         stats_table.add_column("HP",[f'{self.hp}/{self.start_hp}'])
         stats_table.add_column("Strength",[self.strength])
-        stats_table.add_column("Strength",[self.agility])
+        stats_table.add_column("Agility",[self.agility])
         console.print(stats_table,style="orange1")
