@@ -94,7 +94,8 @@ def choose_action(room,rooms,room_number,action):
             room.monster_action=False
 
 def help(room,action):
-    options=["examine","inventory","forwards","backwards","status","attack","equip","use","talk"]
+    options=["examine","inventory","forwards","backwards","status",\
+             "attack","equip","use","talk","take"]
     print("list of available commands:")
     for option in options:
         console.print(option,style="info")

@@ -78,7 +78,7 @@ def create_rooms() -> list:
     spider_egg=Feature("egg","it is wet and slimy",[],False)
     spider_egg_2=Feature("egg","it is wet and slimy",[bronze_key],False)
     well=Feature("well", "You can't see the bottom",[rusty_armour],False)
-    wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [super_healing_potion],False)
+    wooden_chest = Feature("wooden chest","goblins like to store their stuff in chests", [super_healing_potion],False)
     table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
     bag_of_potions = Feature("bag of potions","someone just left this lying around here",[healing_potion,healing_potion,healing_potion],False)
     
