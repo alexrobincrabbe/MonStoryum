@@ -1,11 +1,9 @@
 import time
 from rich import print
-from rich import pretty
 from rich.theme import Theme
 from rich.prompt import Prompt
 from rich.console import Console
 from rich.theme import Theme
-pretty.install()
 
 #my class imports
 from game.items import Weapon, Armor, Potion, Key
@@ -16,16 +14,6 @@ from game.feature import Feature
 from game.clear import clear_console
 from game.endgame import win_game,lose_game
 
-custom_theme= Theme({
-    "info" : "grey62",
-    "features" : "green",
-    "monsters" : "red",
-    "stat" : "bright_green",
-    "option" : "blue",
-    "items" : "turquoise2"
-})
-
-console=Console(theme=custom_theme)
 class Room:
     '''
     Main class, contains object instances of all other classes as attributes.
@@ -45,7 +33,7 @@ class Room:
         self.description = "room"
         self.password = False
         self.game_won = False
-
+    
     def examine(self, player):
         '''
         prints description of room, as well as description of all:
@@ -58,11 +46,20 @@ class Room:
             console.print(f'{self.details_visited}',style="info")
         print("You see:")
         for monster in self.monsters:
-            console.print(f'{monster.description}',style="monsters")
+            console.print(f'{monster.description}',style = "monsters")
         for item in self.items:
             console.print(f'{item.description}', style = "items")
         for feature in self.features:
             console.print(f'{feature.alt_description}',style="features")
+
+custom_theme= Theme({
+    "info" : "grey62",
+    "features" : "green",
+    "monsters" : "red",
+    "items" : "turquoise2"
+})
+
+console=Console(theme=custom_theme)
 
 def enter_room(rooms,room_number):
     '''
@@ -303,7 +300,6 @@ def choose_object_number(room, object_count):
             console.print('Please pick a valid number', stlye = "info") 
     return object_selected,object_select
     
-
 def choose_target(room,action):
     target_string = action.split(" ", 1)
     #user specifies target
@@ -395,9 +391,8 @@ def choose_name():
     else:
         return name
     
-def main ():
-    #create items
-    #armor
+
+def create_armor():
     no_armor = Armor("none","none", 0, 0)
     rusty_armour= Armor("rusty armor", "it has seen better days",2,-1)
     leather_armor = Armor("leather armor", "it is light, and offers some protection",3,0)
@@ -405,7 +400,10 @@ def main ():
     dragonscale_armor = Armor("dragonscale armor", "it glistens",11,1)
     scales = Armor("none", "none",10,0)
     stone_skin = Armor("none", "none", 5, -2)
-    #weapons
+    return no_armor, rusty_armour, leather_armor, plate_armor, dragonscale_armor, \
+            scales, stone_skin
+
+def create_weapons():
     fists = Weapon("fists", "none", [1,2], 0)
     dagger = Weapon("dagger", "a small stabby weapon", [1,6], 1)
     club = Weapon("club", "a large blunt weapon", [2,10], -1)
@@ -416,108 +414,25 @@ def main ():
     claws = Weapon("claws","none",[20,30],5)
     bite= Weapon("bite","none",[4,9],4)
     stone_fists = Weapon("fists", "none", [5,15],4)
-    #potions
+    return fists, dagger, club, sword, silver_sword, dragon_lance, \
+            stinger, claws, bite, stone_fists
+
+def create_potions():
     healing_potion = Potion("healing potion","it is red and smells fruity", "hp",10)
-    Super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
+    super_healing_potion = Potion("super healing potion","really potent stuff", "hp",20)
     agility_potion = Potion("agility potion", "it is green and sticky","agility",3)
     strength_potion = Potion("strength potion", "orange and bubbly", "strength",2)
-    #keys
+    return healing_potion, super_healing_potion, agility_potion, strength_potion
+
+def create_keys():
     rusty_key=Key("rusty key","It smells of goblin brew","prison_door")
     bronze_key=Key("bronze key","It is dusty","bronze chest")
     silver_key=Key("silver key","It is shiny","silver chest")
     golden_key=Key("golden key","It has strange markings","golden chest")
     gold_medallion = Key("gold medallion", "it is proof that you killed the dragon", "none")
+    return rusty_key, bronze_key, silver_key, golden_key, gold_medallion
 
-    items=[
-        [],#1
-        [],#2
-        [],#3
-        [],#4
-        [],#5
-        [],#6
-        [],#7
-        [],#8
-        [plate_armor],#9
-        [],#10
-        [dragon_lance]#11
-    ]
-
-    #initialise player
-    name = choose_name()
-    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
-    player.hp=20
-    player.start_hp=20
-    #creat monsters
-    g_speak = "it is probably swearing at you, but you don't understand goblish"
-    dg_details = "The goblin looks very drunk"
-    g_details = "goblins are funny looking creatures"
-    t_speak = "it grunts at you"
-    t_details = "Looks big, stupid and angry. It is carrying a big club."
-    s_speak = "it hisses at you"
-    s_details = "it is creepy"
-    sg_speak = "it remains silent"
-    sg_details ="it is a living statue, made of pure stone"
-    d_details = "it is huge and scaly"
-    d_speak = ""
-    w_details = "it has really big teeth"
-    w_speak = "it is not a talking wolf"
-    drunk_goblin=Monster("goblin",dg_details, 10, 1, -10, no_armor,dagger,[rusty_key],g_speak)
-    trolls = []
-    for i in range (3):
-        trolls.append(Monster("troll",t_details, 20, 2, -4, no_armor,club,[],t_speak))
-    goblins =[]
-    for i in range (5):
-        goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
-    goblin_captain=Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
-    dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[gold_medallion],d_speak)
-    wolves=[]
-    for i in range(2):
-        wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
-
-    stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
-    spiders=[]
-    for i in range(5):
-        spiders.append(Monster("spider",s_details, 1,0,0,no_armor,stinger,[],s_speak))
-
-    monsters=[
-        [drunk_goblin],#1
-        [trolls[0]],#2
-        [],#3
-        [spider for spider in spiders],#4
-        [],#5
-        [dragon],#6
-        [goblins[0],goblins[1],goblin_captain],#7
-        [trolls[1],goblins[2],goblins[3]],#8
-        [trolls[2], goblins[4],wolves[0],wolves[1]],#9
-        [],#10
-        [stone_guardian]#11
-    ]
-
-    #create features
-    wooden_chest_0=Feature("wooden chest","the chest is rickety and smells damp", [healing_potion],False)
-    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
-    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
-    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,Super_healing_potion,Super_healing_potion],True)
-    spider_egg=Feature("egg","it is wet and slimy",[],False)
-    spider_egg_2=Feature("egg","it is wet and slimy",[bronze_key],False)
-    well=Feature("well", "You can't see the bottom",[rusty_armour],False)
-    wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [Super_healing_potion],False)
-    table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
-    bag_of_potions = Feature("bag of potions","someone just left this lying around here",[Super_healing_potion,Super_healing_potion,Super_healing_potion],False)
-    features=[
-        [],#1
-        [],#2
-        [wooden_chest_0, bronze_chest, silver_chest, golden_chest],#3
-        [spider_egg,spider_egg_2,spider_egg],#4
-        [well],#5
-        [],#6
-        [wooden_chest],#7
-        [table],#8
-        [],#9
-        [bag_of_potions],#10
-        []#11
-        ]
-    #create room descriptions
+def create_room_descriptions():
     room_descriptions = [
         "Regaining consciousness, you open your eyes and realise you are in a dark, "
         "dank-smelling dungeon. From the faint sounds above you, you realise you are " 
@@ -560,7 +475,7 @@ def main ():
         "As you approach, something inside the well catches your eye "
         "- is that metal?",#5
 
-        "You find yourself in another cavern, this time it’s huge. You look up and "
+        "You find yourself in another cavern, this time it's huge. You look up and "
         "wonder if those are stars you see. \n"
         "You can hear something flying above you, circling - probably  birds, you say to yourself. "
         "Spanning the centre of the cavern is a grand bridge made of cut stone. Torches line one side "
@@ -611,6 +526,7 @@ def main ():
         "the exit to this hellish place. You have fought so hard and freedom is so close. "
         "A Stone Guardian stomps towards you."#11 
     ]
+
     room_descriptions_visited = [
         "You are in a foul-smelling cell. There is a door to the east.",#1
 
@@ -645,19 +561,155 @@ def main ():
 
         "This is the last room before freedom. Daylight dazzles your eyes."#11
         ]
+    return room_descriptions, room_descriptions_visited
+
+def create_rooms():
+    '''
+    function to create the game rooms.
+    creates all monsters, items, and features in room, creates player object.
+    '''
+     #create items
+    #armor
+    no_armor, rusty_armour, leather_armor, plate_armor, dragonscale_armor, \
+    scales, stone_skin = create_armor()
+    #weapons
+    fists, dagger, club, sword, silver_sword, dragon_lance, \
+    stinger, claws, bite, stone_fists = create_weapons()
+    #potions
+    healing_potion, super_healing_potion, agility_potion, strength_potion \
+    = create_potions()
+    #keys
+    rusty_key, bronze_key, silver_key, golden_key, gold_medallion \
+    = create_keys()
+    
+    #initialise player
+    name = choose_name()
+    player=Player(name, "A warrior", 25, 1, 1, no_armor, fists,[],"")
+    player.hp=20
+    player.start_hp=20
+
+    #create monsters
+    #talk to response
+    g_speak = "it is probably swearing at you, but you don't understand goblish"
+    dg_details = "The goblin looks very drunk"
+    g_details = "goblins are funny looking creatures"
+    t_speak = "it grunts at you"
+    t_details = "Looks big, stupid and angry. It is carrying a big club."
+    s_speak = "it hisses at you"
+    s_details = "it is creepy"
+    sg_speak = "it remains silent"
+    sg_details ="it is a living statue, made of pure stone"
+    d_details = "it is huge and scaly"
+    d_speak = ""
+    w_details = "it has really big teeth"
+    w_speak = "it is not a talking wolf"
+    #goblins
+    goblins =[]
+    for i in range (5):
+        goblins.append(Monster("goblin", g_details, 10, 1, 0, no_armor,dagger,[],g_speak))
+    goblin_captain = Monster("goblin captain",g_details, 13, 1, 0, leather_armor,sword,[],g_speak)
+    drunk_goblin=Monster("goblin",dg_details, 10, 1, -10, no_armor,dagger,[rusty_key],g_speak)
+    #spiders
+    spiders=[]
+    for i in range(5):
+        spiders.append(Monster("spider",s_details, 1,0,0,no_armor,stinger,[],s_speak))
+    #trolls
+    trolls = []
+    for i in range (3):
+        trolls.append(Monster("troll",t_details, 20, 2, -4, no_armor,club,[],t_speak))
+    #wolves
+    wolves=[]
+    for i in range(2):
+        wolves.append(Monster("wolf", w_details, 20,0,0, no_armor,bite, [], w_speak))
+    #stone guardian
+    stone_guardian = Monster("stone guardian", sg_details, 50, 0, 0, stone_skin,stone_fists,[golden_key],sg_speak)
+    #dragon
+    dragon=Dragon("dragon", d_details,100,0,0,scales,claws,[gold_medallion],d_speak)
+
+    #create features
+    wooden_chest_0=Feature("wooden chest","the chest is rickety and smells damp", [healing_potion],False)
+    bronze_chest=Feature("bronze chest","the chest is dusty", [healing_potion,strength_potion, agility_potion],True)
+    silver_chest=Feature("silver chest","the chest is smooth and shiny", [silver_sword,healing_potion],True)
+    golden_chest=Feature("golden chest","the chest has strange markings on it", [dragonscale_armor,super_healing_potion,super_healing_potion],True)
+    spider_egg=Feature("egg","it is wet and slimy",[],False)
+    spider_egg_2=Feature("egg","it is wet and slimy",[bronze_key],False)
+    well=Feature("well", "You can't see the bottom",[rusty_armour],False)
+    wooden_chest = Feature("wooden chest","goblins like to store there stuff in chests", [super_healing_potion],False)
+    table = Feature ("table", "it has goblin brew stains all over it",[silver_key],False)
+    bag_of_potions = Feature("bag of potions","someone just left this lying around here",[healing_potion,healing_potion,healing_potion],False)
+    
+    #create room descriptions
+    room_descriptions, room_descriptions_visited = create_room_descriptions()
     
     #create rooms
+    #populate rooms with monsters
+    monsters=[
+        [drunk_goblin],#1
+        [trolls[0]],#2
+        [],#3
+        [spider for spider in spiders],#4
+        [],#5
+        [dragon],#6
+        [goblins[0],goblins[1],goblin_captain],#7
+        [trolls[1],goblins[2],goblins[3]],#8
+        [trolls[2], goblins[4],wolves[0],wolves[1]],#9
+        [],#10
+        [stone_guardian]#11
+    ]
+    #populate rooms with features
+    features=[
+        [],#1
+        [],#2
+        [wooden_chest_0, bronze_chest, silver_chest, golden_chest],#3
+        [spider_egg,spider_egg_2,spider_egg],#4
+        [well],#5
+        [],#6
+        [wooden_chest],#7
+        [table],#8
+        [],#9
+        [bag_of_potions],#10
+        []#11
+        ]
+    #populate rooms with items
+    items=[
+        [],#1
+        [],#2
+        [],#3
+        [],#4
+        [],#5
+        [],#6
+        [],#7
+        [],#8
+        [plate_armor],#9
+        [],#10
+        [dragon_lance]#11
+    ]
+    #create the rooms
     rooms=[]
     for i in range(11):
-        rooms.append (Room(room_descriptions[i],room_descriptions_visited[i],player,monsters[i],items[i],features[i]))
+        rooms.append (Room(room_descriptions[i],room_descriptions_visited[i], \
+                           player,monsters[i],items[i],features[i]))
     
     rooms[0].door="locked"
     rooms[0].key_name="prison_door"
     rooms[0].monster_action = True
     rooms[0].battle_started = True
 
+    return rooms
+
+def main ():
+    #create the game
+    rooms = create_rooms()
+    #start the game
     room_number=0
     enter_room(rooms,room_number)
-    Prompt.ask("[chartreuse4]press enter to restart[/chartreuse4]")
+    #end the game or restart
+    while True:
+        play_again = Prompt.ask("[chartreuse4]play again=?[/chartreuse4] (yes/no)")
+        if play_again == "yes" or play_again == "y":
+            main()
+        elif play_again == "no" or play_again == "n":
+            return
+
+if __name__ == "__main__":
     main()
-main()
