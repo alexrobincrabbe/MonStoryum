@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 from rich import print
 
 #my function imports
-from hangman import hangman
+from game.hangman import hangman
 
 custom_theme= Theme({
     "info" : "grey62",

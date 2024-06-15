@@ -7,15 +7,14 @@ from rich.console import Console
 from rich.theme import Theme
 pretty.install()
 
-
 #my class imports
-from game.items import Weapon, Armor, Potion,Key
-from monster import Monster, Dragon, Player
-from feature import Feature
+from game.items import Weapon, Armor, Potion, Key
+from game.monster import Monster, Dragon, Player
+from game.feature import Feature
 
 #my function imports
-from clear import clear_console
-from endgame import win_game,lose_game
+from game.clear import clear_console
+from game.endgame import win_game,lose_game
 
 custom_theme= Theme({
     "info" : "grey62",
@@ -25,6 +24,7 @@ custom_theme= Theme({
     "option" : "blue",
     "items" : "turquoise2"
 })
+
 console=Console(theme=custom_theme)
 class Room:
     '''

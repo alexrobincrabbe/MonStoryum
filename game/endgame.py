@@ -1,6 +1,6 @@
 import time
 from rich.prompt import Prompt
-from clear import clear_console
+from game.clear import clear_console
 import gspread
 from google.oauth2.service_account import Credentials
 from rich import print
