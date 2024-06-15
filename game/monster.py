@@ -80,10 +80,10 @@ class Dragon(Monster):
             print(
                 "The walls shake as, in a booming, gravelly voice, "
                 "the dragon suddenly speaks! "
-                " 'I have been here for centuries and you are the first "
+                " [chartreuse4]'I have been here for centuries and you are the first "
                 "to say a single word to me. Usually they all run away! "
                 "I will let you pass by me unharmed, but only if you play "
-                "my game…and win!' ")
+                "my game…and win!'[/chartreuse4] ")
             while True:
                 answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
                 if answer == "yes" or answer == "y":
@@ -97,7 +97,7 @@ class Dragon(Monster):
                     )
                     break
                 if answer == "no" or answer == "n":
-                    print(" 'very well' ")
+                    print(" [chartreuse4]'very well' [/chartreuse4]")
                     print("the dragon returns to its slumber")
                     return
             while True:
@@ -105,19 +105,19 @@ class Dragon(Monster):
                 if answer_2 == "yes" or answer_2 == "y":
                     break
                 if answer_2 == "no" or answer_2 == "n":
-                    print(" 'very well' ")
+                    print(" [chartreuse4]'very well' [/chartreuse4]")
                     print("the dragon returns to its slumber")
                     return
             win = hangman()
             if win == False:
-                print(" 'It has been so long since my last meal...' ")
+                print(" [chartreuse4]'It has been so long since my last meal...'[/chartreuse4] ")
                 room.monster_action = True
                 room.battle_started = True
             else:
                 self.riddle_solved = True
                 room.password = True
                 print(
-                    " [chartreuse4]'You’ve beaten me at my own game, "
+                    " [chartreuse4]'You've beaten me at my own game, "
                     " I will allow you to pass.' [/chartreuse4]\n The dragon " 
                     "steps aside, allowing you just enough space to pass by. "
                     "Taking a deep breath, you brave the bridge and scurry past "

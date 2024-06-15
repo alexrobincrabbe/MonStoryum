@@ -23,13 +23,13 @@ def hangman():
     print(f'[green3]{show_word}[/green3]')
     # check if the letter is in the word and replace the underscore
     while win == False:
-        guess = Prompt.ask("[deep_sky_blue1]guess a letter: [deep_sky_blue1]")
+        guess = Prompt.ask("[chartreuse4]'guess a letter' [chartreuse4]")
         if len(guess) > 1:
-            print(" 'just one letter please...' ")
+            print("[chartreuse4] 'just one letter please...'[chartreuse4] ")
         else:
             if guess in word:
                 if guess in show_word:
-                    print(" 'you have already guessed that letter, I already tire of you little human...' ")
+                    print(" [chartreuse4]'you have already guessed that letter, I already tire of you little human...' [/chartreuse4]")
                 else:
                     index=0
                     for letter in word:
@@ -43,7 +43,7 @@ def hangman():
                         win = True
                         return win
             else:
-                print("[bright_red]incorrect[/bright_red]")
+                print("[chartreuse4]'incorrect'[chartreuse4]")
                 guesses_remaining-=1
                 if guesses_remaining == 0:
                     print("you lose")
