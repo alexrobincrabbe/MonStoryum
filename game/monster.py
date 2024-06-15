@@ -1,11 +1,16 @@
+'''
+Defines all Monster classes and methods
+'''
+
 import random as rnd
 import math
 import time
 from rich.console import Console
 from rich.theme import Theme
 from rich.prompt import Prompt
-from prettytable import PrettyTable
 from rich import print
+from prettytable import PrettyTable
+
 
 #my function imports
 from game.hangman import hangman
@@ -47,22 +52,30 @@ class Monster:
         hit=self.agility+self.weapon.hit + (rnd.random()*15)
         dodge=target.agility + target.armor.dodge + (rnd.random()*15)
         if hit > dodge:
-            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) - target.armor.armor_value
+            damage=self.strength + rnd.randrange(self.weapon.damage[0],self.weapon.damage[1]+1) \
+                - target.armor.armor_value
             damage = 1 if damage < 1 else damage
-            print(f'[blue]{self.description}[/blue] hits for [red1]{damage}[/red1] points of damage')
+            print(f'[blue]{self.description}[/blue] hits for [red1]{damage}[/red1] '
+                  'points of damage')
             target.hp-=damage
             target.hp = 0 if target.hp < 0 else target.hp
             print(f'[blue]{target.description}[/blue] has '
-                  f'[green1]{target.hp}[/green1]/[chartreuse4]{target.start_hp}[/chartreuse4] remaining')
-            
+                  f'[green1]{target.hp}[/green1]/[chartreuse4]{target.start_hp}[/chartreuse4]'
+                   ' remaining')
 
         else:
             print(f'[blue]{self.description}[/blue] misses')
 
     def examine(self,player):
+        '''
+        examine
+        '''
         console.print(f'{self.details}', style = "info")
-    
+
     def talk(self,room):
+        '''
+        talk
+        '''
         console.print(f'{self.speak}', style = "info")
 class Dragon(Monster):
     '''
@@ -76,7 +89,7 @@ class Dragon(Monster):
         '''
         initate a game of hangman with the dragon
         '''
-        if self.riddle_solved == False:
+        if self.riddle_solved is False:
             print(
                 "The walls shake as, in a booming, gravelly voice, "
                 "the dragon suddenly speaks! "
@@ -85,7 +98,8 @@ class Dragon(Monster):
                 "I will let you pass by me unharmed, but only if you play "
                 "my game…and win!'[/chartreuse4] ")
             while True:
-                answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] (yes/no)")
+                answer = Prompt.ask("[chartreuse4] 'would you like to play?'[/chartreuse4] "
+                                    "(yes/no)")
                 if answer == "yes" or answer == "y":
                     print (
                         " [chartreuse4]'Let us begin, the rules of my game are simple. \n"
@@ -101,7 +115,8 @@ class Dragon(Monster):
                     print("the dragon returns to its slumber")
                     return
             while True:
-                answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want to play?'[/chartreuse4] (yes/no) ")
+                answer_2 = Prompt.ask (" [chartreuse4]'are you you sure you want "
+                                       "to play?'[/chartreuse4] (yes/no) ")
                 if answer_2 == "yes" or answer_2 == "y":
                     break
                 if answer_2 == "no" or answer_2 == "n":
@@ -109,7 +124,7 @@ class Dragon(Monster):
                     print("the dragon returns to its slumber")
                     return
             win = hangman()
-            if win == False:
+            if win is False:
                 print(" [chartreuse4]'It has been so long since my last meal...'[/chartreuse4] ")
                 room.monster_action = True
                 room.battle_started = True
@@ -124,7 +139,8 @@ class Dragon(Monster):
                     "as fast as you can.' "
                     )
         else:
-            print("[chartreuse4]'you have already bested my game human. Leave quickly before I change my mind'[/chartreuse4]")
+            print("[chartreuse4]'you have already bested my game human. Leave quickly "
+                  "before I change my mind'[/chartreuse4]")
 class Player(Monster):
     '''
     Add methods required for the player object,
@@ -135,8 +151,15 @@ class Player(Monster):
         self.inventory=loot
         self.room_reached=0
         self.dragon_killed=False
-        
+        self.weapons = []
+        self.armors = []
+        self.potions = []
+        self.keys = []
+
     def display_inventory(self):
+        '''
+        Display inventory
+        '''
         self.weapons = []
         self.armors = []
         self.potions = []
@@ -150,13 +173,16 @@ class Player(Monster):
                 self.potions.append(item)
             if item.type == "key":
                 self.keys.append(item)
-        
+
         self.print_weapons()
         self.print_armor()
         self.print_potions()
         self.print_keys()
 
     def print_weapons(self):
+        '''
+        Display a table of weapons in the player inventory
+        '''
         table = PrettyTable()
         weapon_data=([weapon.description for weapon in self.weapons])
         damage_data=([f'{weapon.damage[0]}-{weapon.damage[1]}' for weapon in self.weapons])
@@ -167,6 +193,9 @@ class Player(Monster):
         console.print(table,style="purple")
 
     def print_armor(self):
+        '''
+        Display a table of armor in the player inventory
+        '''
         table = PrettyTable()
         armor_data=([armor.description for armor in self.armors])
         armor_value_data=([f'{armor.armor_value}' for armor in self.armors])
@@ -177,6 +206,9 @@ class Player(Monster):
         console.print(table,style="blue")
 
     def print_potions(self):
+        '''
+        display a table of potions in the player inventory
+        '''
         table = PrettyTable()
         potion_data=([potion.description for potion in self.potions])
         stat_data=([f'{potion.stat}' for potion in self.potions])
@@ -187,6 +219,9 @@ class Player(Monster):
         console.print(table,style="green")
 
     def print_keys(self):
+        '''
+        display keys in the player inventory
+        '''
         key_string=""
         for key in self.keys:
             key_string+=f'{key.description}, '
@@ -194,8 +229,12 @@ class Player(Monster):
             key_string = key_string[:-2]
         print(f'Keys : [turquoise2]{key_string}[/turquoise2]')
 
-    
     def inv_equip(self, inv_action):
+        '''
+        checks if item is in inventory,
+        if it is equippable,
+        and equips it.
+        '''
         equip_string=inv_action.split(" ", 1)
         if len(equip_string) > 1:
             equip_object=equip_string[1]
@@ -209,14 +248,16 @@ class Player(Monster):
                             print(f"[green]{item.description}[/green] is already equipped")
                         else:
                             self.weapon=item
-                            print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
+                            print(f'[blue]{self.description}[/blue] equipped '
+                                  '[green]{item.description}[/green]')
                         return True
                     elif item.type == "armor":
                         if self.armor.description == item.description:
                             print(f"[green]{item.description}[/green] is already equipped")
                         else:
                             self.armor=item
-                            print(f'[blue]{self.description}[/blue] equipped [green]{item.description}[/green]')
+                            print(f'[blue]{self.description}[/blue] equipped '
+                                  f'[green]{item.description}[/green]')
                         return True
                     else:
                         print("you cant equip that")
@@ -230,6 +271,11 @@ class Player(Monster):
             return False
 
     def inv_use(self, inv_action):
+        '''
+        checks if item is in inventory,
+        if it is usable,
+        uses it
+        '''
         use_string=inv_action.split(" ", 1)
         if len(use_string) > 1:
             use_object=use_string[1]
@@ -255,8 +301,11 @@ class Player(Monster):
         else:
             console.print("choose an object to use", style = "info")
             return False
-    
+
     def potion_use(self,potion):
+        '''
+        uses potion
+        '''
         print(f'used {potion.description}')
         if potion.stat == "strength":
             self.strength+=potion.effect
@@ -271,19 +320,22 @@ class Player(Monster):
             print("Restored hp")
 
     def status(self):
-        weapon_table = PrettyTable()      
-        print("Hit increases chance to hit an enemy") 
+        '''
+        displays player stats and equipped items
+        '''
+        weapon_table = PrettyTable()
+        print("Hit increases chance to hit an enemy")
         weapon_table.add_column("Weapon",[self.weapon.description])
         weapon_table.add_column("Damage",[f'{self.weapon.damage[0]}-{self.weapon.damage[1]}'])
         weapon_table.add_column("Hit",['{0:+}'.format(self.weapon.hit)])
         console.print(weapon_table,style="red")
         print("Armor value reduces damage taken, Dodge reduces the chance to be hit")
-        armor_table = PrettyTable()      
+        armor_table = PrettyTable()
         armor_table.add_column("Armor",[self.armor.description])
         armor_table.add_column("Armor Value",[self.armor.armor_value])
         armor_table.add_column("Dodge",[self.armor.dodge])
         console.print(armor_table,style="cyan")
-        stats_table = PrettyTable()      
+        stats_table = PrettyTable()
         print("Strength increase damage, Agility increases hit and dodge")
         stats_table.add_column("HP",[f'{self.hp}/{self.start_hp}'])
         stats_table.add_column("Strength",[self.strength])
