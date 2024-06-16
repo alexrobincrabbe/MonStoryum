@@ -66,7 +66,7 @@ def win_game(room):
             if answer == "yes" or answer == "y":
                 break
             if answer == "no" or answer == "n":
-                return
+                return False
     clear_console()
     time.sleep(1)
     print("It has never been done before, but you have succeeded where "

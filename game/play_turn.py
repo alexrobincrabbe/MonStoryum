@@ -45,25 +45,24 @@ def start_turn(rooms, room_number: int):
     monster attack(if condition is met),
     checks if game ends,
     prompts player for action,
-    does action,
-    calls self at the end.
+    does action
     '''
-    room = rooms[room_number]
-    if room.game_lost is True:
-        return
-    if rooms[room_number].game_won is True:
-        return
-    monsters_attack(room)
-    if rooms[room_number].game_lost is True:
-        return
-    if room.player.hp == 0:
-        return
-    action = Prompt.ask(
-        "[gold3]choose an action[/gold3] (type 'help' for options) ")
-    choose_action(room, rooms, room_number, action)
-    if room.game_lost is True:
-        return
-    start_turn(rooms, room_number)
+    while True:
+        room = rooms[room_number]
+        if room.game_lost is True:
+            return
+        if rooms[room_number].game_won is True:
+            return
+        monsters_attack(room)
+        if rooms[room_number].game_lost is True:
+            return
+        if room.player.hp == 0:
+            return
+        action = Prompt.ask(
+            "[gold3]choose an action[/gold3] (type 'help' for options) ")
+        choose_action(room, rooms, room_number, action)
+        if room.game_lost is True or room.game_won is True:
+            break
 
 
 def monsters_attack(room):
@@ -102,6 +101,8 @@ def choose_action(room, rooms, room_number, action):
                 print("There is nothing to attack")
         case "forwards":
             go_forwards(rooms, room_number)
+            if room.game_won is True:
+                return
         case "backwards":
             go_backwards(rooms, room_number)
         case "inventory":
@@ -144,13 +145,15 @@ def go_forwards(rooms, room_number):
             if room_number == 11:
                 room.game_won = win_game(room)
                 if room.game_won is True:
+                    for room in rooms:
+                        room.game_won = True
                     return
                 else:
                     # if player chooses not to exit the dungeon, return to last
                     # room
                     room_number = 10
             enter_room(rooms, room_number)
-            if room.game_lost is True:
+            if room.game_lost is True or room.game_won is True:
                 return
         else:
             # check if player has key to locked door
