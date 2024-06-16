@@ -70,7 +70,7 @@ class Monster:
                     self.weapon.damage[1] + 1) - target.armor.armor_value
             damage = 1 if damage < 1 else damage
             print(f'[blue]{self.description}[/blue] hits for '
-                  '[red1]{damage}[/red1] points of damage')
+                  f'[red1]{damage}[/red1] points of damage')
             target.hp -= damage
             target.hp = 0 if target.hp < 0 else target.hp
             print(f'[blue]{target.description}[/blue] has '
