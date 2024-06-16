@@ -65,8 +65,8 @@ def create_rooms() -> list:
         "goblish"
     dg_details = "The goblin looks very drunk"
     g_details = "goblins are funny looking creatures"
-    gc_details = "it looks taller than the other goblins, and is brandishing "\
-        "a longer sword and isclad in fine leather armor."
+    gc_details = "it looks taller than the other goblins, brandishes "\
+        "a longer sword and is clad in fine leather armor."
     t_speak = "it grunts at you"
     t_details = "Looks big, stupid and angry. It is carrying a big club."
     s_speak = "it hisses at you"

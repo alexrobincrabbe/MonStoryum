@@ -264,6 +264,8 @@ def check_door(rooms, room_number):
                 enter_room(rooms, room_number)
                 if room.game_lost is True:
                     return
+    if room.game_lost is True:
+        return
     print("The door is locked")
 
 
