@@ -10,12 +10,12 @@ from rich import print
 def hangman():
     '''
     Function to play a simple hangman stlye game
-    Player has 5 guesses to guess all the letters in the word
+    Player has 7 guesses to guess all the letters in the word
     returns True if the game is won
     returns False if the game is lost
     '''
     win = False
-    guesses_remaining = 5
+    guesses_remaining = 7
     #
     word_list = ["dinner", "breakfast", "hungry", "delicious"]
     word = rnd.choice(word_list)
@@ -59,6 +59,6 @@ def hangman():
                     return win
                 else:
                     print(f" [chartreuse4]'you have [red1] "
-                          f"{guesses_remaining}[/red1]"
+                          f"{guesses_remaining}[/red1] "
                           "wrong guesses left..'[chartreuse4] ")
                     print("The dragon licks it's lips")

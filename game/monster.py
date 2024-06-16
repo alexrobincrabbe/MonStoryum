@@ -146,7 +146,7 @@ class Dragon(Monster):
                         "thinking of. For each correct guess, I will "
                         "reveal where that letter belongs in my word. \n"
                         "If you guess my word, you are free to go. "
-                        "If you guess incorrectly five times…"
+                        "If you guess incorrectly seven times…"
                         "I will eat you.' [/chartreuse4]")
                     break
                 if answer == "no" or answer == "n":

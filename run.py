@@ -5,8 +5,8 @@ Runs Monstoryum game
 from rich.prompt import Prompt
 
 # my function imports
-from game.create import create_rooms
-from game.turn import enter_room
+from game.create_game import create_rooms
+from game.play_turn import enter_room
 
 
 def main():
