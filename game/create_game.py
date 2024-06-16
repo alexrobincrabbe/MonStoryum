@@ -405,7 +405,7 @@ def create_room_descriptions() -> tuple[list, list]:
         "Leaving the troll's lifeless body behind, you enter a small room. "
         "You hear water dripping. In the dim light, cast by a torch high "
         "up on the wall, you spy four chests; one wooden, one bronze, one "
-        "silver, one gold..",  # 3
+        "silver, one gold...",  # 3
         "You stagger down a narrow corridor and spot a gap in the walls. "
         "You feel your way carefully through the gap, along jagged rock "
         "walls until you edge your way into an opening. You feel "
@@ -481,7 +481,7 @@ def create_room_descriptions() -> tuple[list, list]:
         "You are in a foul-smelling cell. There is a door to the east.",  # 1
         "You are in a dimly lit cave. It smells like trolls have been living "
         "here for a long time",  # 2
-        "room 3",  # 3
+        "This seems to be some kind of trophy room",  # 3
         "You are in the spiders' nest…watch where you walk…those egg sacs "
         "look like they are wriggling!",  # 4
         "A shaft of light shines down upon an old stone well. "
@@ -489,8 +489,9 @@ def create_room_descriptions() -> tuple[list, list]:
         "are strewn about the floor. A stack of buckets has been knocked over "
         "and left where they fell. \n"
         "Goblins and trolls are not renowned for their housekeeping! \n  "
-        "Something is splashing about in that well…best not draw ",  # 5
-        "attention to yourself.Spanning the centre of the familiar cavern is "
+        "Something is splashing about in that well…best not draw "
+        "attention to yourself.",  # 5
+        "Spanning the centre of the familiar cavern is "
         "a grand bridge made of cut stone. Torches line one side and appear "
         "to go on forever, glowing in the darkness, dimly lighting the path. "
         "You can't see where it leads - a mighty, thick fog is blocking "
@@ -499,7 +500,7 @@ def create_room_descriptions() -> tuple[list, list]:
         "The stench of sweet booze lingers in the room, - that stuff "
         "is potent! The chairs and table are knocked over, "
         "there is broken glass everywhere.",  # 8
-        "room 9",  # 9
+        "You are in a medium sized cavern",  # 9
         "You are in some kind of storage room",  # 10
         "This is the last room before freedom. Daylight dazzles your eyes."
         # 11
