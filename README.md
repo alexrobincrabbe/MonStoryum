@@ -278,22 +278,24 @@ The start screen prompt the player to choose a name before starting the game
 
 - most of the remaining errors were lines that were too long, which had to be changed manually
 
-- The following warning from Pyling remain
-
-<div align="center">
-  <img src="readme_images/pylint.png">
-</div>
+- The following warning from Pylint remain
 
     * Rich redefines the print function, which was used for color in the game
 
     * The formatting warnings relate to the argument of a table in prettytable, using and f string caused the data to display incorrectly, therefore I did not change it to an f string
 
-    * The unused arguments were needed for Monster methods which were redefined for subclassses, so that I could call the method with arguments for all Monster objects without an error
+    * The unused arguments were needed for Monster methods which were redefined for subclassses, so that I could call the method with all Monster objects without an error
 
-- One error from Flake8 remained regardless of the indentation I used:
+- One error from Flake8 remained regardless of the indentation I used
+
 
 <div align="center">
-  <img src="readme_images/flake.png">
+  <img src="readme_images/pylint.png" height ="300">
+</div>
+
+
+<div align="center">
+  <img src="readme_images/flake.png" width="300">
 </div>
 
 ## Manual testing
@@ -321,9 +323,102 @@ The endgame functions originally called the main function to restart the game an
 - add friendly monster mechanics
 
 # Deployment
+
+Note: in order to deploy the game, you will need a copy of the creds.json file, which is not included in the github repository for security reasons.
+
 ## local deployment
 
-## Heroku
+### Clone the Repository
+
+1. Open a terminal in the folder you want to clone the project to.
+
+2. In the terminal type:
+
+    ```
+      git clone https://github.com/alexrobincrabbe/Monstoryum
+    ```
+
+3. Change to the repository folder:
+
+    ```
+      cd .\Boopball\
+    ```
+4. Install requirements:
+
+    ```
+      pip install -r requirements.txt
+
+    ```
+5. Run the game:
+
+    ```
+      pip install -r requirements.txt
+
+    ```
+
+## Deploying to Heroku
+
+### Make a repository on Github
+
+1. Open a terminal in the folder you want to clone the project to.
+2. In the terminal type:
+
+    ```
+      git clone https://github.com/alexrobincrabbe/Boopball
+    ```
+
+3. Change to the repository folder:
+
+    ```
+      cd .\Boopball\
+    ```
+
+6. Remove the origin:
+
+    ```
+      git remote rm origin"
+    ```
+
+5. On Github, create a new repository with a name of your choosing.
+
+6. Add your Github repository to the origin:
+
+    ```
+      git remote add origin <url of your repository>
+    ```
+
+7. Push the files to your repository:
+
+    ```
+      git push --set-upstream origin main
+    ```
+### Heroku
+
+1. You will need a Heroku account and to log into it
+
+2. Click on New --> Create new app
+
+3. Choose an app name, and your region --> click create app
+
+4. Click on the setting tab
+
+5. Add buildpack Python
+
+6. Add buildpack NodeJs
+
+7. Click on Reveal Config Vars
+
+8. Enter key "PORT"  and value "8000"
+
+9. Enter key "CREDS" and value will be the content of the creds.json file
+
+10. Click on the deploy tab
+
+11. Click on connect to github
+
+12. Enter the path to your github repository
+
+13. Click on deploy branch
 
 # Credits
 
