@@ -272,14 +272,41 @@ The start screen prompt the player to choose a name before starting the game
 # Testing
 ## Validation
 
+- Pylint and Flake8 were used for validation
+
+- autopep8 was used to automatically format the code
+
+- most of the remaining errors were lines that were too long, which had to be changed manually
+
+- The following warning from Pyling remain
+
+<div align="center">
+  <img src="readme_images/pylint.png">
+</div>
+
+    * Rich redefines the print function, which was used for color in the game
+
+    * The formatting warnings relate to the argument of a table in prettytable, using and f string caused the data to display incorrectly, therefore I did not change it to an f string
+
+    * The unused arguments were needed for Monster methods which were redefined for subclassses, so that I could call the method with arguments for all Monster objects without an error
+
+- One error from Flake8 remained regardless of the indentation I used:
+
+<div align="center">
+  <img src="readme_images/flake.png">
+</div>
+
 ## Manual testing
 
+- Inputs were tested at each stage of developent, they would be too lengthy to put into a table
+
+- The program was tested with repeated runthroughs after completion
 
 ## Bugs
 
 ### Unfixed Bugs
 
-There are no unfixed bugs that I am aware of
+There are no unfixed bugs that I am aware of.
 
 ### Fixed Bugs
 

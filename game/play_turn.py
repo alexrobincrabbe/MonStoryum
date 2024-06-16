@@ -264,7 +264,7 @@ def check_door(rooms, room_number):
                 enter_room(rooms, room_number)
                 if room.game_lost is True:
                     return
-    if not room.player.hp == 0:#this line fixes a bug at endgame
+    if not room.player.hp == 0:  # this line fixes a bug at endgame
         print("The door is locked")
 
 
