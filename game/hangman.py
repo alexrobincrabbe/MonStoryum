@@ -31,6 +31,8 @@ def hangman():
         guess = Prompt.ask("[chartreuse4]'guess a letter' [chartreuse4]")
         if len(guess) > 1:
             print("[chartreuse4] 'just one letter please...'[chartreuse4] ")
+        elif len(guess) == 0:
+            print("[chartreuse4] 'speak up human!'[chartreuse4] ")
         else:
             if guess in word:
                 if guess in show_word:
@@ -58,7 +60,11 @@ def hangman():
                     print("you lose")
                     return win
                 else:
-                    print(f" [chartreuse4]'you have [red1] "
+                    print(f" [chartreuse4]'you have [red1]"
                           f"{guesses_remaining}[/red1] "
                           "wrong guesses left..'[chartreuse4] ")
                     print("The dragon licks it's lips")
+
+
+if __name__ == "__main__":
+    hangman()
