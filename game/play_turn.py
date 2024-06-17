@@ -55,6 +55,8 @@ def start_turn(rooms, room_number: int):
             return
         monsters_attack(room)
         if rooms[room_number].game_lost is True:
+            for room in rooms:
+                room.game_lost = True
             return
         if room.player.hp == 0:
             return
@@ -268,7 +270,7 @@ def check_door(rooms, room_number):
                 if room.game_lost is True:
                     return
     # this condition fixes a bug at endgame
-    if not room.player.hp == 0 or room.game_won is False:
+    if room.game_lost is False and room.game_won is False:
         print("The door is locked")
 
 
