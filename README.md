@@ -22,11 +22,11 @@ Monstoryum was made as a project to showcase the Python skills of the website de
     <summary><a href="#features">Features</a></summary>
 
     - [Intro screen](#intro-screen)
-    - [Examine room screen](#examine-room-screeen)
-    - [Inventory](#inventors)
+    - [Examine room screen](#examine-room-screen)
+    - [Inventory](#inventory)
     - [Status](#status)
-    - [Target select](#select-target)
-    - [Examine select](#examine-select)
+    - [Target select](#target-select)
+    - [Examine select](#exmamine-select)
     - [Hall of fame](#hall-of-fame)
 
 </details>
@@ -42,12 +42,8 @@ Monstoryum was made as a project to showcase the Python skills of the website de
     <summary><a href="#testing">Testing</a></summary>
 
     <ul>
-    <li><details>
-    <summary><a href="#validation">Validation</a></summary>
-
-    - [pylint](#Pylint)
-    - [flake8](#Flake8)
-    </details></li>
+    <li><a href="#validation">Validation</a></li>
+    <li><a href="#manual-testing">Manual Testing</a></li>
     <li><details>
     <summary><a href="#bugs">Bugs</a></summary>
 
@@ -63,19 +59,13 @@ Monstoryum was made as a project to showcase the Python skills of the website de
 6. <details>
     <summary><a href="#deployment">Deployment</a></summary>
 
-    - [Clone Repository](#local-preparation)
-    - [Deploy from Github](#local-instructions)
+    - [Local Deploymen](#local-deployment)
+    - [Deploy to Heroku](#deploying-to-heroku)
     
 </details>
 
-7. <details>
-    <summary><a href="#credits">Credits</a></summary>
+7. <a href="#credits">Credits</a></summary>
 
-    - [Images](#images)
-    - [sounds](#sounds)
-    - [Code](#code)
-    - [Testing](#testing)
-</details>
 
 ----
 
@@ -135,19 +125,20 @@ The Business Goals of MonStoryum are:
 - The hangman game was made as an independent game, for testing purposes and then imported to the main game. 
 
 - Due to the size of the program, the code was refactored into modules:
-    1. run.py calls the create game and enter room functions to start the game
-    2. create_game.py imports all of the classes and creates object instances that are needed for the game, it monsters, items, features, rooms. As the Player class is an extension of the Monster class, it is also created here, and the player is prompted to enter a name
-    3. play_turn.py contains all of the functions that run once the game has started, with the exception of the endgame functions and clear_console function
-    4. endgame.py contains the functions that end the game, and updates the google sheet containing the Hall of Fame data
-    5. clear.py contains a function to clear the console
-    6. The other modules contain the classes used for the game
+    1. [run.py](run.py) calls the create game and enter room functions to start the game
+    2. [create_game.py](game/create_game.py) imports all of the classes and creates object instances that are needed for the game, it monsters, items, features, rooms. As the Player class is an extension of the Monster class, it is also created here, and the player is prompted to enter a name
+    3. [play_turn.py](game/play_turn.py) contains all of the functions that run once the game has started, with the exception of the endgame functions and clear_console function
+    4. [endgame.py](game/endgame.py) contains the functions that end the game, and updates the google sheet containing the Hall of Fame data
+    5. [clear.py](game/clear.py) contains a function to clear the console
+    6. [hangman.py](game/hangman.py) contains the hangman mini-game within the game
+    7. The other modules ([item.py](game/items.py), [monster.py](game/monster.py), [feature.py](game/feature.py), [room.py](game/room.py)) contain the classes used for the game
 
 # Features
 
 ## intro screen
 
 <div align="center">
-  <img src="readme_images/intro.png">
+  <img src="readme_images/intro.png" height = "25">
 </div>
 
 The start screen prompt the player to choose a name before starting the game
@@ -228,33 +219,34 @@ The start screen prompt the player to choose a name before starting the game
 
 # Technologies Used
 ## Languages
-- Python
+- [Python](https://www.python.org/)
 
 ## Libraries
 ### Python modules
  #### Built in
-- random
+- [random](https://docs.python.org/3/library/random.html)
     * randomising initial game variables
     * randomising attack hits and damage
-- math
-    *
-- time
+- [math](https://docs.python.org/3/library/math.html)
+    * rounding up randomly generated numbers to whole numbers
+- [time](https://docs.python.org/3/library/time.html)
     * delay betweet attacks
     * delaying console clear to allow time to read messages
-- os
+- [os](https://docs.python.org/3/library/os.html)
     * clear the console on all operating systems
-- operator
+- [operator](https://docs.python.org/3/library/operator.html)
+    * sort the Hall of Fame by column
     
 #### Others
-- rich
+- [rich](https://rich.readthedocs.io/en/stable/introduction.html)
     * colored text output
     * identify objects the player can interact with
     * highlight important information
-- prettytable
+- [prettytable](https://pypi.org/project/prettytable/)
     * print out informations in tables
-    * Inentory, status, Hall of Fame
-- gspread
-    * required for the gspread API
+    * Inventory, status, Hall of Fame
+- [gspread](https://docs.gspread.org/en/latest/py-modindex.html)
+    * required for the [gspread API](https://docs.gspread.org/en/v6.0.0/)
 
 ## API's
 
@@ -268,13 +260,17 @@ The start screen prompt the player to choose a name before starting the game
     * IDE for project development
 - [Heroku](https://heroku.com/)
     * Deployment
+- [Google Sheets](https://docs.google.com/spreadsheets/u/0/)
+    * Storing the Hall of Fame data
+- [Google Cloud](https://cloud.google.com/)
+    * Managing the gspread API
 
 # Testing
 ## Validation
 
-- Pylint and Flake8 were used for validation
+- [Pylint](https://pypi.org/project/pylint/) and [Flake8](https://flake8.pycqa.org/en/latest/) were used for validation
 
-- autopep8 was used to automatically format the code
+- [autopep8](https://pypi.org/project/autopep8/) was used to automatically format the code
 
 - most of the remaining errors were lines that were too long, which had to be changed manually
 
@@ -312,7 +308,14 @@ There are no unfixed bugs that I am aware of.
 
 ### Fixed Bugs
 
-The endgame functions originally called the main function to restart the game and break out of the start_turn loop. However after refactoring the code to modules, these causes a import recursion error. Therefore I refactored to code to exit the loop when the game had finished. This caused several bugs, where the game would continue the loop when it ended, or text was printed that should not appear on the screen. I had to fix these by introducing extra variables and condition checks to exit the loop when the game ended.
+The endgame functions originally called the main function to restart the game and break out of the start_turn loop. 
+
+However after refactoring the code to modules, these caused an import recursion error. Therefore I refactored to code to exit the loop when the game had finished. This caused several bugs, where the game would continue the loop when it ended, or text was printed that should not appear on the screen. I had to fix these by introducing extra variables and condition checks to exit the loop when the game ended.
+
+I also refactored recursive function calls to while loops.
+
+Because the Enter_room function calls the start_turn function, which in turn calls the enter_room function when the player chooses to enter a new room, there is still a recursion loop in the code. This could be refactored by putting the enter_room function in while loop, and returning the room number from the start_turn function instead of calling the enter_room function again. However due to time constraints I fixed this in an unelegant way by recursively exiting the function at the end_game. 
+
 
 # Future Improvements
 
